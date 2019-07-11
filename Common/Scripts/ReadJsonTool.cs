@@ -11,12 +11,12 @@ public static class ReadJsonTool
         if (json.Length > 0)
         {
             var _js = JsonUtility.FromJson<T>(json);
-            Debug.Log("Load   "+ _js + " ==== " + "OK");
+            Debuger.Log("Load   "+ _js + " ==== " + "OK");
             return _js;
         }
         else
         {
-            Debug.Log("LoadJson ==== " + "NO File");
+            Debuger.Log("LoadJson ==== " + "NO File");
             return default(T);
         }
     }

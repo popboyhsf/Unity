@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System;
 using UnityEngine.Profiling;
 using UnityEngine.Events;
+using System.Diagnostics;
 
 public class DebugerManager : MonoBehaviour
 {
 
-    [Tooltip("是否允许调试")]
-    public bool AllowDebugging = true;
+    
+    bool AllowDebugging = false;
 
     [SerializeField]
     DataKeyType[] PlayerPrefsKey;
@@ -44,8 +45,21 @@ public class DebugerManager : MonoBehaviour
     private float m_WindowScale = DefaultWindowScale;
 
 
+    
+    private void Awake()
+    {
+        DestroySelf();
+        if(!AllowDebugging)
+            Destroy(this.gameObject);
+        
+    }
 
-
+    [Conditional("DEBUG")]
+    private void DestroySelf()
+    {
+        AllowDebugging = true;
+        Debuger.EnableLog = true;
+    }
 
     private void Start()
     {
@@ -279,7 +293,7 @@ public class DebugerManager : MonoBehaviour
                     _currentLogIndex = -1;
                     _fpsColor = Color.white;
                     show = false;
-                    Debug.LogError("ShowMessageError");
+                    UnityEngine.Debug.LogError("ShowMessageError");
                 }
             }
             GUILayout.EndScrollView();

@@ -24,6 +24,11 @@ public static class Extensions
         }
     }
 
+    public static string ToCashString(this int num)
+    {
+        return "$" + num / 100 + "." + (num % 100).ToString("D2");
+    }
+
     public static string ToThroundString(this ulong num)
     {
         if (num > 1000)
