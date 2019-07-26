@@ -1,6 +1,8 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 
@@ -82,6 +84,7 @@ public class PackManager : EditorWindow
         prodectName = EditorGUILayout.TextField("项目名:", prodectName);
         packName = EditorGUILayout.TextField("包名:", packName);
 
+        EditorGUILayout.LabelField("路径是否正确 : " + Directory.Exists(targetPatch));
         targetPatch = EditorGUILayout.TextField("Android项目路径:", targetPatch);
 
         qualityLevel = EditorGUILayout.IntField("图形质量：" + QualitySettings.names[qualityLevel] + "最大：" + (QualitySettings.names.Length-1) , qualityLevel);
@@ -100,7 +103,7 @@ public class PackManager : EditorWindow
             il2CppCompilerConfiguration = (Il2CppCompilerConfiguration)EditorGUILayout.EnumPopup("打包方式：", il2CppCompilerConfiguration);
         }
 
-        EditorGUILayout.LabelField("Has : " + Directory.Exists(targetPatch));
+       
 
         EditorGUILayout.BeginHorizontal();
 
@@ -142,7 +145,10 @@ public class PackManager : EditorWindow
 
                         Directory.Delete("ForAndroid", true);
 
-                        Debug.ClearDeveloperConsole();
+                        Assembly assembly = Assembly.GetAssembly(typeof(SceneView));
+                        Type logEntries = assembly.GetType("UnityEditor.LogEntries");
+                        MethodInfo clearConsoleMethod = logEntries.GetMethod("Clear");
+                        clearConsoleMethod.Invoke(new object(), null);
 
                         Debug.Log("打包完成！");
 
@@ -170,9 +176,17 @@ public class PackManager : EditorWindow
             this.Close();
         }
 
-        EditorGUILayout.EndHorizontal();
+        try
+        {
+            EditorGUILayout.EndHorizontal();
 
-        EditorGUILayout.EndVertical();
+            EditorGUILayout.EndVertical();
+        }
+        catch (Exception)
+        {
+
+            Debug.Log("Why is always consle ?");
+        }
 
         EditorGUILayout.LabelField("Power By YuanJI");
     }
