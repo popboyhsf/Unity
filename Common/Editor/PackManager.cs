@@ -34,6 +34,8 @@ public class PackManager : EditorWindow
 
     private static string targetPatch;
 
+    private static string script;
+
     private void OnGUI()
     {
         buildTargetGroup = (BuildTargetGroup)EditorGUILayout.EnumPopup("项目环境：", buildTargetGroup);
@@ -87,6 +89,7 @@ public class PackManager : EditorWindow
 
         EditorGUILayout.LabelField("Android设置：");
 
+        script = EditorGUILayout.TextField("项目注入:", script);
         targetSdkVersion = (AndroidSdkVersions)EditorGUILayout.EnumPopup("目标SDK：", targetSdkVersion);
         minSdkVersion = (AndroidSdkVersions)EditorGUILayout.EnumPopup("最小SDK：", minSdkVersion);
         scriptingRuntimeVersion = (ScriptingRuntimeVersion)EditorGUILayout.EnumPopup(".Net环境：", scriptingRuntimeVersion);
@@ -100,6 +103,11 @@ public class PackManager : EditorWindow
         EditorGUILayout.LabelField("Has : " + Directory.Exists(targetPatch));
 
         EditorGUILayout.BeginHorizontal();
+
+        if (GUILayout.Button("读取"))
+        {
+            Load2Android();
+        }
 
         if (GUILayout.Button("写入"))
         {
@@ -179,6 +187,9 @@ public class PackManager : EditorWindow
         targetPatch = PlayerPrefs.GetString("Editor_targetPatch" , "../../" + @"\Android\DrillMaster\");
 
         packName = PlayerSettings.GetApplicationIdentifier(buildTargetGroup);
+
+        script = PlayerSettings.GetScriptingDefineSymbolsForGroup(BuildTargetGroup.Android);
+
         targetSdkVersion = PlayerSettings.Android.targetSdkVersion;
         minSdkVersion = PlayerSettings.Android.minSdkVersion;
         scriptingRuntimeVersion = PlayerSettings.scriptingRuntimeVersion;
@@ -195,6 +206,7 @@ public class PackManager : EditorWindow
         PlayerPrefs.SetString("Editor_targetPatch", targetPatch);
 
         PlayerSettings.SetApplicationIdentifier(buildTargetGroup,packName);
+        PlayerSettings.SetScriptingDefineSymbolsForGroup(BuildTargetGroup.Android, script);
         PlayerSettings.Android.targetSdkVersion = targetSdkVersion;
         PlayerSettings.Android.minSdkVersion = minSdkVersion;
         PlayerSettings.scriptingRuntimeVersion = scriptingRuntimeVersion;
