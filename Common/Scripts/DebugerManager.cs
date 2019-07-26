@@ -59,6 +59,8 @@ public class DebugerManager : MonoBehaviour
     {
         AllowDebugging = true;
         Debuger.EnableLog = true;
+
+        //TODO
     }
 
     private void Start()
