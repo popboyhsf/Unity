@@ -15,7 +15,7 @@ public class DebugerManager : MonoBehaviour
     DataKeyType[] PlayerPrefsKey;
 
     [SerializeField]
-    GameObject[] DebugerBoolList;
+    DebugerStruct[] DebugerBoolList;
 
     [SerializeField]
     UnityEvent CallChangeUI;
@@ -530,14 +530,14 @@ public class DebugerManager : MonoBehaviour
             GUILayoutOption[] a = null;
             foreach (var item in DebugerBoolList)
             {
-                var script = item.GetComponent<IDebuger>();
+                var script = item.debugerObject.GetComponent<IDebuger>();
                 if (script == null)
                 {
                     UnityEngine.Debug.LogWarning("Not Found IDebuger From " + item.name);
                     continue;
                 }
 
-                script.AllowDebug = GUILayout.Toggle(script.AllowDebug, item.name + " IDebuger", a);
+                script.AllowDebug = GUILayout.Toggle(script.AllowDebug, item.name, a);
             }
             GUILayout.EndVertical();
 
@@ -654,6 +654,13 @@ public enum DataKeyTypeEnum
     stringType,
     floatType,
     intType,
+}
+
+[Serializable]
+public struct DebugerStruct
+{
+    public string name;
+    public GameObject debugerObject;
 }
 
 public interface IDebuger
