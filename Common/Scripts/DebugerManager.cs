@@ -15,6 +15,9 @@ public class DebugerManager : MonoBehaviour
     DataKeyType[] PlayerPrefsKey;
 
     [SerializeField]
+    GameObject[] DebugerBoolList;
+
+    [SerializeField]
     UnityEvent CallChangeUI;
 
     private int _mapIndex;
@@ -35,6 +38,7 @@ public class DebugerManager : MonoBehaviour
     private Vector2 _scrollLogView = Vector2.zero;
     private Vector2 _scrollCurrentLogView = Vector2.zero;
     private Vector2 _scrollSystemView = Vector2.zero;
+    private Vector2 _scrollPlayerDataView = Vector2.zero;
     private bool _expansion = false;
     private Rect _windowRect = new Rect(0, 0, 100, 60);
 
@@ -208,6 +212,11 @@ public class DebugerManager : MonoBehaviour
         if (GUILayout.Button("环境", GUILayout.Height(30)))
         {
             _debugType = DebugType.Environment;
+        }
+        GUI.contentColor = (_debugType == DebugType.Debug ? Color.white : Color.gray);
+        if (GUILayout.Button("调试", GUILayout.Height(30)))
+        {
+            _debugType = DebugType.Debug;
         }
         GUI.contentColor = Color.white;
         GUILayout.EndHorizontal();
@@ -476,7 +485,7 @@ public class DebugerManager : MonoBehaviour
         #region PlayerData
         else if (_debugType == DebugType.Data)
         {
-            GUILayout.BeginVertical("Box");
+            _scrollPlayerDataView = GUILayout.BeginScrollView(_scrollPlayerDataView, "Box", GUILayout.Height(300));
 
             for (int i = 0; i < PlayerPrefsKey.Length; i++)
             {
@@ -501,7 +510,7 @@ public class DebugerManager : MonoBehaviour
                 GUILayout.EndHorizontal();
             }
 
-            GUILayout.EndVertical();
+            GUILayout.EndScrollView();
 
             if (GUILayout.Button("刷新数据"))
             {
@@ -511,6 +520,27 @@ public class DebugerManager : MonoBehaviour
             {
                 PlayerPrefs.DeleteAll();
             }
+        }
+        #endregion
+
+        #region 调试
+        else if (_debugType == DebugType.Debug)
+        {
+            GUILayout.BeginVertical("Box");
+            GUILayoutOption[] a = null;
+            foreach (var item in DebugerBoolList)
+            {
+                var script = item.GetComponent<IDebuger>();
+                if (script == null)
+                {
+                    UnityEngine.Debug.LogWarning("Not Found IDebuger From " + item.name);
+                    continue;
+                }
+
+                script.AllowDebug = GUILayout.Toggle(script.AllowDebug, item.name + " IDebuger", a);
+            }
+            GUILayout.EndVertical();
+
         }
         #endregion
     }
@@ -607,7 +637,8 @@ public enum DebugType
     System,
     Screen,
     Quality,
-    Environment
+    Environment,
+    Debug,
 }
 
 [Serializable]
@@ -625,3 +656,7 @@ public enum DataKeyTypeEnum
     intType,
 }
 
+public interface IDebuger
+{
+    bool AllowDebug { get; set; }
+}
