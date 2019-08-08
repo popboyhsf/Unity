@@ -506,6 +506,11 @@ public class DebugerManager : MonoBehaviour
                 else
                 {
                     GUILayout.Label("不存在数据：" + PlayerPrefsKey[i].key);
+                    if(PlayerPrefsKey[i].type != DataKeyTypeEnum.stringType)
+                    if (GUILayout.Button("初始化"))
+                    {
+                        InitValue(PlayerPrefsKey[i].type, PlayerPrefsKey[i].key);
+                    }
                 }
                 GUILayout.EndHorizontal();
             }
@@ -621,6 +626,26 @@ public class DebugerManager : MonoBehaviour
         return _tempString;
     }
 
+    private void InitValue(DataKeyTypeEnum _type, string _key)
+    {
+        switch (_type)
+        {
+            case DataKeyTypeEnum.stringType:
+                var _tempString = PlayerPrefs.GetString(_key, "0");
+                PlayerPrefs.SetString(_key, "");
+                break;
+            case DataKeyTypeEnum.floatType:
+                var _tempFloat = PlayerPrefs.GetFloat(_key, 0);
+                PlayerPrefs.SetFloat(_key, 0);
+                break;
+            case DataKeyTypeEnum.intType:
+                var _tempInt = PlayerPrefs.GetInt(_key, 0);
+                PlayerPrefs.SetInt(_key, 0);
+                break;
+            default:
+                break;
+        }
+    }
 }
 public struct LogData
 {
