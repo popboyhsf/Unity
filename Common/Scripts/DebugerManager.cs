@@ -535,6 +535,7 @@ public class DebugerManager : MonoBehaviour
             GUILayoutOption[] a = null;
             foreach (var item in DebugerBoolList)
             {
+                if(item.debugerObject == null) continue;
                 var script = item.debugerObject.GetComponent<IDebuger>();
                 if (script == null)
                 {
