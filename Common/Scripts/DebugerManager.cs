@@ -493,7 +493,7 @@ public class DebugerManager : MonoBehaviour
                 if (PlayerPrefs.HasKey(PlayerPrefsKey[i].key))
                 {
                     GUILayout.Label("数据（" + PlayerPrefsKey[i].key + "）：" + GetValueByType(PlayerPrefsKey[i].type, PlayerPrefsKey[i].key));
-                    if (GUILayout.Button("增加"))
+                    if (GUILayout.RepeatButton("增加"))
                     {
                         ChangeValueAdd(PlayerPrefsKey[i].type, PlayerPrefsKey[i].key);
                     }
@@ -532,7 +532,6 @@ public class DebugerManager : MonoBehaviour
         else if (_debugType == DebugType.Debug)
         {
             GUILayout.BeginVertical("Box");
-            GUILayoutOption[] a = null;
             foreach (var item in DebugerBoolList)
             {
                 if(item.debugerObject == null) continue;
@@ -543,7 +542,7 @@ public class DebugerManager : MonoBehaviour
                     continue;
                 }
 
-                script.AllowDebug = GUILayout.Toggle(script.AllowDebug, item.name, a);
+                script.AllowDebug = GUILayout.Toggle(script.AllowDebug, item.name);
             }
             GUILayout.EndVertical();
 
