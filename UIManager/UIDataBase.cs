@@ -12,13 +12,13 @@ public class UIDataBase
         get => UIStat;
     }
 
-    protected void ShowUI()
+    public void ShowUI()
     {
         UIContor.ShowUI();
         UIStat = UIStatus.Showing;
     }
 
-    protected void HiddenUI()
+    public void HiddenUI()
     {
         UIContor.HiddenUI();
         UIStat = UIStatus.Hidden;
