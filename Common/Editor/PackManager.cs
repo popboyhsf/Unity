@@ -75,6 +75,9 @@ public class PackManager : EditorWindow
 
     }
 
+    /// <summary>
+    /// Android部分对应显示
+    /// </summary>
     private void ShowAndroid()
     {
 
@@ -110,6 +113,7 @@ public class PackManager : EditorWindow
         if (GUILayout.Button("读取"))
         {
             Load2Android();
+            this.Repaint();
         }
 
         if (GUILayout.Button("写入"))
@@ -191,7 +195,9 @@ public class PackManager : EditorWindow
         EditorGUILayout.LabelField("Power By YuanJI");
     }
 
-
+    /// <summary>
+    /// 读取相关参数
+    /// </summary>
     private static void Load2Android()
     {
         companyName = Application.companyName;
@@ -210,7 +216,9 @@ public class PackManager : EditorWindow
         scriptingBackend = PlayerSettings.GetScriptingBackend(buildTargetGroup);
         il2CppCompilerConfiguration = PlayerSettings.GetIl2CppCompilerConfiguration(buildTargetGroup);
     }
-
+    /// <summary>
+    /// 写入相关数据
+    /// </summary>
     private static void Write2Android()
     {
         PlayerSettings.companyName = companyName;
@@ -230,8 +238,38 @@ public class PackManager : EditorWindow
         
     }
 
+    /// <summary>
+    /// 调用系统打包
+    /// </summary>
+    /// <returns>打包完成后的文件</returns>
     private static UnityEditor.Build.Reporting.BuildFile[] Build2Android()
     {
         return BuildPipeline.BuildPlayer(EditorBuildSettings.scenes, "ForAndroid", BuildTarget.Android, BuildOptions.StrictMode).files;
+    }
+
+
+    /// <summary>
+    /// 外部调用函数
+    /// </summary>
+    public static void BuildProjectByBat()
+    {
+        BuildPipeline.BuildPlayer(EditorBuildSettings.scenes, "ForAndroid", BuildTarget.Android, BuildOptions.StrictMode);
+
+        var ass = "../../" + @"\Android\DrillMaster\" + @"\app\src\main\assets";
+        var jl = "../../" + @"\Android\DrillMaster\" + @"\app\src\main\jniLibs";
+
+        var assnew = @"ForAndroid\" + Application.productName + @"\src\main\assets";
+        var jlnew = @"ForAndroid\" + Application.productName + @"\src\main\jniLibs";
+
+        if (Directory.Exists(ass) && Directory.Exists(jl))
+        {
+            Directory.Delete(ass, true);
+            Directory.Delete(jl, true);
+        }
+
+        Directory.Move(assnew, ass);
+        Directory.Move(jlnew, jl);
+        Directory.Delete("ForAndroid", true);
+        
     }
 }
