@@ -8,9 +8,8 @@ public class AdController
     /// <summary>
     /// 播放插屏广告
     /// </summary>
-    /// <param name="pos">0启动游戏,1切回游戏,2获取到奖励</param>
-    /// <param name="must"></param>
-    public static void ShowInterstitial()
+    /// <param name="pos">0启动游戏,1获取到奖励,2切回游戏</param>
+    public static void ShowInterstitial(int pos = 1)
     {
 #if UNITY_EDITOR || NoAd || SafeMode
         return;

@@ -6,7 +6,7 @@ using UnityEngine.Events;
 
 public class EventName
 {
-    private const string gameName = "fishingfantasy";
+    private const string gameName = "XXX";
     public const string gameStart = gameName + "_game_start";
     public const string gameEnd = gameName + "_game_end";
     public const string levelUp = gameName + "_game_lv";
