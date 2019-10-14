@@ -14,10 +14,13 @@ public class PackManager : EditorWindow
         Rect wr = new Rect(0, 0, 450, 500);
         PackManager window = (PackManager)EditorWindow.GetWindowWithRect(typeof(PackManager), wr, true, "PackManager");
         window.Show();
-        Load2Android();
+        if(EditorUserBuildSettings.activeBuildTarget == BuildTarget.Android) Load2Android();
+        if (EditorUserBuildSettings.activeBuildTarget == BuildTarget.iOS) Load2IOS();
     }
 
-    private static BuildTargetGroup buildTargetGroup = BuildTargetGroup.Android;
+    private static BuildTarget buildTarget = EditorUserBuildSettings.activeBuildTarget;
+
+    private static BuildTargetGroup buildTargetGroup;
 
     private static string companyName;
 
@@ -27,6 +30,10 @@ public class PackManager : EditorWindow
 
     private static AndroidSdkVersions targetSdkVersion;
     private static AndroidSdkVersions minSdkVersion;
+
+    private static string targetOSVersion;
+    private static iOSSdkVersion sdkVersion;
+    private static iOSTargetDevice targetDevice;
 
     private static ScriptingRuntimeVersion scriptingRuntimeVersion;
     private static ScriptingImplementation scriptingBackend;
@@ -40,39 +47,49 @@ public class PackManager : EditorWindow
 
     private void OnGUI()
     {
-        buildTargetGroup = (BuildTargetGroup)EditorGUILayout.EnumPopup("项目环境：", buildTargetGroup);
+        buildTarget = (BuildTarget)EditorGUILayout.EnumPopup("项目环境：", buildTarget);
 
-        switch (buildTargetGroup)
+        switch (buildTarget)
         {
-            case BuildTargetGroup.Unknown:
+            case BuildTarget.StandaloneOSX:
                 break;
-            case BuildTargetGroup.Standalone:
+            case BuildTarget.StandaloneWindows:
                 break;
-            case BuildTargetGroup.iOS:
+            case BuildTarget.iOS:
+                buildTargetGroup = BuildTargetGroup.iOS;
+                ShowIOS();
                 break;
-            case BuildTargetGroup.Android:
+            case BuildTarget.Android:
+                buildTargetGroup = BuildTargetGroup.Android;
                 ShowAndroid();
                 break;
-            case BuildTargetGroup.WebGL:
+            case BuildTarget.StandaloneLinux:
                 break;
-            case BuildTargetGroup.WSA:
+            case BuildTarget.StandaloneWindows64:
                 break;
-            case BuildTargetGroup.PS4:
+            case BuildTarget.WebGL:
                 break;
-            case BuildTargetGroup.XboxOne:
+            case BuildTarget.WSAPlayer:
                 break;
-            case BuildTargetGroup.tvOS:
+            case BuildTarget.StandaloneLinux64:
                 break;
-            case BuildTargetGroup.Facebook:
+            case BuildTarget.StandaloneLinuxUniversal:
                 break;
-            case BuildTargetGroup.Switch:
+            case BuildTarget.PS4:
                 break;
-            case BuildTargetGroup.Lumin:
+            case BuildTarget.XboxOne:
+                break;
+            case BuildTarget.tvOS:
+                break;
+            case BuildTarget.Switch:
+                break;
+            case BuildTarget.Lumin:
+                break;
+            case BuildTarget.NoTarget:
                 break;
             default:
                 break;
         }
-
     }
 
     /// <summary>
@@ -88,10 +105,10 @@ public class PackManager : EditorWindow
         packName = EditorGUILayout.TextField("包名:", packName);
 
         EditorGUILayout.LabelField("路径是否正确 : " + Directory.Exists(targetPatch));
-        targetPatch = EditorGUILayout.TextField("Android项目路径:", targetPatch);
+        targetPatch = EditorGUILayout.TextField("项目路径:", targetPatch);
 
         qualityLevel = EditorGUILayout.IntField("图形质量：" + QualitySettings.names[qualityLevel] + "最大：" + (QualitySettings.names.Length-1) , qualityLevel);
-        qualityLevel = qualityLevel <= 5 ? qualityLevel : 5;
+        qualityLevel = qualityLevel <= QualitySettings.names.Length - 1 ? qualityLevel : QualitySettings.names.Length - 1;
 
         EditorGUILayout.LabelField("Android设置：");
 
@@ -196,6 +213,127 @@ public class PackManager : EditorWindow
     }
 
     /// <summary>
+    /// IOS部分对应显示
+    /// </summary>
+    private void ShowIOS()
+    {
+
+        EditorGUILayout.BeginVertical();
+
+        prodectName = EditorGUILayout.TextField("项目名:", prodectName);
+        packName = EditorGUILayout.TextField("包名:", packName);
+
+        EditorGUILayout.LabelField("路径是否正确 : " + Directory.Exists(targetPatch));
+        targetPatch = EditorGUILayout.TextField("项目路径:", targetPatch);
+
+        
+        EditorGUILayout.LabelField("IOS设置：");
+
+        script = EditorGUILayout.TextField("项目注入:", script);
+        targetOSVersion = EditorGUILayout.TextField("IOS版本支援：", targetOSVersion);
+        sdkVersion = (iOSSdkVersion)EditorGUILayout.EnumPopup("目标SDK：", sdkVersion);
+        targetDevice = (iOSTargetDevice)EditorGUILayout.EnumPopup("目标设备：", targetDevice);
+
+
+
+        EditorGUILayout.BeginHorizontal();
+
+        if (GUILayout.Button("读取"))
+        {
+            Load2IOS();
+            this.Repaint();
+        }
+
+        if (GUILayout.Button("写入"))
+        {
+            Write2IOS();
+        }
+
+        if (GUILayout.Button("打包（如有变更先写入）"))
+        {
+            var file = Build2IOS();
+            if (file.Length > 0)
+            {
+                if (EditorUtility.DisplayDialog("PackManager", "导出成功,是否导入IOS工程", "Yep", "Closs"))
+                {
+                    var ass = targetPatch + @"\Classes";
+                    var jl = targetPatch + @"\Data";
+                    var lb = targetPatch + @"\Libraries";
+
+                    var assnew = @"ForIOS\" + prodectName + @"\Classes";
+                    var jlnew = @"ForIOS\" + prodectName + @"\Data";
+                    var lbnew = @"ForIOS\" + prodectName + @"\Libraries";
+
+                    try
+                    {
+                        if (Directory.Exists(ass) && Directory.Exists(jl) && Directory.Exists(lb))
+                        {
+                            Directory.Delete(ass, true);
+                            Directory.Delete(jl, true);
+                            Directory.Delete(lb, true);
+                        }
+
+                        Directory.Move(assnew, ass);
+                        Directory.Move(jlnew, jl);
+                        Directory.Move(lbnew, lb);
+
+                        Directory.Delete("ForIOS", true);
+
+                        var file01 = ass + @"\UnityAppController.h";
+                        var file02 = ass + @"\UnityAppController.mm";
+
+                        if (File.Exists(file01) && File.Exists(file02))
+                        {
+                            File.Delete(file01);
+                            File.Delete(file02);
+                        }
+
+                        Assembly assembly = Assembly.GetAssembly(typeof(SceneView));
+                        Type logEntries = assembly.GetType("UnityEditor.LogEntries");
+                        MethodInfo clearConsoleMethod = logEntries.GetMethod("Clear");
+                        clearConsoleMethod.Invoke(new object(), null);
+
+                        Debug.Log("打包完成！");
+                        this.Close();
+
+                    }
+                    catch (System.Exception e)
+                    {
+
+                        if (EditorUtility.DisplayDialog("PackManager", e.Message, "Closs"))
+                        {
+                            this.Close();
+                        }
+                    }
+                }
+                else
+                {
+                    this.Close();
+                }
+            }
+        }
+
+        if (GUILayout.Button("关闭"))
+        {
+            this.Close();
+        }
+
+        try
+        {
+            EditorGUILayout.EndHorizontal();
+
+            EditorGUILayout.EndVertical();
+        }
+        catch (Exception)
+        {
+
+            Debug.Log("Why is always consle ?");
+        }
+
+        EditorGUILayout.LabelField("Power By YuanJI");
+    }
+
+    /// <summary>
     /// 读取相关参数
     /// </summary>
     private static void Load2Android()
@@ -204,7 +342,7 @@ public class PackManager : EditorWindow
         prodectName = Application.productName;
         qualityLevel = QualitySettings.GetQualityLevel();
 
-        targetPatch = PlayerPrefs.GetString("Editor_targetPatch" , "../../" + @"\Android\DrillMaster\");
+        targetPatch = PlayerPrefs.GetString("Editor_targetPatch" , "../../" + @"\Android\FishZoo\");
 
         packName = PlayerSettings.GetApplicationIdentifier(buildTargetGroup);
 
@@ -212,9 +350,26 @@ public class PackManager : EditorWindow
 
         targetSdkVersion = PlayerSettings.Android.targetSdkVersion;
         minSdkVersion = PlayerSettings.Android.minSdkVersion;
+
         scriptingRuntimeVersion = PlayerSettings.scriptingRuntimeVersion;
         scriptingBackend = PlayerSettings.GetScriptingBackend(buildTargetGroup);
         il2CppCompilerConfiguration = PlayerSettings.GetIl2CppCompilerConfiguration(buildTargetGroup);
+    }
+    private static void Load2IOS()
+    {
+        companyName = Application.companyName;
+        prodectName = Application.productName;
+        qualityLevel = QualitySettings.GetQualityLevel();
+
+        targetPatch = PlayerPrefs.GetString("Editor_targetPatch", "../../" + @"\Android\FishZoo\");
+
+        packName = PlayerSettings.GetApplicationIdentifier(buildTargetGroup);
+
+        script = PlayerSettings.GetScriptingDefineSymbolsForGroup(BuildTargetGroup.iOS);
+
+        targetOSVersion = PlayerSettings.iOS.targetOSVersionString;
+        targetDevice = PlayerSettings.iOS.targetDevice;
+        sdkVersion = PlayerSettings.iOS.sdkVersion;
     }
     /// <summary>
     /// 写入相关数据
@@ -237,6 +392,24 @@ public class PackManager : EditorWindow
 
         
     }
+    private static void Write2IOS()
+    {
+        PlayerSettings.companyName = companyName;
+        PlayerSettings.productName = prodectName;
+        QualitySettings.SetQualityLevel(qualityLevel);
+
+        PlayerPrefs.SetString("Editor_targetPatch", targetPatch);
+
+        PlayerSettings.SetApplicationIdentifier(buildTargetGroup, packName);
+        PlayerSettings.SetScriptingDefineSymbolsForGroup(BuildTargetGroup.iOS, script);
+        PlayerSettings.iOS.sdkVersion = sdkVersion;
+        PlayerSettings.iOS.targetDevice = targetDevice;
+        PlayerSettings.iOS.targetOSVersionString = targetOSVersion;
+
+
+
+    }
+
 
     /// <summary>
     /// 调用系统打包
@@ -245,6 +418,10 @@ public class PackManager : EditorWindow
     private static UnityEditor.Build.Reporting.BuildFile[] Build2Android()
     {
         return BuildPipeline.BuildPlayer(EditorBuildSettings.scenes, "ForAndroid", BuildTarget.Android, BuildOptions.StrictMode).files;
+    }
+    private static UnityEditor.Build.Reporting.BuildFile[] Build2IOS()
+    {
+        return BuildPipeline.BuildPlayer(EditorBuildSettings.scenes, @"ForIOS\" + prodectName, BuildTarget.iOS, BuildOptions.StrictMode).files;
     }
 
 
