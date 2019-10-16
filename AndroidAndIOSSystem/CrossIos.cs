@@ -29,6 +29,9 @@ public class CrossIos : MonoBehaviour
 
     [DllImport("__Internal")]
     public static extern void showInterstitial(int p);
+
+    [DllImport("__Internal")]
+    public static extern void showRewardBasedVideoParam(int p);
     
     [DllImport("__Internal")]
     public static extern void showRewardBasedVideo();
@@ -147,7 +150,7 @@ public class CrossIos : MonoBehaviour
     /// <summary>
     /// 播放视频广告
     /// </summary>
-    public static void ShowRewardedVideo(int entry, UnityAction watchCompletedAction,UnityAction watchStartAction = null, UnityAction watchClossAction = null)
+    public static void ShowRewardedVideo(int entry, UnityAction watchCompletedAction, UnityAction watchStartAction = null, UnityAction watchClossAction = null)
     {
         Debuger.Log("ShowRewardedVideo");
         if (!CheckInited())
@@ -158,7 +161,21 @@ public class CrossIos : MonoBehaviour
         RewardVideoOpenCallback = watchStartAction;
         RewardVideoCloseCallback = watchClossAction;
 #if UNITY_IPHONE && !UNITY_EDITOR && !SafeMode
-        AnalysisController.TraceWatchVideoComplete(entry);
+        showRewardBasedVideoParam(entry);
+#endif
+    }
+
+    public static void ShowRewardedVideo(UnityAction watchCompletedAction, UnityAction watchStartAction = null, UnityAction watchClossAction = null)
+    {
+        Debuger.Log("ShowRewardedVideo");
+        if (!CheckInited())
+        {
+            return;
+        }
+        RewardVideoCompletedAction = watchCompletedAction;
+        RewardVideoOpenCallback = watchStartAction;
+        RewardVideoCloseCallback = watchClossAction;
+#if UNITY_IPHONE && !UNITY_EDITOR && !SafeMode
         showRewardBasedVideo();
 #endif
     }
@@ -222,7 +239,7 @@ public class CrossIos : MonoBehaviour
         {
             return;
         }
-        
+
     }
 
     /// <summary>
