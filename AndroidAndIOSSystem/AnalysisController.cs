@@ -10,13 +10,10 @@ public class EventName
     public const string gameStart = gameName + "_game_start";
     public const string gameEnd = gameName + "_game_end";
     public const string levelUp = gameName + "_game_lv";
-    public const string watchVideoCompleted = gameName +
-    "_video_reward";
 
     public const string openLuckWallet = gameName + "_luck_wallet";
     public const string openLuckBox = gameName + "_luck_box";
     public const string gainLuckBalance = gameName + "_luck_balance";
-    public const string watchVideoKey = "entry";
 }
 
 public static class AnalysisController
@@ -75,16 +72,6 @@ public static class AnalysisController
         }
     }
 
-    /// <summary>
-    /// 观看完视频,事件
-    /// </summary>
-    /// <param name="reason"></param>
-    public static void TraceWatchVideoComplete(int reason)
-    {
-        Dictionary<string, string> dic = new Dictionary<string, string>();
-        dic.Add(EventName.watchVideoKey, reason.ToString());
-        TraceEvent(EventName.watchVideoCompleted, dic);
-    }
 
     public static void TraceEvent(string eventName, string jsonStr="")
     {
