@@ -23,6 +23,23 @@ public class MoceCurve2D : MonoBehaviour
         StartCoroutine(StartMoveSin());
     }
 
+    /// <summary>
+    /// 开始Sin形式移动
+    /// </summary>
+    /// <param name="speed">速度 默认0.2f</param>
+    ///<param name="xOffset">X轴偏移</param>
+    /// <param name="yOffset">Y轴偏移</param>
+    public void StartSinMove(int xOffset, int yOffset, float speed = 0.2f)
+    {
+        this.xOffset = xOffset;
+        this.yOffset = yOffset;
+
+        float vertexCount = (500f / (20f / 4.4f)) * (1/ speed); 
+
+        this.vertexCount = (int)vertexCount;
+        StartCoroutine(StartMoveSin());
+    }
+
     IEnumerator StartMoveSin()
     {
         int index = 0;
@@ -41,7 +58,13 @@ public class MoceCurve2D : MonoBehaviour
                 index = 0;
             }
             this.transform.position = new Vector3(obj.PointList[index].x, obj.PointList[index].y + offsetY, this.transform.position.z);
-            this.transform.LookAt(new Vector3(obj.PointList[index + 1].x, obj.PointList[index + 1].y + offsetY, this.transform.position.z),-Vector3.forward);
+
+            Vector3 target = new Vector3(obj.PointList[index + 1].x, obj.PointList[index + 1].y + offsetY, this.transform.position.z);
+
+            var directionTo = (target - this.transform.position).normalized;
+
+            this.transform.up = -directionTo;
+
             yield return null;
         }
     }

@@ -22,6 +22,23 @@ public class MoceCurve : MonoBehaviour
         StartCoroutine(StartMoveSin());
     }
 
+    /// <summary>
+    /// 开始Sin形式移动
+    /// </summary>
+    /// <param name="speed">速度 默认0.2f</param>
+    ///<param name="xOffset">X轴偏移</param>
+    /// <param name="zOffset">Z轴偏移</param>
+    public void StartSinMove(int xOffset, int zOffset, float speed = 0.2f)
+    {
+        this.xOffset = xOffset;
+        this.zOffset = zOffset;
+
+        float vertexCount = (500f / (20f / 4.4f)) * (1 / speed);
+
+        this.vertexCount = (int)vertexCount;
+        StartCoroutine(StartMoveSin());
+    }
+
     IEnumerator StartMoveSin()
     {
         int index = 0;
