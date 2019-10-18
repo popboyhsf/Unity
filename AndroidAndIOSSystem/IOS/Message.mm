@@ -1,9 +1,4 @@
-//
-//  Message.m
-//  Unity-iPhone
-//
-//  Created by 徐春龙 on 2019/7/24.
-//
+
 
 #import <Foundation/Foundation.h>
 
