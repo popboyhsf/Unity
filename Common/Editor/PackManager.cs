@@ -14,11 +14,11 @@ public class PackManager : EditorWindow
         Rect wr = new Rect(0, 0, 450, 500);
         PackManager window = (PackManager)EditorWindow.GetWindowWithRect(typeof(PackManager), wr, true, "PackManager");
         window.Show();
-        if(EditorUserBuildSettings.activeBuildTarget == BuildTarget.Android) Load2Android();
+        if (EditorUserBuildSettings.activeBuildTarget == BuildTarget.Android) Load2Android();
         if (EditorUserBuildSettings.activeBuildTarget == BuildTarget.iOS) Load2IOS();
     }
 
-    private static BuildTarget buildTarget = EditorUserBuildSettings.activeBuildTarget;
+    private static BuildTarget buildTarget;
 
     private static BuildTargetGroup buildTargetGroup;
 
@@ -44,6 +44,11 @@ public class PackManager : EditorWindow
     private static string targetPatch;
 
     private static string script;
+
+    private void OnEnable()
+    {
+        buildTarget = EditorUserBuildSettings.activeBuildTarget;
+    }
 
     private void OnGUI()
     {
@@ -107,7 +112,7 @@ public class PackManager : EditorWindow
         EditorGUILayout.LabelField("路径是否正确 : " + Directory.Exists(targetPatch));
         targetPatch = EditorGUILayout.TextField("项目路径:", targetPatch);
 
-        qualityLevel = EditorGUILayout.IntField("图形质量：" + QualitySettings.names[qualityLevel] + "最大：" + (QualitySettings.names.Length-1) , qualityLevel);
+        qualityLevel = EditorGUILayout.IntField("图形质量：" + QualitySettings.names[qualityLevel] + "最大：" + (QualitySettings.names.Length - 1), qualityLevel);
         qualityLevel = qualityLevel <= QualitySettings.names.Length - 1 ? qualityLevel : QualitySettings.names.Length - 1;
 
         EditorGUILayout.LabelField("Android设置：");
@@ -123,7 +128,7 @@ public class PackManager : EditorWindow
             il2CppCompilerConfiguration = (Il2CppCompilerConfiguration)EditorGUILayout.EnumPopup("打包方式：", il2CppCompilerConfiguration);
         }
 
-       
+
 
         EditorGUILayout.BeginHorizontal();
 
@@ -226,7 +231,7 @@ public class PackManager : EditorWindow
         EditorGUILayout.LabelField("路径是否正确 : " + Directory.Exists(targetPatch));
         targetPatch = EditorGUILayout.TextField("项目路径:", targetPatch);
 
-        
+
         EditorGUILayout.LabelField("IOS设置：");
 
         script = EditorGUILayout.TextField("项目注入:", script);
@@ -342,7 +347,7 @@ public class PackManager : EditorWindow
         prodectName = Application.productName;
         qualityLevel = QualitySettings.GetQualityLevel();
 
-        targetPatch = PlayerPrefs.GetString("Editor_targetPatch" , "../../" + @"\Android\FishZoo\");
+        targetPatch = PlayerPrefs.GetString("Editor_targetPatch", "../../" + @"\Android\FishZoo\");
 
         packName = PlayerSettings.GetApplicationIdentifier(buildTargetGroup);
 
@@ -382,7 +387,7 @@ public class PackManager : EditorWindow
 
         PlayerPrefs.SetString("Editor_targetPatch", targetPatch);
 
-        PlayerSettings.SetApplicationIdentifier(buildTargetGroup,packName);
+        PlayerSettings.SetApplicationIdentifier(buildTargetGroup, packName);
         PlayerSettings.SetScriptingDefineSymbolsForGroup(BuildTargetGroup.Android, script);
         PlayerSettings.Android.targetSdkVersion = targetSdkVersion;
         PlayerSettings.Android.minSdkVersion = minSdkVersion;
@@ -390,7 +395,7 @@ public class PackManager : EditorWindow
         PlayerSettings.SetScriptingBackend(buildTargetGroup, scriptingBackend);
         PlayerSettings.SetIl2CppCompilerConfiguration(buildTargetGroup, il2CppCompilerConfiguration);
 
-        
+
     }
     private static void Write2IOS()
     {
@@ -447,6 +452,6 @@ public class PackManager : EditorWindow
         Directory.Move(assnew, ass);
         Directory.Move(jlnew, jl);
         Directory.Delete("ForAndroid", true);
-        
+
     }
 }
