@@ -15,7 +15,7 @@ public class DebugerManager : MonoBehaviour
     DataKeyType[] PlayerPrefsKey;
 
     [SerializeField]
-    DebugerStruct[] DebugerBoolList;
+    List<DebugerStruct> DebugerBoolList;
 
     [SerializeField]
     UnityEvent CallChangeUI;
@@ -532,6 +532,20 @@ public class DebugerManager : MonoBehaviour
         else if (_debugType == DebugType.Debug)
         {
             GUILayout.BeginVertical("Box");
+
+            if (DebugerBoolList.Count == 0)
+            {
+                var i = GameObject.FindObjectsOfType<GameObject>();
+                foreach (var item in i)
+                {
+                    var j = item.gameObject.GetComponent<IDebuger>();
+                    if (j != null)
+                    {
+                        DebugerBoolList.Add(new DebugerStruct("无敌", item));
+                    }
+                }
+            }
+
             foreach (var item in DebugerBoolList)
             {
                 if(item.debugerObject == null) continue;
@@ -686,6 +700,12 @@ public struct DebugerStruct
 {
     public string name;
     public GameObject debugerObject;
+
+    public DebugerStruct(string name, GameObject debugerObject)
+    {
+        this.name = name;
+        this.debugerObject = debugerObject;
+    }
 }
 
 public interface IDebuger
