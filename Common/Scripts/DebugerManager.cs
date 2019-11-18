@@ -541,7 +541,7 @@ public class DebugerManager : MonoBehaviour
                     var j = item.gameObject.GetComponent<IDebuger>();
                     if (j != null)
                     {
-                        DebugerBoolList.Add(new DebugerStruct("无敌", item));
+                        DebugerBoolList.Add(new DebugerStruct(j.AllowName, item));
                     }
                 }
             }
@@ -711,4 +711,5 @@ public struct DebugerStruct
 public interface IDebuger
 {
     bool AllowDebug { get; set; }
+    string AllowName { get; }
 }
