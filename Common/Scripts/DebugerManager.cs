@@ -52,6 +52,31 @@ public class DebugerManager : MonoBehaviour
     
     private void Awake()
     {
+        string filePath = $"{Application.persistentDataPath}/Test.txt";
+
+        if (System.IO.File.Exists(filePath))
+        {
+            var io = System.IO.File.ReadAllLines(filePath);
+
+            if (io[0] == "greedisgood")
+            {
+                AllowDebugging = true;
+                Debuger.EnableLog = true;
+            }
+            else
+            {
+                AllowDebugging = false;
+                Debuger.EnableLog = false;
+                UnityEngine.Debug.LogWarning("World Is Not Good");
+            }
+        }
+        else
+        {
+            AllowDebugging = false;
+            Debuger.EnableLog = false;
+            UnityEngine.Debug.LogWarning("DebugPatch ==== " + filePath);
+        }
+
         DestroySelf();
         if(!AllowDebugging)
             Destroy(this.gameObject);
