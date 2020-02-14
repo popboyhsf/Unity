@@ -4,21 +4,27 @@ using UnityEngine;
 
 
 [ExecuteInEditMode]
-public class FackAF : MonoBehaviour, IDebuger
+public class FackAF : MonoBehaviour
 {
     [SerializeField]
     bool isAF;
-    public static bool isFackAF = false;
-
-    public bool AllowDebug { get => isAF; set => isAF = value; }
-
+    public static bool isFackAF = false; 
     void Update()
     {
         if (isFackAF != isAF)
         {
             isFackAF = isAF;
-            if (isFackAF) AnalysisController.OnAFStatusChanged?.Invoke();
-            else AnalysisController.OffAFStatusChanged?.Invoke();
+            if (isFackAF)
+            {
+                AnalysisController.OnAFStatusChanged?.Invoke();
+                AnalysisController.AfStatus = AnalysisController.AFStatus.NonOrganic;
+            }
+            else
+            {
+                AnalysisController.OffAFStatusChanged?.Invoke();
+                AnalysisController.AfStatus = AnalysisController.AFStatus.Organic;
+
+            }
         }
         
     }

@@ -24,6 +24,9 @@ public class CrossAndroid : MonoBehaviour
         //DontDestroyOnLoad(gameObject);
         CheckInited();
         GetVersionInfo();
+#if !UNITY_ANDROID
+        gameObject.SetActive(false);
+#endif
     }
 
     private void Start()
@@ -163,6 +166,59 @@ public class CrossAndroid : MonoBehaviour
         activity.Call("LogEvent", eventName, jsonStr);
     }
 
+
+    private static IIsViedoReady thisIsReadyI;
+
+    #region 请求广告
+
+    /// <summary>
+    /// 请求广告是否加载完毕
+    /// </summary>
+    /// <param name="isViedoReady">接口类</param>
+    public static void VideoIsReady(IIsViedoReady isViedoReady)
+    {
+        if (!CheckInited())
+        {
+            return;
+        }
+        activity.Call("rewardVideoIsReady");
+        thisIsReadyI = isViedoReady;
+
+    }
+
+    /// <summary>
+    /// 接收是否有广告
+    /// </summary>
+    /// <param name="status"></param>
+    public void RewardVideoIsReady(string status)
+    {
+        var isRead = bool.Parse(status);
+        thisIsReadyI?.isReady(isRead);
+    }
+
+    /// <summary>
+    /// 没有广告时等待加载完成后返回
+    /// </summary>
+    public void RewardVideoIsReadyCall()
+    {
+        thisIsReadyI?.isReady(true);
+    }
+
+    /// <summary>
+    /// 强制取消回调
+    /// </summary>
+    public static void RewardVideoCancel()
+    {
+        if (!CheckInited())
+        {
+            return;
+        }
+        activity.Call("rewardVideoCancel");
+        Debug.Log("rewardVideoCancel ====== " + thisIsReadyI);
+    }
+
+    #endregion
+
     /// <summary>
     ///  开始震动,
     /// </summary>
@@ -190,12 +246,12 @@ public class CrossAndroid : MonoBehaviour
 
     public void ShowLoadingRewardVideoWindow(string returnCode)
     {
-        ADLoading.Instance.ShowLoading();
+        //ADLoading.Instance.ShowLoading();
     }
 
     public void HideLoadingRewardVideoWindow(string returnCode)
     {
-        ADLoading.Instance.HiddenLoading();
+        //ADLoading.Instance.HiddenLoading();
     }
 
     /// <summary>

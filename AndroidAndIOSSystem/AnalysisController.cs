@@ -6,7 +6,7 @@ using UnityEngine.Events;
 
 public class EventName
 {
-    private const string gameName = "XXX";
+    private const string gameName = "fishingfantasy_WX";
     public const string gameStart = gameName + "_game_start";
     public const string gameEnd = gameName + "_game_end";
     public const string levelUp = gameName + "_game_lv";
@@ -42,6 +42,7 @@ public static class AnalysisController
             {
                 afStatus = value;
                 OnAFStatusChanged?.Invoke();
+                Debug.Log("DoOnAFStatusChanged == ");
             }
         }
     }
@@ -68,14 +69,14 @@ public static class AnalysisController
         get
         {
             if (FackAF.isFackAF) return true;
-            return MustNonOrganic || AfStatus == AFStatus.NonOrganic;
+            return MustNonOrganic || (AfStatus == AFStatus.NonOrganic);
         }
     }
 
-
     public static void TraceEvent(string eventName, string jsonStr="")
     {
-#if SafeMode
+
+#if SafeMode || Marketing
         return;
 #elif UNITY_ANDROID && !UNITY_EDITOR
         CrossAndroid.LogEvent(eventName, jsonStr);
