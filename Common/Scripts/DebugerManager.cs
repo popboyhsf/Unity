@@ -52,6 +52,9 @@ public class DebugerManager : MonoBehaviour
     
     private void Awake()
     {
+
+#if UNITY_ANDROID
+
         string filePath = $"{Application.persistentDataPath}/Test.txt";
 
         if (System.IO.File.Exists(filePath))
@@ -80,7 +83,17 @@ public class DebugerManager : MonoBehaviour
         DestroySelf();
         if(!AllowDebugging)
             Destroy(this.gameObject);
-        
+
+#elif UNITY_IPHONE
+        AllowDebugging = Application.version.IndexOf("99") >= 1;
+        Debuger.EnableLog = Application.version.IndexOf("99") >= 1;
+
+        DestroySelf();
+        if (!AllowDebugging)
+            Destroy(this.gameObject);
+#endif
+
+
     }
 
     [Conditional("DEBUG")]
@@ -583,6 +596,9 @@ public class DebugerManager : MonoBehaviour
 
                 script.AllowDebug = GUILayout.Toggle(script.AllowDebug, item.name);
             }
+
+            AdController.isDebug = GUILayout.Toggle(AdController.isDebug, "屏蔽广告");
+
             GUILayout.EndVertical();
 
         }

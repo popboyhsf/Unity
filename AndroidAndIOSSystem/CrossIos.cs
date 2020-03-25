@@ -57,7 +57,9 @@ public class CrossIos : MonoBehaviour
     [DllImport("__Internal")]
     public static extern void startVibrator(int type);
 
-
+    [DllImport("__Internal")]
+    public static extern void gameStart(bool type);
+        
 
     
 #endif
@@ -167,7 +169,7 @@ public class CrossIos : MonoBehaviour
     /// <summary>
     /// 播放视频广告
     /// </summary>
-    public static void ShowRewardedVideo(int entry, UnityAction watchCompletedAction,UnityAction watchStartAction = null, UnityAction watchClossAction = null)
+    public static void ShowRewardedVideo(int entry, UnityAction watchCompletedAction, UnityAction watchStartAction = null, UnityAction watchClossAction = null)
     {
         Debuger.Log("ShowRewardedVideo");
         if (!CheckInited())
@@ -281,6 +283,19 @@ public class CrossIos : MonoBehaviour
 #endif
 
     }
+
+    /// <summary>
+    /// 展示启动插屏
+    /// </summary>
+    /// <param name="isShow"></param>
+    public void ShowGameStartInterstitial(bool isShow)
+    {
+#if UNITY_IPHONE && !UNITY_EDITOR && !SafeMode
+            gameStart(isShow);
+            
+#endif
+    }
+
 
 
     public void ShowLoadingRewardVideoWindow(string returnCode)

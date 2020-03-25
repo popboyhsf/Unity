@@ -42,6 +42,8 @@ public class AdController
         }
     }
 
+    public static bool isDebug = false;
+
     /// <summary>
     /// 播放插屏广告
     /// </summary>
@@ -53,8 +55,10 @@ public class AdController
 
         Debug.Log("ShowInterstitial");
 
-#if UNITY_EDITOR || NoAd || SAFETY
-        return;
+        if (isDebug) return;
+
+#if UNITY_EDITOR || NoAd || SafeMode
+            return;
 #elif UNITY_ANDROID && !UNITY_EDITOR
         CrossAndroid.ShowInterstitial();
 #elif UNITY_IPHONE// && !UNITY_EDITOR
@@ -74,9 +78,7 @@ public class AdController
         watchCompletedActionSelf = watchCompletedAction;
         entrySelf = entry;
 
-        Srot.StartLimit();
 
-        Debug.Log("ShowRewardedVideo");
 
         ADLoading.Instance.Open();
 
@@ -87,6 +89,20 @@ public class AdController
 
     public static void ShowRewardedVideoCallBack()
     {
+
+        Srot.StartLimit();
+
+        Debug.Log("ShowRewardedVideo");
+
+        if (isDebug)
+        {
+            watchCompletedActionSelf?.Invoke();
+            watchCompletedActionSelf = null;
+            entrySelf = 0;
+            return;
+        }
+
+
 #if UNITY_EDITOR || SafeMode || NoAd
         watchCompletedActionSelf?.Invoke();
 
@@ -113,8 +129,9 @@ public class AdController
 
     public static void VideoIsReady(IIsViedoReady isViedoReady)
     {
-
         Debug.Log("IIsViedoReady From ==== " + isViedoReady);
+
+        if (isDebug) isViedoReady?.isReady(true);
 
 #if UNITY_EDITOR || SafeMode || NoAd
         isViedoReady?.isReady(true);
@@ -136,6 +153,16 @@ public class AdController
 #endif
     }
 
+    public static void ShowGameStartInterstitial(bool isShow)
+    {
+        if (isDebug) return;
+#if UNITY_EDITOR || SafeMode || NoAd
 
+#elif UNITY_ANDROID
+        
+#elif UNITY_IPHONE
+        CrossIos.Instance.ShowGameStartInterstitial(isShow);
+#endif
+    }
 
 }
