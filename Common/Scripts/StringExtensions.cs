@@ -15,7 +15,7 @@ public static class StringExtensions /*: ICalculator*/
     //单位
     private static string[] units = new string[]
     {
-        "","K", "M", "G", "T", "AA","AB","AC","AD","AE","AF","AG","AH","AI",
+        "","K", "M", "B", "T", "AA","AB","AC","AD","AE","AF","AG","AH","AI",
         "AJ","AK","AL","AM","AN","AO","AP","AQ","AR","AS","AT","AU","AV","AW",
         "AX","AY","AZ","BA","BB","BC","BD","BE","BF","BG","BH","BI","BJ","BK",
         "BL","BM","BN","BO","BP","BQ","BR","BS","BT","BU","BV","BW","BX","BY",
@@ -176,9 +176,13 @@ public static class StringExtensions /*: ICalculator*/
     static int divLength = 4;
     public static string Div(this string param1, string param2, string minValue="1")
     {
-        //Debug.Log(param1 + " Div " + param2);
+        //Dbg.Log(param1 + " Div " + param2);
 
-        if (param1.Less(param2))
+        if (param1.Equals(param2))
+        {
+            return "1";
+        }
+        else if (param1.Less(param2))
         {
             return minValue;
         }
@@ -188,23 +192,23 @@ public static class StringExtensions /*: ICalculator*/
         {
             prefix = param2.Substring(0, divLength);
         }
-        //Debug.Log("prefix " + prefix);
+        //Dbg.Log("prefix " + prefix);
         int multi = Mathf.RoundToInt(100000000 / int.Parse(prefix));
-        //Debug.Log("multi " + multi);
+        //Dbg.Log("multi " + multi);
         string result = param1.Mul(multi.ToString());
-        //Debug.Log("result " + result);
+        //Dbg.Log("result " + result);
 
         if (param2.Length > divLength)
         {
-            //Debug.Log("div " + (8 + param2.Length - divLength).ToString());
+            //Dbg.Log("div " + (8 + param2.Length - divLength).ToString());
             result = div(result, 8 + param2.Length - divLength);
         }
         else
         {
-            //Debug.Log("div 8");
+            //Dbg.Log("div 8");
             result = div(result, 8);
         }
-        //Debug.Log("result " + result);
+        //Dbg.Log("result " + result);
         return result;
 
     }
