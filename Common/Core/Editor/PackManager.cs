@@ -14,22 +14,8 @@ public class PackManager : EditorWindow
         Rect wr = new Rect(0, 0, 450, 500);
         PackManager window = (PackManager)EditorWindow.GetWindowWithRect(typeof(PackManager), wr, true, "PackManager");
         window.Show();
-        if (EditorUserBuildSettings.activeBuildTarget == BuildTarget.Android)
-        {
-            buildTargetGroup = BuildTargetGroup.Android;
-            Load2Android();
-        }
-        if (EditorUserBuildSettings.activeBuildTarget == BuildTarget.iOS)
-        {
-            buildTargetGroup = BuildTargetGroup.iOS;
-            Load2IOS();
-        }
-
-        var style = new GUIStyle();
-        style.normal.textColor = Color.red;
-        style.fontSize = 30;
-
-        redStyle = style;
+        if (EditorUserBuildSettings.activeBuildTarget == BuildTarget.Android) Load2Android();
+        if (EditorUserBuildSettings.activeBuildTarget == BuildTarget.iOS) Load2IOS();
     }
 
     private static BuildTarget buildTarget;
@@ -58,10 +44,6 @@ public class PackManager : EditorWindow
     private static string targetPatch;
 
     private static string script;
-
-    private static GUIStyle redStyle;
-
-    private static bool isFullPack;
 
     private void OnEnable()
     {
@@ -113,18 +95,6 @@ public class PackManager : EditorWindow
             default:
                 break;
         }
-        EditorGUILayout.BeginVertical();
-
-        EditorGUILayout.LabelField("Power By YuanJI");
-
-        EditorGUILayout.EndVertical();
-
-        EditorGUILayout.BeginVertical();
-
-        if (FackAF.isFackAF) EditorGUILayout.LabelField("是买量用户", redStyle);
-        else EditorGUILayout.LabelField("是自然用户", redStyle);
-
-        EditorGUILayout.EndVertical();
     }
 
     /// <summary>
@@ -180,10 +150,10 @@ public class PackManager : EditorWindow
             {
                 if (EditorUtility.DisplayDialog("PackManager", "导出成功,是否导入Android工程", "Yep", "Closs"))
                 {
-                    var ass = targetPatch + @"\app\src\main\assets";
+                    var ass = targetPatch + @"\app\src\main\assets\bin";
                     var jl = targetPatch + @"\app\src\main\jniLibs";
 
-                    var assnew = @"ForAndroid\" + prodectName + @"\src\main\assets";
+                    var assnew = @"ForAndroid\" + prodectName + @"\src\main\assets\bin";
                     var jlnew = @"ForAndroid\" + prodectName + @"\src\main\jniLibs";
 
                     try
@@ -243,6 +213,8 @@ public class PackManager : EditorWindow
 
             Debug.Log("Why is always consle ?");
         }
+
+        EditorGUILayout.LabelField("Power By YuanJI");
     }
 
     /// <summary>
@@ -267,7 +239,7 @@ public class PackManager : EditorWindow
         sdkVersion = (iOSSdkVersion)EditorGUILayout.EnumPopup("目标SDK：", sdkVersion);
         targetDevice = (iOSTargetDevice)EditorGUILayout.EnumPopup("目标设备：", targetDevice);
 
-        isFullPack = EditorGUILayout.Toggle("是否为完整导出：",isFullPack);
+
 
         EditorGUILayout.BeginHorizontal();
 
@@ -289,101 +261,55 @@ public class PackManager : EditorWindow
             {
                 if (EditorUtility.DisplayDialog("PackManager", "导出成功,是否导入IOS工程", "Yep", "Closs"))
                 {
+                    var ass = targetPatch + @"\Classes";
+                    var jl = targetPatch + @"\Data";
+                    var lb = targetPatch + @"\Libraries";
 
-                    if (isFullPack)
+                    var assnew = @"ForIOS\" + prodectName + @"\Classes";
+                    var jlnew = @"ForIOS\" + prodectName + @"\Data";
+                    var lbnew = @"ForIOS\" + prodectName + @"\Libraries";
+
+                    try
                     {
-                        var left = targetPatch;
-
-                        var right = @"ForIOS\" + prodectName;
-
-                        try
+                        if (Directory.Exists(ass) && Directory.Exists(jl) && Directory.Exists(lb))
                         {
-                            if (Directory.Exists(left))
-                            {
-                                Directory.Delete(left, true);
-                            }
-
-                            Directory.Move(right, left);
-
-                            if (Directory.Exists(right))
-                            {
-                                Directory.Delete(right, true);
-                            }
-
-                            Directory.Delete("ForIOS", true);
-
-                            Assembly assembly = Assembly.GetAssembly(typeof(SceneView));
-                            Type logEntries = assembly.GetType("UnityEditor.LogEntries");
-                            MethodInfo clearConsoleMethod = logEntries.GetMethod("Clear");
-                            clearConsoleMethod.Invoke(new object(), null);
-
-                            Debug.Log("打包完成！");
-                            this.Close();
-
-
+                            Directory.Delete(ass, true);
+                            Directory.Delete(jl, true);
+                            Directory.Delete(lb, true);
                         }
-                        catch (System.Exception e)
-                        {
 
-                            if (EditorUtility.DisplayDialog("PackManager", e.Message, "Closs"))
-                            {
-                                this.Close();
-                            }
+                        Directory.Move(assnew, ass);
+                        Directory.Move(jlnew, jl);
+                        Directory.Move(lbnew, lb);
+
+                        Directory.Delete("ForIOS", true);
+
+                        var file01 = ass + @"\UnityAppController.h";
+                        var file02 = ass + @"\UnityAppController.mm";
+
+                        if (File.Exists(file01) && File.Exists(file02))
+                        {
+                            File.Delete(file01);
+                            File.Delete(file02);
+                        }
+
+                        Assembly assembly = Assembly.GetAssembly(typeof(SceneView));
+                        Type logEntries = assembly.GetType("UnityEditor.LogEntries");
+                        MethodInfo clearConsoleMethod = logEntries.GetMethod("Clear");
+                        clearConsoleMethod.Invoke(new object(), null);
+
+                        Debug.Log("打包完成！");
+                        this.Close();
+
+                    }
+                    catch (System.Exception e)
+                    {
+
+                        if (EditorUtility.DisplayDialog("PackManager", e.Message, "Closs"))
+                        {
+                            this.Close();
                         }
                     }
-                    else
-                    {
-                        var ass = targetPatch + @"\Classes";
-                        var jl = targetPatch + @"\Data";
-                        var lb = targetPatch + @"\Libraries";
-
-                        var assnew = @"ForIOS\" + prodectName + @"\Classes";
-                        var jlnew = @"ForIOS\" + prodectName + @"\Data";
-                        var lbnew = @"ForIOS\" + prodectName + @"\Libraries";
-
-                        try
-                        {
-                            if (Directory.Exists(ass) && Directory.Exists(jl) && Directory.Exists(lb))
-                            {
-                                Directory.Delete(ass, true);
-                                Directory.Delete(jl, true);
-                                Directory.Delete(lb, true);
-                            }
-
-                            Directory.Move(assnew, ass);
-                            Directory.Move(jlnew, jl);
-                            Directory.Move(lbnew, lb);
-
-                            Directory.Delete("ForIOS", true);
-
-                            var file01 = ass + @"\UnityAppController.h";
-                            var file02 = ass + @"\UnityAppController.mm";
-
-                            if (File.Exists(file01) && File.Exists(file02))
-                            {
-                                File.Delete(file01);
-                                File.Delete(file02);
-                            }
-
-                            Assembly assembly = Assembly.GetAssembly(typeof(SceneView));
-                            Type logEntries = assembly.GetType("UnityEditor.LogEntries");
-                            MethodInfo clearConsoleMethod = logEntries.GetMethod("Clear");
-                            clearConsoleMethod.Invoke(new object(), null);
-
-                            Debug.Log("打包完成！");
-                            this.Close();
-
-                        }
-                        catch (System.Exception e)
-                        {
-
-                            if (EditorUtility.DisplayDialog("PackManager", e.Message, "Closs"))
-                            {
-                                this.Close();
-                            }
-                        }
-                    }
-                    
                 }
                 else
                 {
@@ -409,7 +335,7 @@ public class PackManager : EditorWindow
             Debug.Log("Why is always consle ?");
         }
 
-       
+        EditorGUILayout.LabelField("Power By YuanJI");
     }
 
     /// <summary>
@@ -440,8 +366,6 @@ public class PackManager : EditorWindow
         prodectName = Application.productName;
         qualityLevel = QualitySettings.GetQualityLevel();
 
-        isFullPack = PlayerPrefs.GetInt("PackManager_isFullPack",0) == 1;
-
         targetPatch = PlayerPrefs.GetString("Editor_targetPatch", "../../" + @"\Android\FishZoo\");
 
         packName = PlayerSettings.GetApplicationIdentifier(buildTargetGroup);
@@ -471,15 +395,13 @@ public class PackManager : EditorWindow
         PlayerSettings.SetScriptingBackend(buildTargetGroup, scriptingBackend);
         PlayerSettings.SetIl2CppCompilerConfiguration(buildTargetGroup, il2CppCompilerConfiguration);
 
+
     }
     private static void Write2IOS()
     {
         PlayerSettings.companyName = companyName;
         PlayerSettings.productName = prodectName;
         QualitySettings.SetQualityLevel(qualityLevel);
-
-        PlayerPrefs.SetInt("PackManager_isFullPack", isFullPack ? 1 : 0);
-
 
         PlayerPrefs.SetString("Editor_targetPatch", targetPatch);
 
@@ -488,6 +410,9 @@ public class PackManager : EditorWindow
         PlayerSettings.iOS.sdkVersion = sdkVersion;
         PlayerSettings.iOS.targetDevice = targetDevice;
         PlayerSettings.iOS.targetOSVersionString = targetOSVersion;
+
+
+
     }
 
 

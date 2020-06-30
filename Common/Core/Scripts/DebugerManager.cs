@@ -48,52 +48,16 @@ public class DebugerManager : MonoBehaviour
     private float _lastShowFPSTime = 0f;
     private float m_WindowScale = DefaultWindowScale;
 
+    private List<ListData> dataList = new List<ListData>();
 
-    
     private void Awake()
     {
-
-#if UNITY_ANDROID
-
-        string filePath = $"{Application.persistentDataPath}/Test.txt";
-
-        if (System.IO.File.Exists(filePath))
-        {
-            var io = System.IO.File.ReadAllLines(filePath);
-
-            if (io[0] == "greedisgood")
-            {
-                AllowDebugging = true;
-                Debuger.EnableLog = true;
-            }
-            else
-            {
-                AllowDebugging = false;
-                Debuger.EnableLog = false;
-                UnityEngine.Debug.LogWarning("World Is Not Good");
-            }
-        }
-        else
-        {
-            AllowDebugging = false;
-            Debuger.EnableLog = false;
-            UnityEngine.Debug.LogWarning("DebugPatch ==== " + filePath);
-        }
-
-        DestroySelf();
-        if(!AllowDebugging)
-            Destroy(this.gameObject);
-
-#elif UNITY_IPHONE
         AllowDebugging = Application.version.IndexOf("99") >= 1;
         Debuger.EnableLog = Application.version.IndexOf("99") >= 1;
 
         DestroySelf();
         if (!AllowDebugging)
             Destroy(this.gameObject);
-#endif
-
-
     }
 
     [Conditional("DEBUG")]
@@ -112,6 +76,7 @@ public class DebugerManager : MonoBehaviour
             Application.logMessageReceived += LogHandler;
         }
 
+        DebugDataManager.Init();
     }
     private void Update()
     {
@@ -540,18 +505,37 @@ public class DebugerManager : MonoBehaviour
                         ChangeValueDec(PlayerPrefsKey[i].type, PlayerPrefsKey[i].key);
                     }
 
+                    GUILayout.BeginHorizontal();
+                    GetValueByType(PlayerPrefsKey[i].type, PlayerPrefsKey[i].key);
+                    for (int j = 0; j < dataList.Count; j++)
+                    {
+                        if (dataList[j].key == PlayerPrefsKey[i].key)
+                        {
+                            var s = GUILayout.TextArea(dataList[j].value);
+
+                            if (GUILayout.Button("修改"))
+                            {
+                                ChangeValue(PlayerPrefsKey[i].type, PlayerPrefsKey[i].key, s);
+                            }
+                        }
+                    }
+
+                    GUILayout.EndHorizontal();
                 }
                 else
                 {
                     GUILayout.Label("不存在数据：" + PlayerPrefsKey[i].key);
-                    if(PlayerPrefsKey[i].type != DataKeyTypeEnum.stringType)
-                    if (GUILayout.Button("初始化"))
-                    {
-                        InitValue(PlayerPrefsKey[i].type, PlayerPrefsKey[i].key);
-                    }
+                    if (PlayerPrefsKey[i].type != DataKeyTypeEnum.stringType)
+                        if (GUILayout.Button("初始化"))
+                        {
+                            InitValue(PlayerPrefsKey[i].type, PlayerPrefsKey[i].key);
+                        }
                 }
                 GUILayout.EndHorizontal();
             }
+
+
+            DebugDataManager.Draw();
 
             GUILayout.EndScrollView();
 
@@ -596,9 +580,6 @@ public class DebugerManager : MonoBehaviour
 
                 script.AllowDebug = GUILayout.Toggle(script.AllowDebug, item.name);
             }
-
-            AdController.isDebug = GUILayout.Toggle(AdController.isDebug, "屏蔽广告");
-
             GUILayout.EndVertical();
 
         }
@@ -660,6 +641,24 @@ public class DebugerManager : MonoBehaviour
         }
     }
 
+    private void ChangeValue(DataKeyTypeEnum _type, string _key, string _value)
+    {
+        switch (_type)
+        {
+            case DataKeyTypeEnum.stringType:
+                PlayerPrefs.SetString(_key, _value);
+                break;
+            case DataKeyTypeEnum.floatType:
+                PlayerPrefs.SetFloat(_key, float.Parse(_value));
+                break;
+            case DataKeyTypeEnum.intType:
+                PlayerPrefs.SetInt(_key, int.Parse(_value));
+                break;
+            default:
+                break;
+        }
+    }
+
     private string GetValueByType(DataKeyTypeEnum _type, string _key)
     {
         string _tempString = "";
@@ -678,6 +677,7 @@ public class DebugerManager : MonoBehaviour
                 _tempString = "NullType";
                 break;
         }
+
         return _tempString;
     }
 
@@ -734,6 +734,20 @@ public enum DataKeyTypeEnum
     stringType,
     floatType,
     intType,
+}
+
+public struct ListData
+{
+    public string key;
+    public DataKeyTypeEnum type;
+    public string value;
+
+    public ListData(string key, DataKeyTypeEnum type, string value)
+    {
+        this.key = key;
+        this.type = type;
+        this.value = value;
+    }
 }
 
 [Serializable]

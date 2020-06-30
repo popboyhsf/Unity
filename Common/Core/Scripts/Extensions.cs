@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using Spine.Unity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -358,25 +357,6 @@ public static class Extensions
 
     #endregion
 
-
-    #region 骨骼动画
-
-    /// <summary>
-    /// 切换骨骼动画资源
-    /// </summary>
-    /// <param name="skeleton"></param>
-    /// <param name="patch">地址</param>
-    public static void ChangeSpineData(this GameObject skeleton, string patch, ref SkeletonAnimation animation)
-    {
-        var data = Resources.Load<SkeletonDataAsset>(patch);
-        if (data == null) Debuger.LogError("皮肤资源地址错误：" + patch);
-        else
-        {
-            animation = SkeletonAnimation.AddToGameObject(skeleton, data);
-        }
-    }
-
-    #endregion
 
     public static float Delta(this float number, float delta)
     {

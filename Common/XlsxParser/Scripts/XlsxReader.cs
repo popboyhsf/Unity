@@ -135,7 +135,7 @@ public static class XlsxReader
             }
             catch (Exception e)
             {
-                Dbg.LogException(e);
+                Debuger.LogError(e);
             }
         }
 

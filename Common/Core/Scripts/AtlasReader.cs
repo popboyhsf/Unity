@@ -8,7 +8,7 @@ public static class AtlasReader
 
     private static Dictionary<string, SpriteAtlas> atlasDic = new Dictionary<string, SpriteAtlas>();
 
-    private static Sprite GetIteHead(string atlas, string name)
+    public static Sprite GetIteHead(string atlas, string name)
     {
         if(!atlasDic.ContainsKey(atlas))
         {

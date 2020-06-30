@@ -47,7 +47,7 @@ public class HierachyIconManager
         
         Rect nameCheck = new Rect(selectionRect);
         nameCheck.x += 18.5f;
-        nameCheck.y += 2.2f;
+        nameCheck.y += 1.2f;
         //nameCheck.width = 2;
 
         GameObject go = EditorUtility.InstanceIDToObject(instanceID) as GameObject;
@@ -63,15 +63,6 @@ public class HierachyIconManager
             GUI.Label(rectIcon, "S");
         }
 
-        var script = go.GetComponent<IUIListener>();
-
-        if (script != null)
-        {
-            index += 1;
-            Rect rectIcon = GetRect(selectionRect, index);
-            GUI.Label(rectIcon, "U");
-        }
-
         var name = go.name.IndexOf("Manager"); ;
 
         if (name >= 0)
@@ -79,6 +70,13 @@ public class HierachyIconManager
             index += 1;
             Rect rectIcon = GetRect(selectionRect, index);
             GUI.Label(rectIcon, "M");
+        }
+
+        if (PrefabUtility.GetPrefabAssetType(go) == PrefabAssetType.Regular)
+        {
+            index += 1;
+            Rect rectIcon = GetRect(selectionRect, index);
+            GUI.Label(rectIcon, "P");
         }
 
         // 文字颜色定义 
@@ -127,12 +125,6 @@ public class HierachyIconManager
         DrawRectIcon<UnityEngine.AI.NavMeshAgent>(selectionRect, go, colorNav, ref index, ref style);
         DrawRectIcon<UnityEngine.AI.NavMeshObstacle>(selectionRect, go, colorNav, ref index, ref style);
 
-        // Network
-        DrawRectIcon<NetworkIdentity>(selectionRect, go, colorNetwork, ref index, ref style);
-        DrawRectIcon<NetworkAnimator>(selectionRect, go, colorNetwork, ref index, ref style);
-        DrawRectIcon<NetworkTransform>(selectionRect, go, colorNetwork, ref index, ref style);
-        DrawRectIcon<NetworkBehaviour>(selectionRect, go, colorNetwork, ref index, ref style);
-        DrawRectIcon<NetworkManager>(selectionRect, go, colorNetwork, ref index, ref style);
 
         // Particle
         DrawRectIcon<ParticleSystem>(selectionRect, go, colorParticle, ref index, ref style);
