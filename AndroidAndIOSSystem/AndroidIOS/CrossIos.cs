@@ -49,7 +49,7 @@ public class CrossIos : MonoBehaviour
     public static extern void hideLoadingRewardVideoWindow();
 
     [DllImport("__Internal")]
-    public static extern void isRewardVideoReady();
+    public static extern void isRewardVideoReady(bool isCash);
 
     [DllImport("__Internal")]
     public static extern void rewardVideoCancel();
@@ -57,8 +57,11 @@ public class CrossIos : MonoBehaviour
     [DllImport("__Internal")]
     public static extern void startVibrator(int type);
         
+    [DllImport("__Internal")]
+    public static extern void gameStart(bool type);     
         
-    
+    [DllImport("__Internal")]
+    public static extern void getAF();   
 #endif
 
 
@@ -73,9 +76,9 @@ public class CrossIos : MonoBehaviour
 #if UNITY_IPHONE && !UNITY_EDITOR
         Application.targetFrameRate = 60;
         gameObject.name = "CrossIosObject";
-        _instance = this;
+        
 #endif
-
+        _instance = this;
         CheckInited();
         GetVersionInfo();
     }
@@ -88,6 +91,7 @@ public class CrossIos : MonoBehaviour
     public static UnityAction RewardVideoCompletedAction;
     public static UnityAction RewardVideoOpenCallback;
     public static UnityAction RewardVideoCloseCallback;
+    public static UnityAction RewardVideoFailCallback;
 
     private static void Init()
     {
@@ -166,9 +170,10 @@ public class CrossIos : MonoBehaviour
     /// <summary>
     /// 播放视频广告
     /// </summary>
-    public static void ShowRewardedVideo(int entry, UnityAction watchCompletedAction, UnityAction watchStartAction = null, UnityAction watchClossAction = null)
+
+    public static void ShowRewardedVideo(int entry, UnityAction watchCompletedAction, UnityAction watchStartAction = null, UnityAction watchClossAction = null, UnityAction watchFailAction = null)
     {
-        Debuger.Log("RewardedVideoShow");
+        Debuger.Log("ShowRewardedVideo");
         if (!CheckInited())
         {
             return;
@@ -176,14 +181,15 @@ public class CrossIos : MonoBehaviour
         RewardVideoCompletedAction = watchCompletedAction;
         RewardVideoOpenCallback = watchStartAction;
         RewardVideoCloseCallback = watchClossAction;
+        RewardVideoFailCallback = watchFailAction;
 #if UNITY_IPHONE && !UNITY_EDITOR && !SafeMode
         showRewardBasedVideoParam(entry);
 #endif
     }
 
-    public static void ShowRewardedVideo(UnityAction watchCompletedAction, UnityAction watchStartAction = null, UnityAction watchClossAction = null)
+    public static void ShowRewardedVideo(UnityAction watchCompletedAction, UnityAction watchStartAction = null, UnityAction watchClossAction = null, UnityAction watchFailAction = null)
     {
-        Debuger.Log("RewardedVideoShow");
+        Debuger.Log("ShowRewardedVideo");
         if (!CheckInited())
         {
             return;
@@ -191,6 +197,7 @@ public class CrossIos : MonoBehaviour
         RewardVideoCompletedAction = watchCompletedAction;
         RewardVideoOpenCallback = watchStartAction;
         RewardVideoCloseCallback = watchClossAction;
+        RewardVideoFailCallback = watchFailAction;
 #if UNITY_IPHONE && !UNITY_EDITOR && !SafeMode
         showRewardBasedVideo();
 #endif
@@ -276,16 +283,36 @@ public class CrossIos : MonoBehaviour
     {
         Debuger.Log("WatchRewardVideoComplete");
 #if UNITY_IPHONE && !UNITY_EDITOR && !SafeMode
-        RewardVideoClose();
+        
         if (returnCode == "success")
             RewardVideoCompletedAction?.Invoke();
+        else
+        {
+            
+        }
+        RewardVideoFailCallback?.Invoke();
+        RewardVideoClose();
 #endif
 
     }
 
+
+    /// <summary>
+    /// 展示启动插屏
+    /// </summary>
+    /// <param name="isShow"></param>
+    public void ShowGameStartInterstitial(bool isShow)
+    {
+#if UNITY_IPHONE && !UNITY_EDITOR && !SafeMode
+            gameStart(isShow);
+            
+#endif
+    }
+
+
     public void ShowLoadingRewardVideoWindow(string returnCode)
     {
-        ADLoading.Instance.ShowLoading();
+        //ADLoading.Instance.ShowLoading();
     }
 
     public void HideLoadingRewardVideoWindow(string returnCode)
@@ -302,17 +329,16 @@ public class CrossIos : MonoBehaviour
     /// 请求广告是否加载完毕
     /// </summary>
     /// <param name="isViedoReady">接口类</param>
-    public static void VideoIsReady(IIsViedoReady isViedoReady)
+    public static void VideoIsReady(IIsViedoReady isViedoReady, bool isCash)
     {
         if (!CheckInited())
         {
             return;
         }
 #if UNITY_IPHONE && !UNITY_EDITOR && !SafeMode
-        isRewardVideoReady();
+        isRewardVideoReady(isCash);
 #endif
         thisIsReadyI = isViedoReady;
-
     }
 
     /// <summary>
@@ -351,12 +377,34 @@ public class CrossIos : MonoBehaviour
 
     #endregion
 
+
     /// <summary>
     /// af返回买量跟自然区分
     /// </summary>
     /// <param name="status"></param>
     public void AppsFlyerState(string status)
     {
-        AnalysisController.AfStatus = (AnalysisController.AFStatus)(int.Parse(status));
+        if ((AnalysisController.AFStatus)(int.Parse(status)) == AnalysisController.AFStatus.NonOrganic)
+            AnalysisController.AfStatus = (AnalysisController.AFStatus)(int.Parse(status));
+        Debug.LogWarning("AFSET === " + AnalysisController.AfStatus);
+    }
+
+
+
+    public void GetAF(float timer)
+    {
+        StartCoroutine(GetAFI(timer));
+    }
+
+    private IEnumerator GetAFI(float timer)
+    {
+        yield return new WaitForSeconds(timer);
+
+        Debug.Log("Send Massage To IOS === GetAF");
+
+#if UNITY_IPHONE && !UNITY_EDITOR && !SafeMode
+            getAF();          
+#endif
+        yield break;
     }
 }

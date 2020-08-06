@@ -4,13 +4,6 @@ using UnityEngine;
 
 public static class UtilsAndroid
 {
-    public enum IosType
-    {
-        Null = 0,
-        SMSReceived_Vibrate = 1011,
-        Vibrate = 4095,
-    }
-
     //是否开启震动
     public static bool IsVibrator
     {
@@ -23,7 +16,7 @@ public static class UtilsAndroid
     /// </summary>
     /// <param name="delayTime"></param>
     /// <param name="duration"></param>
-    public static void Vibrator(float delayTime, float duration,int type = 0)
+    public static void Vibrator(float delayTime, float duration, int type = 4095)
     {
 #if SafeMode
         return;
@@ -32,6 +25,7 @@ public static class UtilsAndroid
         {
             return;
         }
+
         long delayMillisecond = (long)(1000 * delayTime);
         long vibratorMillisecond = (long)(1000 * duration);
         long[] pattern = new long[2];
@@ -40,8 +34,8 @@ public static class UtilsAndroid
 #if UNITY_ANDROID && !UNITY_EDITOR
         CrossAndroid.StartVibrator(pattern, -1);
 #elif UNITY_IPHONE && !UNITY_EDITOR
-        if(type != 0)
-            CrossIos.Instance.StartVibrator(pattern, type);
+        CrossIos.Instance.StartVibrator(pattern, type);
 #endif
+
     }
 }

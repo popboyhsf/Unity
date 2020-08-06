@@ -8,8 +8,13 @@ public class FackAF : MonoBehaviour
 {
     [SerializeField]
     bool isAF;
-    public static bool isFackAF = false; 
-    void Update()
+    public static bool isFackAF = false;
+
+    private void Awake()
+    {
+        isFackAF = isAF;
+    }
+    private void Update()
     {
         if (isFackAF != isAF)
         {

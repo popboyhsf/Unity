@@ -4,12 +4,14 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
+
+#if !ADV2
 public class ADLoading : MonoBehaviour,IIsViedoReady
 {
     [SerializeField]
     GameObject loadingObj,failObj;
-    [SerializeField]
-    Button closs;
+    //[SerializeField]
+    //Button closs;
 
     private static ADLoading _instance;
 
@@ -21,14 +23,13 @@ public class ADLoading : MonoBehaviour,IIsViedoReady
     private void Awake()
     {
         _instance = this;
-        closs.onClick.AddListener(AdController.CancelRewardVideo);
-        closs.onClick.AddListener(HiddenLoading);
+        //closs.onClick.AddListener(AdController.CancelRewardVideo);
+        //closs.onClick.AddListener(HiddenLoading);
     }
 
-    public void Open()
+    public void Open(bool isCash)
     {
-        
-        AdController.VideoIsReady(this);
+        AdController.VideoIsReady(this, isCash);
     }
 
     public void ShowLoading()
@@ -67,6 +68,7 @@ public class ADLoading : MonoBehaviour,IIsViedoReady
             {
                 loadingObj.SetActive(false);
                 failObj.SetActive(true);
+                AdController.CancelRewardVideo();
             }
             else
             {
@@ -79,3 +81,56 @@ public class ADLoading : MonoBehaviour,IIsViedoReady
         yield break;
     }
 }
+#else
+public class ADLoading : MonoBehaviour
+{
+    [SerializeField]
+    GameObject loadingObj, failObj;
+
+
+    private static ADLoading _instance;
+
+    public static ADLoading Instance { get => _instance; }
+
+
+    private float timer = 0;
+
+    private void Awake()
+    {
+        _instance = this;
+    }
+
+    public void ShowLoading()
+    {
+        loadingObj.SetActive(true);
+        StartCoroutine(startTimer());
+    }
+    public void HiddenLoading()
+    {
+        loadingObj.SetActive(false);
+    }
+
+    IEnumerator startTimer()
+    {
+        timer = 0;
+
+        while (loadingObj.activeSelf)
+        {
+            if (timer >= 15f)
+            {
+                loadingObj.SetActive(false);
+                failObj.SetActive(true);
+                AdController.CancelShowRewardedVideo();
+            }
+            else
+            {
+                timer += Time.deltaTime;
+            }
+            yield return null;
+        }
+        yield return new WaitForSecondsRealtime(2f);
+        failObj.SetActive(false);
+        yield break;
+    }
+}
+#endif

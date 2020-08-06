@@ -4,16 +4,23 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
+
+
+public enum VideoEventName
+{
+    ClickBox,
+    RetryGame,
+    GetThree,
+    TipItem,
+    GetPower,
+}
 public class EventName
 {
-    private const string gameName = "fishingfantasy_WX";
+    private const string gameName = "_WX";
     public const string gameStart = gameName + "_game_start";
     public const string gameEnd = gameName + "_game_end";
-    public const string levelUp = gameName + "_game_lv";
 
-    public const string openLuckWallet = gameName + "_luck_wallet";
-    public const string openLuckBox = gameName + "_luck_box";
-    public const string gainLuckBalance = gameName + "_luck_balance";
+    public const string saveWallet = gameName + "_save_wallet";
 }
 
 public static class AnalysisController
@@ -62,7 +69,7 @@ public static class AnalysisController
     }
 
     /// <summary>
-    /// 是否是买量用户,默认为自然
+    /// 是否是买量用户,默认为自然 true是买量
     /// </summary>
     public static bool IsNonOrganic
     {
