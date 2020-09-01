@@ -42,12 +42,12 @@ public class GetAF : MonoBehaviour
 
     IEnumerator Delay()
     {
+        yield return new WaitForSeconds(4f);
 
 #if ADV2
 
-        yield return new WaitForSeconds(8f);
-
         AnalysisController.AfStatus = CrossAndroid.GetAF();
+
 
 #else
 
@@ -55,6 +55,23 @@ public class GetAF : MonoBehaviour
         CrossIos.Instance.GetAF(0);
 
 #endif
+
+
+        if (GoldData.giftNum.Value >= 0.1f)
+        {
+            if (!AnalysisController.IsNonOrganic)
+                AnalysisController.TraceEvent(EventName.luck_miss);
+        }
+
+        yield return new WaitForSeconds(4f);
+
+        if (FirstCheck.GetIsGameFirst("GetAF_AnalysisControllerLuckReady") && GoldData.giftNum.Value <= 0f )
+        {
+            if (AnalysisController.IsNonOrganic)
+                AnalysisController.TraceEvent(EventName.luck_ready);
+        }
+
+
 
         yield break;
     }

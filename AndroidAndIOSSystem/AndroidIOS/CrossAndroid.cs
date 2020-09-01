@@ -332,7 +332,7 @@ public class CrossAndroid : MonoBehaviour
         {
             Init();
         }
-        Debug.Log("CanInvoke is :" + (activity != null));
+        Debug.Log("CrossAndroidCanInvoke is :" + (activity != null));
         return activity != null;
     }
 
@@ -356,7 +356,10 @@ public class CrossAndroid : MonoBehaviour
         Debuger.Log("CheckInited ==== true");
     }
 
-
+    public void GetClassToUnity(string c) 
+    {
+        Debug.Log("AF平台为 ===== " + c);
+    }
 
     #region 原始版本
     /// <summary>
@@ -433,7 +436,7 @@ public class CrossAndroid : MonoBehaviour
 
     public void WatchRewardVideoFail()
     {
-        Debuger.Log("WatchRewardVideoComplete");
+        Debuger.Log("WatchRewardVideoFail");
         AdController.ShowRewardedVideoFail();
     }
 
@@ -447,7 +450,6 @@ public class CrossAndroid : MonoBehaviour
         ADLoading.Instance.HiddenLoading();
     }
     #endregion
-
 
     #region 请求广告
     private static IIsViedoReady thisIsReadyI;
@@ -495,6 +497,106 @@ public class CrossAndroid : MonoBehaviour
         }
         activity.Call("rewardVideoCancel");
         Debug.Log("rewardVideoCancel ====== " + thisIsReadyI);
+    }
+
+    #endregion
+
+    #region HW相关
+
+
+    /// <summary>
+    /// HW登陆函数
+    /// </summary>
+    public static void HWLogin()
+    {
+#if !HWMode
+        return;
+#endif
+        Debuger.Log("HWLogin Log");
+        if (!CheckInited())
+        {
+            return;
+        }
+        activity.Call("HWLogin");
+    }
+
+    public static string HWGetUserID()
+    {
+        if (!CheckInited())
+        {
+            Debuger.Log("CheckInited ==== false");
+            return "";
+        }
+        string id = activity.Call<string>("GetName");
+
+        Debuger.Log("GetName ==== " + id);
+
+        return id;
+
+
+    }
+
+    #endregion
+
+    #region 服务器抽奖
+
+    /// <summary>
+    /// 传递状态 int
+    /// </summary>
+    /// <param name="i"></param>
+    public static void PostInt(int i)
+    {
+        Debuger.Log("PostUnityPostInt === " + i);
+        if (!CheckInited())
+        {
+            return;
+        }
+        activity.Call("GetUnityPostInt", i);
+    }
+
+    /// <summary>
+    /// 奖品回调
+    /// </summary>
+    /// <param name="name"></param>
+    /// <param name="num"></param>
+    public void OnLuckCallBack(string count)
+    {
+        string name = count.Split('_')[0];
+        int num = int.Parse(count.Split('_')[1]);
+
+        Debuger.Log("抽中的奖品 === " + name + "    数量 ==== " + num);
+        if (name.Equals("goldnet"))
+        {
+
+        }
+    }
+
+    //发送请求url
+    public static void PostUrlForIcon()
+    {
+        Debuger.Log("PostUrlForIcon === ");
+        if (!CheckInited())
+        {
+            return;
+        }
+        activity.Call("GetUrlForIcon");
+    }
+
+    //接受url
+    public void GetUrlForIconCallBack(string url)
+    {
+        PostAndGetIcon.Instance.GetIcon(url);
+    }
+
+    //CashOut
+    public static void CashOut(string i = "")
+    {
+        Debuger.Log("CashOut === " + i);
+        if (!CheckInited())
+        {
+            return;
+        }
+        activity.Call("CashOut", i);
     }
 
     #endregion
@@ -547,42 +649,6 @@ public class CrossAndroid : MonoBehaviour
         return afStatus;
     }
 
-    #region HW相关
-
-
-    /// <summary>
-    /// HW登陆函数
-    /// </summary>
-    public static void HWLogin()
-    {
-#if !HWMode
-        return;
-#endif
-        Debuger.Log("HWLogin Log");
-        if (!CheckInited())
-        {
-            return;
-        }
-        activity.Call("HWLogin");
-    }
-
-    public static string HWGetUserID()
-    {
-        if (!CheckInited())
-        {
-            Debuger.Log("CheckInited ==== false");
-            return "";
-        }
-        string id = activity.Call<string>("GetName");
-
-        Debuger.Log("GetName ==== " + id);
-
-        return id;
-
-
-    }
-
-    #endregion
     public static void LogEvent(String eventName, String jsonStr)
     {
         if (!CheckInited())
@@ -590,6 +656,20 @@ public class CrossAndroid : MonoBehaviour
             return;
         }
         activity.Call("LogEvent", eventName, jsonStr);
+    }
+
+    /// <summary>
+    /// 传递礼品卡信息
+    /// </summary>
+    /// <param name="i">当前礼品卡总额</param>
+    /// <param name="j">当前礼品卡梯度</param>
+    public static void LogEvetnForTrackLuckBalance(float i, int j = 200)
+    {
+        if (!CheckInited())
+        {
+            return;
+        }
+        activity.Call("LogEvetnForTrackLuckBalance", j, i);
     }
 
 

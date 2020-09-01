@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class CashLoadingManager : MonoBehaviour
 {
@@ -12,6 +13,8 @@ public class CashLoadingManager : MonoBehaviour
     public GameObject adLoadingBack;
     public GameObject adFail;
 
+    private UnityAction watchCompletedAction;
+
     private float timer = 0;
 
     private void Awake()
@@ -21,6 +24,7 @@ public class CashLoadingManager : MonoBehaviour
 
     public void Show()
     {
+        watchCompletedAction = null;
         adLoading.SetActive(true);
         adLoadingBack.SetActive(false);
         this.StartCoroutine(startTimer());
@@ -31,6 +35,14 @@ public class CashLoadingManager : MonoBehaviour
     }
     public void ShowBack()
     {
+        adLoading.SetActive(false);
+        adLoadingBack.SetActive(true);
+        this.StopAllCoroutines();
+        this.StartCoroutine(endTimer());
+    }
+    public void ShowBack(UnityAction watchCompletedAction)
+    {
+        this.watchCompletedAction = watchCompletedAction;
         adLoading.SetActive(false);
         adLoadingBack.SetActive(true);
         this.StopAllCoroutines();
@@ -69,6 +81,7 @@ public class CashLoadingManager : MonoBehaviour
             if (timer >= 1.5f)
             {
                 adLoadingBack.SetActive(false);
+                this.watchCompletedAction?.Invoke();
             }
             else
             {

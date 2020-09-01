@@ -62,6 +62,19 @@ public class CrossIos : MonoBehaviour
         
     [DllImport("__Internal")]
     public static extern void getAF();   
+
+    [DllImport("__Internal")]
+    public static extern void GetUnityPostInt(int type);   
+
+    [DllImport("__Internal")]
+    public static extern void GetUrlForIcon();   
+
+    [DllImport("__Internal")]
+    public static extern void LogEvetnForTrackLuckBalance(int j,float i);
+
+    [DllImport("__Internal")]
+    public static extern void CashOut(string i);
+
 #endif
 
 
@@ -373,6 +386,79 @@ public class CrossIos : MonoBehaviour
         rewardVideoCancel();
 #endif
         Debug.Log("rewardVideoCancel ====== " + thisIsReadyI);
+    }
+
+    #endregion
+
+    #region 服务器抽奖
+
+    /// <summary>
+    /// 传递状态 int
+    /// </summary>
+    /// <param name="i"></param>
+    public static void PostInt(int i)
+    {
+        Debuger.Log("PostUnityPostInt === " + i);
+        if (!CheckInited())
+        {
+            return;
+        }
+#if UNITY_IPHONE && !UNITY_EDITOR && !SafeMode
+            GetUnityPostInt(i);         
+#endif
+
+    }
+
+    /// <summary>
+    /// 奖品回调
+    /// </summary>
+    /// <param name="name"></param>
+    /// <param name="num"></param>
+    public void OnLuckCallBack(string count)
+    {
+        string name = count.Split('_')[0];
+        int num = int.Parse(count.Split('_')[1]);
+
+        Debuger.Log("抽中的奖品 === " + name + "    数量 ==== " + num);
+        if (name.Equals("goldhook"))
+        {
+
+        }
+    }
+
+    //发送请求url
+    public static void PostUrlForIcon()
+    {
+        Debuger.Log("PostUrlForIcon === ");
+        if (!CheckInited())
+        {
+            return;
+        }
+#if UNITY_IPHONE && !UNITY_EDITOR && !SafeMode
+            GetUrlForIcon();         
+#endif
+
+    }
+
+    //接受url
+    public void GetUrlForIconCallBack(string url)
+    {
+        PostAndGetIcon.Instance.GetIcon(url);
+    }
+
+    //CashOut
+    public static void CashOut(string i = "")
+    {
+        Debuger.Log("CashOut === " + i);
+        if (!CheckInited())
+        {
+            return;
+        }
+
+#if UNITY_IPHONE && !UNITY_EDITOR && !SafeMode
+            CashOut(i);         
+#endif
+
     }
 
     #endregion

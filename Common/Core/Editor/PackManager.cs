@@ -180,10 +180,10 @@ public class PackManager : EditorWindow
             {
                 if (EditorUtility.DisplayDialog("PackManager", "导出成功,是否导入Android工程", "Yep", "Closs"))
                 {
-                    var ass = targetPatch + @"\app\src\main\assets";
+                    var ass = targetPatch + @"\app\src\main\assets\bin";
                     var jl = targetPatch + @"\app\src\main\jniLibs";
 
-                    var assnew = @"ForAndroid\" + prodectName + @"\src\main\assets";
+                    var assnew = @"ForAndroid\" + prodectName + @"\src\main\assets\bin";
                     var jlnew = @"ForAndroid\" + prodectName + @"\src\main\jniLibs";
 
                     try

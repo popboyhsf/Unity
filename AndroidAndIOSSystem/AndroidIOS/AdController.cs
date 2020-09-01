@@ -33,7 +33,7 @@ public class AdController
 
         if (isDebug) return;
 
-#if UNITY_EDITOR || NoAd || SAFETY
+#if UNITY_EDITOR || NoAd || SafeMode
         return;
 #elif UNITY_ANDROID && !UNITY_EDITOR
         CrossAndroid.ShowInterstitial();
@@ -186,8 +186,7 @@ public class AdController
     /// 播放插屏广告
     /// </summary>
     /// <param name="pos">0启动游戏,1切回游戏,2获取到奖励</param>
-    /// <param name="must"></param>
-    public static void ShowInterstitial(int pos)
+    public static void ShowInterstitial(int pos = 2)
     {
         if (Srot.limit > 0) return;
 
@@ -224,7 +223,7 @@ public class AdController
             return;
         }
 
-#if UNITY_EDITOR || NoAd || SAFETY
+#if UNITY_EDITOR || NoAd || SafeMode
 
         ShowRewardedVideoCallBack();
         return;
@@ -271,7 +270,6 @@ public class AdController
         CrossIos.ReqHideLoadingRewardVideoWindow();
 #endif
     }
-
 
     public static void ShowGameStartInterstitial(bool isShow)
     {

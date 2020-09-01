@@ -13,14 +13,168 @@ public enum VideoEventName
     GetThree,
     TipItem,
     GetPower,
+    SumDouble,
 }
-public class EventName
+public static class EventName
 {
-    private const string gameName = "_WX";
-    public const string gameStart = gameName + "_game_start";
-    public const string gameEnd = gameName + "_game_end";
+#if SoundMode
+    private const string gameName = "soundtrivia_wx_";
+#else
+    private const string gameName = "musictrivia_wx_";
+#endif
 
-    public const string saveWallet = gameName + "_save_wallet";
+    public const string gameStart = gameName + "game_start";
+    public const string gameEnd = gameName + "game_end";
+
+    #region 游戏界面
+    public const string screen_splash = gameName + "screen_splash";
+    public const string screen_home = gameName + "screen_home";
+    public const string screen_luck = gameName + "screen_luck";
+    public const string screen_game = gameName + "screen_game";
+    public const string screen_gameend = gameName + "screen_gameend";
+    #endregion
+
+    #region 参与游戏
+    public const string game_playtime = gameName + "game_playtime";
+    public const string game_start = gameName + "game_start";
+    public const string game_win = gameName + "game_win";
+    public const string game_fail = gameName + "game_fail";
+    public const string game_retry = gameName + "game_retry";
+    public const string energy_empty = gameName + "energy_empty";
+
+
+
+    public static string mode_name = "";
+    public static string mode_start = gameName + "mode_" + mode_name + "_start";
+    public static string mode_win = gameName + "mode_" + mode_name + "_win";
+    public static string mode_fail = gameName + "mode_" + mode_name + "_fail";
+    public static string mode_retry = gameName + "mode_" + mode_name + "_retry";
+    public static void SetModeNage(modeEnum mode)
+    {
+        switch (mode)
+        {
+            case modeEnum.normalMode:
+                mode_name = "search";
+                break;
+            case modeEnum.findMode:
+                mode_name = "find";
+                break;
+            case modeEnum.selectMode:
+                mode_name = "movie";
+                break;
+            case modeEnum.selectMode2:
+                mode_name = "music";
+                break;
+            case modeEnum.selectMode3:
+                mode_name = "sound";
+                break;
+            case modeEnum.rewardMode:
+                mode_name = "egg";
+                break;
+            case modeEnum.UnKnow:
+                mode_name = "unknow";
+                break;
+            default:
+                break;
+        }
+
+        mode_start = gameName + "mode_" + mode_name + "_start";
+        mode_win = gameName + "mode_" + mode_name + "_win";
+        mode_fail = gameName + "mode_" + mode_name + "_fail";
+        mode_retry = gameName + "mode_" + mode_name + "_retry";
+}
+    
+
+
+    /// <summary>
+    /// 累计胜利次数
+    /// </summary>
+    /// <returns></returns>
+    public static string Game_Win()
+    {
+        var i = PlayerPrefs.GetInt(gameName+ "game_win_",0);
+        i++;
+        PlayerPrefs.SetInt(gameName + "game_win_", i);
+
+        if (i >= 5 && i < 7) i = 5;
+        if (i >= 7 && i < 10) i = 7;
+        if (i >= 10 && i < 15) i = 10;
+        if (i >= 15 && i < 25) i = 15;
+        if (i >= 25 && i < 40) i = 25;
+        if (i >= 40 && i < 65) i = 40;
+        if (i >= 65 && i < 100) i = 65;
+        if (i >= 100) i = 100;
+
+        return gameName + "game_win_" + i;
+    }
+
+    /// <summary>
+    /// 累计金条金额
+    /// </summary>
+    /// <returns></returns>
+    public static string Gold()
+    {
+        var i = GoldData.goldNum.Value;
+
+        if (i >= 1 && i < 100) i = 1;
+        if (i >= 100 && i < 500) i = 100;
+        if (i >= 500 && i < 1000) i = 500;
+        if (i >= 1000 && i < 5000) i = 1000;
+        if (i >= 5000 && i < 10000) i = 5000;
+        if (i >= 10000 && i < 50000) i = 10000;
+        if (i >= 50000 && i < 100000) i = 50000;
+        if (i >= 100000) i = 100000;
+
+        return gameName + "gold_" + i;
+    }
+
+    /// <summary>
+    /// 使用道具
+    /// </summary>
+    /// <param name="tip"></param>
+    /// <returns></returns>
+    public static string Use_Item(TipItemManager.tipE tip)
+    {
+        switch (tip)
+        {
+            case TipItemManager.tipE.tip:
+                return gameName + "use_item_answer";
+            case TipItemManager.tipE.re:
+                return gameName + "use_item_change";
+            case TipItemManager.tipE.dec:
+                return gameName + "use_item_remove";
+            case TipItemManager.tipE.addT:
+                return gameName + "use_item_time";
+            default:
+                return gameName + "use_item_default";
+        }
+    }
+
+    #endregion
+
+    #region 礼品卡相关
+    public const string video_reward_paypal_game = gameName + "video_reward_paypal_game";
+    public const string video_reward_paypal_star = gameName + "video_reward_paypal_star";
+    public const string video_reward_paypal_online = gameName + "video_reward_paypal_online";
+    public const string video_reward_energy = gameName + "video_reward_energy";
+    public const string video_reward_item = gameName + "video_reward_item";
+    public const string video_reward_luckmore = gameName + "video_reward_luckmore";
+    public const string video_reward_goldX3 = gameName + "video_reward_goldX3";
+
+    public const string luck_game = gameName + "luck_game";
+    public const string luck_star = gameName + "luck_star";
+    public const string luck_online = gameName + "luck_online";
+    public const string luck_egg = gameName + "luck_egg";
+    public const string luck_agree_show = gameName + "luck_agree_show";
+    public const string luck_agree_done = gameName + "luck_agree_done";
+    public const string luck_paypal_show = gameName + "luck_paypal_show";
+    public const string luck_click_card = gameName + "luck_click_card";
+    public const string luck_miss = gameName + "luck_miss";
+    public const string luck_ready = gameName + "luck_ready";
+
+
+
+    #endregion
 }
 
 public static class AnalysisController
@@ -84,6 +238,7 @@ public static class AnalysisController
     {
 
 #if SafeMode || Marketing
+        Debuger.LogWarning("AF ====== " + eventName + "    Content === " + jsonStr);
         return;
 #elif UNITY_ANDROID && !UNITY_EDITOR
         CrossAndroid.LogEvent(eventName, jsonStr);
@@ -95,5 +250,17 @@ public static class AnalysisController
     public static void TraceEvent(string eventName, Dictionary<string, string> dic)
     {
         TraceEvent(eventName, JsonMapper.ToJson(dic));
+    }
+
+    public static void LogEvetnForTrackLuckBalance(float i, int j = 200)
+    {
+#if SafeMode || Marketing
+        Debuger.LogWarning("AF ====== LogEvetnForTrackLuckBalance" +  "    Content === " + i + "   ===== " + j);
+        return;
+#elif UNITY_ANDROID && !UNITY_EDITOR
+        CrossAndroid.LogEvetnForTrackLuckBalance(i,j);
+#elif UNITY_IPHONE && !UNITY_EDITOR
+        
+#endif
     }
 }
