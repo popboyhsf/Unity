@@ -30,7 +30,7 @@ public class CrossAndroid : MonoBehaviour
 
     private void Start()
     {
-        
+
     }
 
     private static UnityAction WatchVideoCompletedAction;
@@ -361,7 +361,7 @@ public class CrossAndroid : MonoBehaviour
         Debug.Log("AF平台为 ===== " + c);
     }
 
-    #region 原始版本
+#region 原始版本
     /// <summary>
     /// 显示Banner
     /// </summary>
@@ -449,9 +449,9 @@ public class CrossAndroid : MonoBehaviour
     {
         ADLoading.Instance.HiddenLoading();
     }
-    #endregion
+#endregion
 
-    #region 请求广告
+#region 请求广告
     private static IIsViedoReady thisIsReadyI;
     /// <summary>
     /// 请求广告是否加载完毕
@@ -499,9 +499,9 @@ public class CrossAndroid : MonoBehaviour
         Debug.Log("rewardVideoCancel ====== " + thisIsReadyI);
     }
 
-    #endregion
+#endregion
 
-    #region HW相关
+#region HW相关
 
 
     /// <summary>
@@ -536,9 +536,9 @@ public class CrossAndroid : MonoBehaviour
 
     }
 
-    #endregion
+#endregion
 
-    #region 服务器抽奖
+#region 服务器抽奖
 
     /// <summary>
     /// 传递状态 int
@@ -565,9 +565,9 @@ public class CrossAndroid : MonoBehaviour
         int num = int.Parse(count.Split('_')[1]);
 
         Debuger.Log("抽中的奖品 === " + name + "    数量 ==== " + num);
-        if (name.Equals("goldnet"))
+        if (name.Equals("Hint"))
         {
-
+            TipItemData.AddTipOne();
         }
     }
 
@@ -589,17 +589,20 @@ public class CrossAndroid : MonoBehaviour
     }
 
     //CashOut
-    public static void CashOut(string i = "")
+    public static void CashOut(float balance,string s)
     {
-        Debuger.Log("CashOut === " + i);
+        balance = (float)Math.Round(balance, 2);
+
+        Debuger.Log("CashOut === " + balance);
+        Debuger.Log("CashOut === " + s);
         if (!CheckInited())
         {
             return;
         }
-        activity.Call("CashOut", i);
+        activity.Call("CashOut", balance, s);
     }
 
-    #endregion
+#endregion
 
     /// <summary>
     ///  开始震动,

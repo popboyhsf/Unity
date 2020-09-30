@@ -25,7 +25,7 @@ public class AdController
     /// </summary>
     /// <param name="pos">0启动游戏,1切回游戏,2获取到奖励</param>
     /// <param name="must"></param>
-    public static void ShowInterstitial(int pos = 1)
+    public static void ShowInterstitial(int pos = 2)
     {
         if (Srot.limit > 0) return;
 
@@ -38,7 +38,7 @@ public class AdController
 #elif UNITY_ANDROID && !UNITY_EDITOR
         CrossAndroid.ShowInterstitial();
 #elif UNITY_IPHONE// && !UNITY_EDITOR
-        CrossIos.ShowInterstitial(1,null, null);
+        CrossIos.ShowInterstitial(pos,null, null);
 #endif
 
     }
@@ -55,7 +55,7 @@ public class AdController
         watchEnterActionSelf = watchEnterAction;
         entrySelf = entry;
 
-        if (entrySelf == RewardedVideoPos.rewardCash)
+        if (entrySelf == (int)VideoEventName.ClickBox)
         {
             ADLoading.Instance.Open(true);
         }
@@ -197,7 +197,7 @@ public class AdController
 #elif UNITY_ANDROID && !UNITY_EDITOR
         CrossAndroid.ShowInterstitial(pos);
 #elif UNITY_IPHONE// && !UNITY_EDITOR
-        CrossIos.ShowInterstitial(1,null, null);
+        CrossIos.ShowInterstitial(pos,null, null);
 #endif
 
     }

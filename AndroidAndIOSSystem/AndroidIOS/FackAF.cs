@@ -6,6 +6,7 @@ using UnityEngine;
 [ExecuteInEditMode]
 public class FackAF : MonoBehaviour
 {
+#if UNITY_EDITOR
     [SerializeField]
     bool isAF;
     public static bool isFackAF = false;
@@ -13,6 +14,11 @@ public class FackAF : MonoBehaviour
     private void Awake()
     {
         isFackAF = isAF;
+    }
+
+    private void Start()
+    {
+        AnalysisController.OnAFStatusChanged?.Invoke();
     }
     private void Update()
     {
@@ -33,4 +39,5 @@ public class FackAF : MonoBehaviour
         }
         
     }
+#endif
 }

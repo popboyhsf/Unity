@@ -73,7 +73,10 @@ public class CrossIos : MonoBehaviour
     public static extern void LogEvetnForTrackLuckBalance(int j,float i);
 
     [DllImport("__Internal")]
-    public static extern void CashOut(string i);
+    public static extern void CashOutI(float i,string j);
+
+    [DllImport("__Internal")]
+    public static extern void PushMessage();
 
 #endif
 
@@ -147,7 +150,7 @@ public class CrossIos : MonoBehaviour
     /// 显示插屏广告
     /// </summary>
     /// <param name="pos">0 表示gamestart，1表示gameresume，2表示gameended</param>
-    public static void ShowInterstitial(int pos = 0, UnityAction openCallback = null, UnityAction closeCallback = null)
+    public static void ShowInterstitial(int pos = 2, UnityAction openCallback = null, UnityAction closeCallback = null)
     {
         if (!CheckInited())
         {
@@ -232,9 +235,11 @@ public class CrossIos : MonoBehaviour
     public void RewardVideoClose()
     {
         Debug.Log(" RewardVideoClose ");
-        if (RewardVideoCloseCallback != null)
-            RewardVideoCloseCallback();
+        RewardVideoCloseCallback?.Invoke();
+        RewardVideoCompletedAction = null;
+        RewardVideoOpenCallback = null;
         RewardVideoCloseCallback = null;
+        RewardVideoFailCallback = null;
     }
 
 
@@ -261,6 +266,18 @@ public class CrossIos : MonoBehaviour
 #if UNITY_IPHONE && !UNITY_EDITOR && !SafeMode
         LogEventIOS(eventName, jsonStr);
 #endif
+    }
+
+    public static void LogEvetnForTrackLuckBalance(float i, int j)
+    {
+        if (!CheckInited())
+        {
+            return;
+        }
+#if UNITY_IPHONE && !UNITY_EDITOR && !SafeMode
+            LogEvetnForTrackLuckBalance(j, i);         
+#endif
+
     }
 
     /// <summary>
@@ -318,7 +335,7 @@ public class CrossIos : MonoBehaviour
     {
 #if UNITY_IPHONE && !UNITY_EDITOR && !SafeMode
             gameStart(isShow);
-            
+            PushMessage();
 #endif
     }
 
@@ -420,9 +437,9 @@ public class CrossIos : MonoBehaviour
         int num = int.Parse(count.Split('_')[1]);
 
         Debuger.Log("抽中的奖品 === " + name + "    数量 ==== " + num);
-        if (name.Equals("goldhook"))
+        if (name.Equals("Hint"))
         {
-
+            TipItemData.AddTipOne();
         }
     }
 
@@ -447,16 +464,20 @@ public class CrossIos : MonoBehaviour
     }
 
     //CashOut
-    public static void CashOut(string i = "")
+    public static void CashOut(float balance,string s)
     {
-        Debuger.Log("CashOut === " + i);
+        balance = (float)Math.Round(balance, 2);
+
+        Debuger.Log("CashOut === " + balance); 
+        Debuger.Log("CashOut === " + s);
+
         if (!CheckInited())
         {
             return;
         }
 
 #if UNITY_IPHONE && !UNITY_EDITOR && !SafeMode
-            CashOut(i);         
+            CashOutI(balance,s);         
 #endif
 
     }

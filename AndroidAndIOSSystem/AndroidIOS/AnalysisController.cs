@@ -14,11 +14,14 @@ public enum VideoEventName
     TipItem,
     GetPower,
     SumDouble,
+    PK,
 }
 public static class EventName
 {
 #if SoundMode
     private const string gameName = "soundtrivia_wx_";
+#elif MusicIOMode
+    private const string gameName = "musicio_wx_";
 #else
     private const string gameName = "musictrivia_wx_";
 #endif
@@ -32,6 +35,8 @@ public static class EventName
     public const string screen_luck = gameName + "screen_luck";
     public const string screen_game = gameName + "screen_game";
     public const string screen_gameend = gameName + "screen_gameend";
+    public const string screen_pkmode = gameName + "screen_pkmode";
+
     #endregion
 
     #region 参与游戏
@@ -108,6 +113,8 @@ public static class EventName
         return gameName + "game_win_" + i;
     }
 
+
+
     /// <summary>
     /// 累计金条金额
     /// </summary>
@@ -150,6 +157,35 @@ public static class EventName
         }
     }
 
+
+
+
+    public const string pk_lose = gameName + "pk_lose";
+
+    /// <summary>
+    /// 累计PK胜利次数
+    /// </summary>
+    /// <returns></returns>
+    public static string Game_Win_PK()
+    {
+        var i = PlayerPrefs.GetInt(gameName + "pk_win_", 0);
+        i++;
+        PlayerPrefs.SetInt(gameName + "pk_win_", i);
+
+        if (i >= 5 && i < 5) i = 5;
+        if (i >= 7 && i < 10) i = 7;
+        if (i >= 10 && i < 15) i = 10;
+        if (i >= 15 && i < 25) i = 15;
+        if (i >= 25 && i < 40) i = 25;
+        if (i >= 40 && i < 65) i = 40;
+        if (i >= 65 && i < 100) i = 65;
+        if (i >= 100) i = 100;
+
+        return gameName + "pk_win_" + i;
+    }
+
+
+
     #endregion
 
     #region 礼品卡相关
@@ -161,6 +197,9 @@ public static class EventName
     public const string video_reward_luckmore = gameName + "video_reward_luckmore";
     public const string video_reward_goldX3 = gameName + "video_reward_goldX3";
 
+    public const string video_reward_pktime = gameName + "video_reward_pktime";
+
+
     public const string luck_game = gameName + "luck_game";
     public const string luck_star = gameName + "luck_star";
     public const string luck_online = gameName + "luck_online";
@@ -171,7 +210,10 @@ public static class EventName
     public const string luck_click_card = gameName + "luck_click_card";
     public const string luck_miss = gameName + "luck_miss";
     public const string luck_ready = gameName + "luck_ready";
-
+    public const string luck_phone = gameName + "luck_phone";
+    public const string luck_cashout = gameName + "luck_cashout";
+    public const string luck_cashout_fromUI = gameName + "luck_cashout_fromUI";
+    public const string luck_cashout_fromList = gameName + "luck_cashout_fromList";
 
 
     #endregion
@@ -229,7 +271,9 @@ public static class AnalysisController
     {
         get
         {
+#if UNITY_EDITOR
             if (FackAF.isFackAF) return true;
+#endif
             return MustNonOrganic || (AfStatus == AFStatus.NonOrganic);
         }
     }
@@ -260,7 +304,7 @@ public static class AnalysisController
 #elif UNITY_ANDROID && !UNITY_EDITOR
         CrossAndroid.LogEvetnForTrackLuckBalance(i,j);
 #elif UNITY_IPHONE && !UNITY_EDITOR
-        
+        CrossIos.LogEvetnForTrackLuckBalance(i,j);
 #endif
     }
 }

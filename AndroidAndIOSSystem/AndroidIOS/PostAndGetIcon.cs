@@ -24,22 +24,31 @@ public class PostAndGetIcon : MonoBehaviour
 
     private void Start()
     {
-
-
+#if PAG
+        
+        PostUrlForIcon();
+#else
+        this.gameObject.SetActive(false);
+#endif
     }
 
     private void ButtonClick()
     {
+
+
+        AnalysisController.TraceEvent(EventName.luck_phone);
+
 #if UNITY_EDITOR || NoAd || SafeMode
 
+        Debug.Log("MainData.GetGameModePlayCount() == " + MainData.GetGameModePlayCount());
 
 #elif UNITY_ANDROID && !UNITY_EDITOR && PAG
 
-        CrossAndroid.PostInt(SkillData.Instance.GetPostDeep);
+        CrossAndroid.PostInt(MainData.GetGameModePlayCount());
         
-#elif UNITY_IPHONE && !UNITY_EDITOR
+#elif UNITY_IPHONE && !UNITY_EDITOR && PAG
 
-        CrossIos.PostInt(SkillData.Instance.GetPostDeep);
+        CrossIos.PostInt(MainData.GetGameModePlayCount());
 #endif
     }
 
@@ -55,8 +64,8 @@ public class PostAndGetIcon : MonoBehaviour
 
         CrossAndroid.PostUrlForIcon();
         
-#elif UNITY_IPHONE && !UNITY_EDITOR
-        CrossIos.PostUrlForIcon();
+#elif UNITY_IPHONE && !UNITY_EDITOR && PAG
+        //交给SDK层控制
 #endif
     }
 
