@@ -437,9 +437,9 @@ public class CrossIos : MonoBehaviour
         int num = int.Parse(count.Split('_')[1]);
 
         Debuger.Log("抽中的奖品 === " + name + "    数量 ==== " + num);
-        if (name.Equals("Hint"))
+        if (name.ToLower().Equals("hammer"))
         {
-            TipItemData.AddTipOne();
+            ItemSystemData.AddItem(ItemSystemData.ItemEnum.chuizi,num);
         }
     }
 
@@ -496,7 +496,18 @@ public class CrossIos : MonoBehaviour
         Debug.LogWarning("AFSET === " + AnalysisController.AfStatus);
     }
 
-
+    private bool isCheckPhy = false;
+    /// <summary>
+    /// 显示静音状态弹窗
+    /// </summary>
+    public void ShowWindowsMute()
+    {
+        if (!isCheckPhy)
+        {
+            isCheckPhy = true;
+            //PopUIManager.Instance.ShowUI(PopUIEnum.PhyMuteTip);
+        }
+    }
 
     public void GetAF(float timer)
     {

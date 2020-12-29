@@ -5,39 +5,11 @@ using UnityEngine;
 public class GetAF : MonoBehaviour
 {
 
+    BoolData isNotCallAF = new BoolData("GetAF_AnalysisControllerLuckReady", true);
+
     void Start()
     {
-#if ADV2
-
-
-#if UNITY_EDITOR || SafeMode
-        
-        return;
-#elif UNITY_ANDROID
         StartCoroutine(Delay());
-
-#elif UNITY_IPHONE
-        
-#endif
-
-
-#else
-
-
-
-#if UNITY_EDITOR || SafeMode
-        
-        return;
-#elif UNITY_ANDROID
-            
-#elif UNITY_IPHONE
-
-        StartCoroutine(Delay());
-
-#endif
-
-
-#endif
     }
 
     IEnumerator Delay()
@@ -57,19 +29,90 @@ public class GetAF : MonoBehaviour
 #endif
 
 
-        if (GoldData.giftNum.Value >= 0.1f)
+
+        if (isNotCallAF.Value)
         {
-            if (!AnalysisController.IsNonOrganic)
-                AnalysisController.TraceEvent(EventName.luck_miss);
+            if (GoldData.giftNum.Value <= 0f)
+            {
+                if (AnalysisController.IsNonOrganic)
+                {
+                    AnalysisController.TraceEvent(EventName.luck_ready + "_4");
+                    isNotCallAF.Value = false;
+                    yield break;
+                }
+            }
+
+            yield return new WaitForSeconds(6f); //6+4
+
+            if (GoldData.giftNum.Value <= 0f)
+            {
+                if (AnalysisController.IsNonOrganic)
+                {
+                    AnalysisController.TraceEvent(EventName.luck_ready + "_10");
+                    isNotCallAF.Value = false;
+                    yield break;
+                }
+            }
+
+
+            yield return new WaitForSeconds(10f); //10+6+4
+
+            if (GoldData.giftNum.Value <= 0f)
+            {
+                if (AnalysisController.IsNonOrganic)
+                {
+                    AnalysisController.TraceEvent(EventName.luck_ready + "_20");
+                    isNotCallAF.Value = false;
+                    yield break;
+                }
+            }
+
+            yield return new WaitForSeconds(10f); //10+10+6+4
+
+            if (GoldData.giftNum.Value <= 0f)
+            {
+                if (AnalysisController.IsNonOrganic)
+                {
+                    AnalysisController.TraceEvent(EventName.luck_ready + "_30");
+                    isNotCallAF.Value = false;
+                    yield break;
+                }
+            }
+
+            yield return new WaitForSeconds(30f); //30+10+10+6+4
+
+            if (GoldData.giftNum.Value <= 0f)
+            {
+                if (AnalysisController.IsNonOrganic)
+                {
+                    AnalysisController.TraceEvent(EventName.luck_ready + "_60");
+                    isNotCallAF.Value = false;
+                    yield break;
+                }
+            }
+
+            yield return new WaitForSeconds(60f); //60+30+10+10+6+4
+
+            if (GoldData.giftNum.Value <= 0f)
+            {
+                if (AnalysisController.IsNonOrganic)
+                {
+                    AnalysisController.TraceEvent(EventName.luck_ready + "_120");
+                    isNotCallAF.Value = false;
+                    yield break;
+                }
+            }
+
+        }
+        else
+        {
+            if (GoldData.giftNum.Value >= 0.1f)
+            {
+                if (!AnalysisController.IsNonOrganic)
+                    AnalysisController.TraceEvent(EventName.luck_miss);
+            }
         }
 
-        yield return new WaitForSeconds(4f);
-
-        if (FirstCheck.GetIsGameFirst("GetAF_AnalysisControllerLuckReady") && GoldData.giftNum.Value <= 0f )
-        {
-            if (AnalysisController.IsNonOrganic)
-                AnalysisController.TraceEvent(EventName.luck_ready);
-        }
 
 
 

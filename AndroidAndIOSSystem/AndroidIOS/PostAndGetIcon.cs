@@ -40,7 +40,7 @@ public class PostAndGetIcon : MonoBehaviour
 
 #if UNITY_EDITOR || NoAd || SafeMode
 
-        Debug.Log("MainData.GetGameModePlayCount() == " + MainData.GetGameModePlayCount());
+        Debug.Log("MainData.GetGameModePlayCount() == " + GoldData.fractionHistory.Value);
 
 #elif UNITY_ANDROID && !UNITY_EDITOR && PAG
 

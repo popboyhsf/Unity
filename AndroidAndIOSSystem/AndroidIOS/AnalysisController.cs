@@ -8,22 +8,19 @@ using UnityEngine.Events;
 
 public enum VideoEventName
 {
-    ClickBox,
-    RetryGame,
-    GetThree,
-    TipItem,
-    GetPower,
-    SumDouble,
-    PK,
+    GiftCard_ClickBox,
+    DoubleBonus,
+    UseOrGetItem,
+    WheelStart,
 }
 public static class EventName
 {
-#if SoundMode
-    private const string gameName = "soundtrivia_wx_";
+#if LuckyBlock
+    private const string gameName = "luckyblock_wx_";
 #elif MusicIOMode
     private const string gameName = "musicio_wx_";
 #else
-    private const string gameName = "musictrivia_wx_";
+    private const string gameName = "blockpuzzle_wx_";
 #endif
 
     public const string gameStart = gameName + "game_start";
@@ -34,6 +31,8 @@ public static class EventName
     public const string screen_home = gameName + "screen_home";
     public const string screen_luck = gameName + "screen_luck";
     public const string screen_game = gameName + "screen_game";
+    public const string screen_shop = gameName + "screen_shop";
+    public const string screen_luckywheel = gameName + "screen_luckywheel";
     public const string screen_gameend = gameName + "screen_gameend";
     public const string screen_pkmode = gameName + "screen_pkmode";
 
@@ -54,40 +53,6 @@ public static class EventName
     public static string mode_win = gameName + "mode_" + mode_name + "_win";
     public static string mode_fail = gameName + "mode_" + mode_name + "_fail";
     public static string mode_retry = gameName + "mode_" + mode_name + "_retry";
-    public static void SetModeNage(modeEnum mode)
-    {
-        switch (mode)
-        {
-            case modeEnum.normalMode:
-                mode_name = "search";
-                break;
-            case modeEnum.findMode:
-                mode_name = "find";
-                break;
-            case modeEnum.selectMode:
-                mode_name = "movie";
-                break;
-            case modeEnum.selectMode2:
-                mode_name = "music";
-                break;
-            case modeEnum.selectMode3:
-                mode_name = "sound";
-                break;
-            case modeEnum.rewardMode:
-                mode_name = "egg";
-                break;
-            case modeEnum.UnKnow:
-                mode_name = "unknow";
-                break;
-            default:
-                break;
-        }
-
-        mode_start = gameName + "mode_" + mode_name + "_start";
-        mode_win = gameName + "mode_" + mode_name + "_win";
-        mode_fail = gameName + "mode_" + mode_name + "_fail";
-        mode_retry = gameName + "mode_" + mode_name + "_retry";
-}
     
 
 
@@ -140,18 +105,18 @@ public static class EventName
     /// </summary>
     /// <param name="tip"></param>
     /// <returns></returns>
-    public static string Use_Item(TipItemManager.tipE tip)
+    public static string Use_Item(ItemSystemData.ItemEnum tip)
     {
         switch (tip)
         {
-            case TipItemManager.tipE.tip:
-                return gameName + "use_item_answer";
-            case TipItemManager.tipE.re:
-                return gameName + "use_item_change";
-            case TipItemManager.tipE.dec:
-                return gameName + "use_item_remove";
-            case TipItemManager.tipE.addT:
-                return gameName + "use_item_time";
+            case ItemSystemData.ItemEnum.chuizi:
+                return gameName + "use_item_hammer";
+            case ItemSystemData.ItemEnum.chongzhi:
+                return gameName + "use_item_roll";
+            case ItemSystemData.ItemEnum.shandian:
+                return gameName + "use_item_bliz";
+            case ItemSystemData.ItemEnum.dachuizi:
+                return gameName + "use_item_bomb";
             default:
                 return gameName + "use_item_default";
         }
@@ -188,19 +153,45 @@ public static class EventName
 
     #endregion
 
-    #region 礼品卡相关
+    #region 广告
+
     public const string video_reward_paypal_game = gameName + "video_reward_paypal_game";
-    public const string video_reward_paypal_star = gameName + "video_reward_paypal_star";
-    public const string video_reward_paypal_online = gameName + "video_reward_paypal_online";
-    public const string video_reward_energy = gameName + "video_reward_energy";
+    public const string video_reward_paypal_day = gameName + "video_reward_paypal_day";
+    public const string video_reward_paypal_click = gameName + "video_reward_paypal_click";
+
     public const string video_reward_item = gameName + "video_reward_item";
-    public const string video_reward_luckmore = gameName + "video_reward_luckmore";
-    public const string video_reward_goldX3 = gameName + "video_reward_goldX3";
+    public static string Video_Item(ItemSystemData.ItemEnum tip)
+    {
+        switch (tip)
+        {
+            case ItemSystemData.ItemEnum.chuizi:
+                return gameName + "video_reward_item_hammer";
+            case ItemSystemData.ItemEnum.chongzhi:
+                return gameName + "video_reward_item_roll";
+            case ItemSystemData.ItemEnum.shandian:
+                return gameName + "video_reward_item_bliz";
+            case ItemSystemData.ItemEnum.dachuizi:
+                return gameName + "video_reward_item_bomb";
+            default:
+                return gameName + "video_reward_item_default";
+        }
+    }
 
-    public const string video_reward_pktime = gameName + "video_reward_pktime";
 
 
+
+    public const string video_reward_luckywheel_time = gameName + "video_reward_luckywheel_time";
+
+    #endregion
+
+    #region 礼品卡相关
+
+    public const string screen_paypal_claim = gameName + "screen_paypal_claim";
+    public const string luck_freeday = gameName + "luck_freeday";
     public const string luck_game = gameName + "luck_game";
+    public const string luck_clickbox = gameName + "luck_clickbox";
+    public const string luck_pop = gameName + "luck_pop";
+    public const string luck_day = gameName + "luck_day";
     public const string luck_star = gameName + "luck_star";
     public const string luck_online = gameName + "luck_online";
     public const string luck_egg = gameName + "luck_egg";
@@ -280,9 +271,9 @@ public static class AnalysisController
 
     public static void TraceEvent(string eventName, string jsonStr="")
     {
-
-#if SafeMode || Marketing
         Debuger.LogWarning("AF ====== " + eventName + "    Content === " + jsonStr);
+
+#if SafeMode || Marketing      
         return;
 #elif UNITY_ANDROID && !UNITY_EDITOR
         CrossAndroid.LogEvent(eventName, jsonStr);

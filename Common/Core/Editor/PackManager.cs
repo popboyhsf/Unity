@@ -30,6 +30,18 @@ public class PackManager : EditorWindow
         style.fontSize = 30;
 
         redStyle = style;
+
+        var style2 = new GUIStyle();
+        style2.normal.textColor = Color.green;
+        style2.fontSize = 15;
+
+        greenStyleSmile = style2;
+
+        var style3 = new GUIStyle();
+        style3.normal.textColor = Color.red;
+        style3.fontSize = 15;
+
+        redStyleSmile = style3;
     }
 
     private static BuildTarget buildTarget;
@@ -60,6 +72,8 @@ public class PackManager : EditorWindow
     private static string script;
 
     private static GUIStyle redStyle;
+    private static GUIStyle redStyleSmile;
+    private static GUIStyle greenStyleSmile;
 
     private static bool isFullPack;
 
@@ -139,7 +153,13 @@ public class PackManager : EditorWindow
         prodectName = EditorGUILayout.TextField("项目名:", prodectName);
         packName = EditorGUILayout.TextField("包名:", packName);
 
-        EditorGUILayout.LabelField("路径是否正确 : " + Directory.Exists(targetPatch));
+        var _s = Directory.Exists(targetPatch).ToString();
+
+            
+        if(Directory.Exists(targetPatch)) EditorGUILayout.LabelField("路径是否正确 : " + _s, greenStyleSmile);
+        else EditorGUILayout.LabelField("路径是否正确 : " + _s, redStyleSmile);
+
+
         targetPatch = EditorGUILayout.TextField("项目路径:", targetPatch);
 
         qualityLevel = EditorGUILayout.IntField("图形质量：" + QualitySettings.names[qualityLevel] + "最大：" + (QualitySettings.names.Length - 1), qualityLevel);
@@ -180,8 +200,8 @@ public class PackManager : EditorWindow
             {
                 if (EditorUtility.DisplayDialog("PackManager", "导出成功,是否导入Android工程", "Yep", "Closs"))
                 {
-                    var ass = targetPatch + @"\app\src\main\assets\bin";
-                    var jl = targetPatch + @"\app\src\main\jniLibs";
+                    var ass = targetPatch + @"app\src\main\assets\bin";
+                    var jl = targetPatch + @"app\src\main\jniLibs";
 
                     var assnew = @"ForAndroid\" + prodectName + @"\src\main\assets\bin";
                     var jlnew = @"ForAndroid\" + prodectName + @"\src\main\jniLibs";

@@ -55,7 +55,7 @@ public class AdController
         watchEnterActionSelf = watchEnterAction;
         entrySelf = entry;
 
-        if (entrySelf == (int)VideoEventName.ClickBox)
+        if (entrySelf == (int)VideoEventName.GiftCard_ClickBox)
         {
             ADLoading.Instance.Open(true);
         }

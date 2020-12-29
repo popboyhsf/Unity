@@ -565,10 +565,11 @@ public class CrossAndroid : MonoBehaviour
         int num = int.Parse(count.Split('_')[1]);
 
         Debuger.Log("抽中的奖品 === " + name + "    数量 ==== " + num);
-        if (name.Equals("Hint"))
+        if (name.ToLower().Equals("hammer"))
         {
-            TipItemData.AddTipOne();
+            ItemSystemData.AddItem(ItemSystemData.ItemEnum.chuizi,num);
         }
+
     }
 
     //发送请求url
