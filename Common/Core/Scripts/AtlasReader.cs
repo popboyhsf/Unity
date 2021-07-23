@@ -19,6 +19,7 @@ public static class AtlasReader
 
         var spr = atlasDic[atlas].GetSprite(name);
         if (spr) return spr;
+        else Debuger.LogWarning("Missing "+ atlas + " Image Name === " + name);
         return null;
     }
 }

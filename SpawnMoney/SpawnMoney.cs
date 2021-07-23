@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 public class SpawnMoney : MonoBehaviour
 {
@@ -28,9 +29,7 @@ public class SpawnMoney : MonoBehaviour
     [Header("[UnityObj]")]
     public SpriteRenderer prefab; //复制的预设
 
-    //--------------- private -------------
-    Vector3 _startPos;
-    Transform parentOfCurrency;
+    private GameObject obj;
 
     private void Start()
     {
@@ -39,30 +38,21 @@ public class SpawnMoney : MonoBehaviour
 
 
     //--------------- function ------------
-    public void BoombToCollectCurrency(Transform from,int count, Vector3 to)
+    public void BoombToCollectCurrency(Vector3 startPos, int count, Vector3 to, UnityAction onFlyEnded = null,float offsetScale = 1f)
     {
+        obj = new GameObject("parentOfCurrency");
+        obj.transform.position = startPos;
+        obj.transform.localScale *= offsetScale;
 
-        _startPos = from.position;
-        var obj = CreateParent(from);
         int coinCount = Mathf.Clamp(count, minIcon, maxIcon);
 
         obj.AddComponent<SpawnMoneyLisner>().Init(this, coinCount, to);
 
         var timer = timeToSpawn * coinCount + timeToBoom + timeToStop + timeToCollect + 0.5f;
 
-
-        Destroy(obj, timer);
+        obj.AddComponent<DelayDestroy>().Init(timer, onFlyEnded);
     }
-   
 
-    GameObject CreateParent(Transform from)
-    {
-        GameObject obj = new GameObject("parentOfCurrency");
-        parentOfCurrency = obj.transform;
-        parentOfCurrency.SetParent(from);
-        parentOfCurrency.position = _startPos;
-        return obj;
-    }
 
 
 

@@ -55,10 +55,64 @@ public static class Utils
         return randomList;
     }
 
+    public static string floatToData(this float self,bool useFix = false)
+    {
+        TimeSpan ts = new TimeSpan(0, 0, Convert.ToInt32(self));
+        string str = "";
+        if (useFix)
+        {
+            if (ts.Hours > 0)
+            {
+                str = ts.Hours.ToString("00") + ": " + ts.Minutes.ToString("00") + ": " + ts.Seconds.ToString("00");
+            }
+            if (ts.Hours == 0 && ts.Minutes > 0)
+            {
+                str = ts.Minutes.ToString("00") + ":" + ts.Seconds.ToString("00");
+            }
+            if (ts.Hours == 0 && ts.Minutes == 0)
+            {
+                str = ts.Seconds.ToString("00");
+            }
+        }
+        else
+        {
+            str = ts.Minutes.ToString("00") + ":" + ts.Seconds.ToString("00");
+        }
+
+        return str;
+    }
+
+    public static string doubleToData(this double self, bool useFix = false)
+    {
+        TimeSpan ts = new TimeSpan(0, 0, Convert.ToInt32(self));
+        string str = "";
+        if (useFix)
+        {
+            if (ts.Hours > 0)
+            {
+                str = ts.Hours.ToString("00") + ": " + ts.Minutes.ToString("00") + ": " + ts.Seconds.ToString("00");
+            }
+            if (ts.Hours == 0 && ts.Minutes > 0)
+            {
+                str = ts.Minutes.ToString("00") + ":" + ts.Seconds.ToString("00");
+            }
+            if (ts.Hours == 0 && ts.Minutes == 0)
+            {
+                str = ts.Seconds.ToString("00");
+            }
+        }
+        else
+        {
+            str = ts.Minutes.ToString("00") + ":" + ts.Seconds.ToString("00");
+        }
+        return str;
+    }
+
     public static int RandomOne()
     {
         return Random(0, 1) > 0 ? 1 : -1;
     }
+
 
     private static string AESKey = "fjkasdjJdA4178A0";
 
@@ -107,4 +161,18 @@ public static class Utils
         return Encoding.UTF8.GetString(resultArray);
     }
 
+
+    public static string ChangeDataToD(string strData)
+    {
+        decimal dData = 0.0M;
+        if (strData.Contains("E"))
+        {
+            dData = decimal.Parse(strData, System.Globalization.NumberStyles.Float);
+        }
+        else
+        {
+            return strData;
+        }
+        return dData.ToString();
+    }
 }

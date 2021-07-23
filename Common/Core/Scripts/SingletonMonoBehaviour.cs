@@ -23,7 +23,6 @@ public class SingletonMonoBehaviour<T> : OptimizedMonoBehaviour where T : Compon
 
     protected void Awake()
     {
-        DontDestroyOnLoad(this);
         Init();
     }
 

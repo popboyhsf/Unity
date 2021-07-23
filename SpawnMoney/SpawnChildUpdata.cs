@@ -4,26 +4,31 @@ using UnityEngine;
 
 public class SpawnChildUpdata : MonoBehaviour
 {
-
-    public float aniTime = 0.03f;
+    public float aniTime = 0.07f;
     public SpriteRenderer sprite;
     public List<Sprite> sprites = new List<Sprite>();
 
+    float spendTime = 0;
+    int spriteIndex = 0;
+
     private void Start()
     {
-        StartCoroutine(Up());
+        ChangeSprite();
     }
 
-    IEnumerator Up()
+    private void Update()
     {
-        while (true)
+        spendTime += Time.deltaTime;
+        if (spendTime > aniTime)
         {
-            foreach (var item in sprites)
-            {
-                sprite.sprite = item;
-                yield return new WaitForSecondsRealtime(aniTime);
-            }
+            ChangeSprite();
         }
+    }
 
+    private void ChangeSprite()
+    {
+        sprite.sprite = sprites[spriteIndex];
+        spriteIndex = (spriteIndex + 1) % sprites.Count;
+        spendTime = 0;
     }
 }
