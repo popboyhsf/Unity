@@ -17,7 +17,7 @@ public sealed class CheatableAttribute : Attribute
 
 public static class DebugDataManager
 {
-    private static Dictionary<string, DebugData> debugDataDic = new Dictionary<string, DebugData>();
+    public static Dictionary<string, DebugData> debugDataDic { get; private set; } = new Dictionary<string, DebugData>();
 
     public class DebugData
     {
@@ -337,6 +337,13 @@ public class ListData<T> : PlayerPrefsData
     {
         List<T> temp = Value;
         temp.Remove(t);
+        Value = temp;
+    }
+
+    public void Clear()
+    {
+        List<T> temp = Value;
+        temp.Clear();
         Value = temp;
     }
 
