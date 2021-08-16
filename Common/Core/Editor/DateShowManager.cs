@@ -24,7 +24,7 @@ public class DateShowManager : EditorWindow
         EditorGUILayout.LabelField("Power By YuanJI");
     }
 
-
+    private Vector2 _scrollLogView = Vector2.zero;
     private static Dictionary<string, DebugDataManager.DebugData> debugDataDic = new Dictionary<string, DebugDataManager.DebugData>();
 
 
@@ -39,6 +39,8 @@ public class DateShowManager : EditorWindow
 
     private void Draw()
     {
+        _scrollLogView = GUILayout.BeginScrollView(_scrollLogView, "Box", GUILayout.Height(450));
+
         foreach (var debugData in debugDataDic.Values)
         {
             GUILayout.BeginHorizontal();
@@ -53,6 +55,8 @@ public class DateShowManager : EditorWindow
             GUILayout.EndHorizontal();
 
         }
+
+        GUILayout.EndScrollView();
     }
 
 
