@@ -8,10 +8,32 @@ public enum SoundType
 {
     //背景音乐
     BGMain,
+    ClickButton,
+    RongBox,
+    SpawnNewLineWithCoin,
+    WinUI,
+    WheelUI,
+    WheelGetUI,
+    FailedUI,
+    BreakLink,
+    BreakIce,
+    BreakRockWithHole,
+    HoleDecCount,
+    BreakNormalWithHole,
+    RubberDecCount,
+    ChangeNormal,
+    DoubleSmallGet,
+    DoubleSmallSpawn,
+    SingleBigGet,
+    PointAdd,
+    StopTime,
+    ReStartTime,
+    BreakLinkItemUse,
+    RandomItemUse,
 }
 
 
-public class SoundController : SingletonManager<SoundController>
+public class SoundController : SingletonMonoBehaviour<SoundController>
 {
     //是否开启声音
     public bool IsSoundOn
@@ -39,7 +61,7 @@ public class SoundController : SingletonManager<SoundController>
     //背景音乐
     private AudioSource musicAudioSource;
     //音效
-    private ComponentPool<AudioSource> audioSourcePool = new ComponentPool<AudioSource>();
+    private ComponentPool<AudioSource> audioSourcePool = new ComponentPool<AudioSource>(null,null,"音效");
 
     //音频路径
     private Dictionary<SoundType, string> audioClipPaths = new Dictionary<SoundType, string>();
@@ -144,6 +166,7 @@ public class SoundController : SingletonManager<SoundController>
         {
             audioSource.loop = false;
             audioSource.Pause();
+            audioSource.Stop();
             audioSourcePool.Release(audioSource);
         }
     }
@@ -200,7 +223,10 @@ public class SoundController : SingletonManager<SoundController>
         musicAudioSource.mute = false;
     }
 
-
+    public void ChangeMusicVolume(float i)
+    {
+        musicAudioSource.volume = i;
+    }
 
 }
 

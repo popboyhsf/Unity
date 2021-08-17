@@ -9,9 +9,9 @@ public class ComponentPool<T>: ObjectPool<T> where T:Component,new ()
     CreateDelegate createAction;
 
 
-    public ComponentPool() : base(null, null)
+    public ComponentPool(UnityAction<T> actionOnGet, UnityAction<T> actionOnRelease,string name) : base(actionOnGet, actionOnRelease)
     {
-
+        Debuger.Log("创建了 " + name + " 对象池");
     }
 
 
