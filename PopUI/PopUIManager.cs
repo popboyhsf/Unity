@@ -2,13 +2,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class PopUIManager : MonoBehaviour
 {
     [SerializeField]
     GameObject self;
-    [SerializeField]
-    List<PopUIListC> popUIList = new List<PopUIListC>();
 
 
     private Dictionary<int, PopUIBase> popUIDic = new Dictionary<int, PopUIBase>();
@@ -25,12 +24,16 @@ public class PopUIManager : MonoBehaviour
 
     public Dictionary<int, PopUIBase> GetPopUIDic { get => popUIDic;}
 
+    public UnityAction BeforShowAction;
+    public UnityAction AfterHiddenAction;
+
     private void Awake()
     {
         _instance = this;
-        foreach (var item in popUIList)
+        foreach (Transform item in self.transform)
         {
-            popUIDic.Add((int)item.UIEnum,item.UIBase);
+            PopUIBase _base = item.GetComponent<PopUIBase>();
+            popUIDic.Add((int)_base.thisPopUIEnum, _base);
         }
 
         self.SetActive(false);
@@ -40,12 +43,14 @@ public class PopUIManager : MonoBehaviour
     {
         self.SetActive(true);
         PopUISound(uIEnum);
+        if (UIBase(uIEnum).UseBaseBeforActive) BeforShowAction?.Invoke();
         UIBase(uIEnum).ShowUI();
     }
 
     public void HiddenUI(PopUIEnum uIEnum)
     {
-        UIBase(uIEnum).HiddenUI();
+        if (UIBase(uIEnum).UseBaseAfterActive) AfterHiddenAction?.Invoke();
+        UIBase(uIEnum).HiddenUIAI();
     }
 
     public void HiddenUIForAni()
@@ -58,6 +63,7 @@ public class PopUIManager : MonoBehaviour
         return UIBase(uIEnum) as T;
     }
 
+
     private PopUIBase UIBase(PopUIEnum uIEnum)
     {
         return popUIDic[(int)uIEnum];
@@ -66,23 +72,17 @@ public class PopUIManager : MonoBehaviour
     private void PopUISound(PopUIEnum uIEnum)
     {
 
+        
     }
 
     public int ActiveUINum()
     {
         var i = 0;
-        foreach (var item in popUIList)
+        foreach (var item in popUIDic.Values)
         {
-            if (item.UIBase.gameObject.activeSelf) i++;
+            if (item.gameObject.activeSelf) i++;
         }
         return i;
     }
 
-}
-
-[Serializable]
-public class PopUIListC
-{
-    public PopUIEnum UIEnum;
-    public PopUIBase UIBase;
 }

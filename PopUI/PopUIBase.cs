@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public abstract class PopUIBase : MonoBehaviour
 {
     [SerializeField]
-    Animator ani;
+    protected Animator ani;
     [SerializeField]
     protected GameObject self;
 
@@ -14,20 +14,18 @@ public abstract class PopUIBase : MonoBehaviour
 
     protected float aniTime = 0.38f;
 
+    public abstract PopUIEnum thisPopUIEnum { get; }
+
+    public virtual bool UseBaseBeforActive { get; } = false;
+    public virtual bool UseBaseAfterActive { get; } = false;
+
     /// <summary>
     /// 打开之前
     /// </summary>
     public abstract void BeforShow();
-    /// <summary>
-    /// 打开之后
-    /// </summary>
 
-    public virtual void AfterShow()
-    {
 
-    }
-
-    public void ShowUI()
+    public virtual void ShowUI()
     {
         BeforShow();
         foreach (var item in buttonlist)
@@ -35,12 +33,27 @@ public abstract class PopUIBase : MonoBehaviour
             item.interactable = true;
         }
         self.SetActive(true);
-        AfterShow();
     }
 
-    public void HiddenUIWithOutHiddeParent()
+    /// <summary>
+    /// 有超过一个（不包含自我）存在时则走WithOut路线 
+    /// </summary>
+    public void HiddenUIAI()
     {
+        var i = PopUIManager.Instance.ActiveUINum();
+        if (i >= 2)
+        {
+            HiddenUIWithOutHiddeParent();
+        }
+        else
+        {
+            HiddenUI();
 
+        }
+
+    }
+    private void HiddenUIWithOutHiddeParent()
+    {
         if (!ani)
         {
             AniCallBack2();
@@ -57,7 +70,7 @@ public abstract class PopUIBase : MonoBehaviour
 
     }
 
-    public void HiddenUI()
+    private void HiddenUI()
     {
         if (!ani)
         {
@@ -72,23 +85,7 @@ public abstract class PopUIBase : MonoBehaviour
             }
             Invoke("AniCallBack", aniTime);
         }
-
-    }
-
-    /// <summary>
-    /// 有超过一个（不包含自我）存在时则走WithOut路线 
-    /// </summary>
-    public void HiddenUIAI()
-    {
-        var i = PopUIManager.Instance.ActiveUINum();
-        if (i >= 2)
-        {
-            HiddenUIWithOutHiddeParent();
-        }
-        else
-        {
-            HiddenUI();
-        }
+       
     }
 
     private void AniCallBack()
@@ -102,6 +99,8 @@ public abstract class PopUIBase : MonoBehaviour
         self.SetActive(false);
         AfterHiddenUI();
     }
+
+
 
     /// <summary>
     /// 关闭之后
