@@ -468,7 +468,9 @@ public class DictionaryData<TKey, TValue> : PlayerPrefsData, ICollection<KeyValu
 
     public void Clear()
     {
-        Value = new Dictionary<TKey, TValue>();
+        Dictionary<TKey, TValue> temp = Value;
+        temp.Clear();
+        Value = temp;
     }
 
     public bool Contains(KeyValuePair<TKey, TValue> item)
