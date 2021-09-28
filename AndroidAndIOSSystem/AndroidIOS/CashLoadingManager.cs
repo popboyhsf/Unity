@@ -14,6 +14,7 @@ public class CashLoadingManager : MonoBehaviour
     public GameObject adFail;
 
     private UnityAction watchCompletedAction;
+    private UnityAction watchFailedAction;
 
     private float timer = 0;
 
@@ -22,9 +23,12 @@ public class CashLoadingManager : MonoBehaviour
         _instance = this;
     }
 
-    public void Show()
+    public void Show(UnityAction watchFailed = null)
     {
         watchCompletedAction = null;
+        watchFailedAction = null;
+
+        watchFailedAction = watchFailed;
         adLoading.SetActive(true);
         adLoadingBack.SetActive(false);
         this.StartCoroutine(startTimer());
@@ -59,6 +63,7 @@ public class CashLoadingManager : MonoBehaviour
             {
                 adLoading.SetActive(false);
                 adFail.SetActive(true);
+                watchFailedAction?.Invoke();
                 AdController.CancelShowRewardedVideo();
             }
             else

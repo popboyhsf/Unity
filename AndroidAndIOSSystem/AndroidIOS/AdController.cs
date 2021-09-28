@@ -27,7 +27,7 @@ public class AdController
     /// <param name="must"></param>
     public static void ShowInterstitial(int pos = 2)
     {
-        if (Srot.limit > 0) return;
+        //if (Srot.limit > 0) return;
 
         Debug.Log("ShowInterstitial");
 
@@ -41,6 +41,30 @@ public class AdController
         CrossIos.ShowInterstitial(pos,null, null);
 #endif
 
+    }
+
+
+    /// <summary>
+    /// 播放插屏广告
+    /// </summary>
+    /// <param name="pos">0启动游戏,1切回游戏,2获取到奖励</param>
+    /// <param name="must"></param>
+    public static void ShowInterstitial(UnityAction watchCompletedAction, int pos = 2, UnityAction watchFailAction = null)
+    {
+        //if (Srot.limit > 0) return;
+
+        Debug.Log("ShowInterstitial");
+
+        if (isDebug) return;
+
+#if UNITY_EDITOR || NoAd || SafeMode
+        return;
+#elif UNITY_ANDROID && !UNITY_EDITOR
+        CrossAndroid.ShowInterstitial();
+#elif UNITY_IPHONE// && !UNITY_EDITOR
+        CrossIos.ShowInterstitial(pos,null, null);
+#endif
+        //TODO 还没写IOS方面的交互 记得写
     }
 
     /// <summary>
@@ -182,13 +206,15 @@ public class AdController
     private static UnityAction watchFailActionSelf;
     private static UnityAction watchEnterActionSelf;
 
+    private static UnityAction watchICompletedActionSelf;
+    private static UnityAction watchIFailActionSelf;
     /// <summary>
     /// 播放插屏广告
     /// </summary>
     /// <param name="pos">0启动游戏,1切回游戏,2获取到奖励</param>
     public static void ShowInterstitial(int pos = 2)
     {
-        if (Srot.limit > 0) return;
+        //if (Srot.limit > 0) return;
 
         if (isDebug) return;
 
@@ -200,6 +226,54 @@ public class AdController
         CrossIos.ShowInterstitial(pos,null, null);
 #endif
 
+    }
+
+    /// <summary>
+    /// 播放插屏广告带有回调
+    /// </summary>
+    /// <param name="pos">0启动游戏,1切回游戏,2获取到奖励</param>
+    public static void ShowInterstitial(UnityAction watchCompletedAction, int pos = 2, UnityAction watchFailAction = null)
+    {
+        //if (Srot.limit > 0) return;
+
+        watchICompletedActionSelf = watchCompletedAction;
+        watchIFailActionSelf = watchFailAction;
+
+        if (isDebug)
+        {
+            watchICompletedActionSelf?.Invoke();
+            watchICompletedActionSelf = null;
+            watchIFailActionSelf = null;
+            return;
+        }
+
+#if UNITY_EDITOR || NoAd || SafeMode
+        ShowInterstitialCallBack();
+        return;
+#elif UNITY_ANDROID && !UNITY_EDITOR
+        CrossAndroid.ShowInterstitial(pos);
+#elif UNITY_IPHONE// && !UNITY_EDITOR
+        CrossIos.ShowInterstitial(pos,null, null);
+#endif
+
+    }
+
+    public static void ShowInterstitialCallBack()
+    {
+
+        Debug.Log("ShowInterstitialCallBack");
+        watchICompletedActionSelf?.Invoke();
+        watchICompletedActionSelf = null;
+        watchIFailActionSelf = null;
+    }
+
+    public static void ShowInterstitialFail()
+    {
+
+        Debug.Log("ShowInterstitialFail");
+        watchIFailActionSelf?.Invoke();
+        watchICompletedActionSelf = null;
+        watchIFailActionSelf = null;
     }
 
     /// <summary>
