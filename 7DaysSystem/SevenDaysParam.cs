@@ -1,29 +1,56 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
+using I2.Loc;
 
 public class SevenDaysParam : MonoBehaviour
 {
-    private bool isGet = false;
 
-    public GameObject on, off;
+    [SerializeField]
+    List<GameObject> now ,on, off = new List<GameObject>();
+    [SerializeField]
+    Animator ani;
+    [SerializeField]
+    Image icon;
+    [SerializeField]
+    TextMeshProUGUI numT,dayT;
 
-    public Animator ani;
-
-    public bool IsGet
+    public void Init(Sprite sprite,int num,int day)
     {
-        get => isGet;
-        set
-        {
-            isGet = value;
-            on.SetActive(!isGet);
-            off.SetActive(isGet);
-        }
+        //if (icon) icon.sprite = sprite;
+        if (numT) numT.text = I2Language.Instance.ChangeMoney(num, false);
+        if (dayT && dayT.GetComponent<LocalizationParamsManager>()) dayT.GetComponent<LocalizationParamsManager>().SetParameterValue("X", day.ToString("0"));
+    }
+
+    public void IsGet()
+    {
+
+        on.ForEach(i => i.SetActive(true));
+        off.ForEach(i => i.SetActive(false));
+        now.ForEach(i => i.SetActive(false));
+
+    }
+
+    public void IsNotGet()
+    {
+        on.ForEach(i => i.SetActive(false));
+        off.ForEach(i => i.SetActive(true));
+        now.ForEach(i => i.SetActive(false));
+    }
+    
+    public void IsNow()
+    {
+        on.ForEach(i => i.SetActive(false));
+        off.ForEach(i => i.SetActive(false));
+        now.ForEach(i => i.SetActive(true));
     }
 
     public void PlayGetAni()
     {
-        ani.SetTrigger("Get");
+        if(ani)ani.SetTrigger("Get");
+        IsGet();
     }
 
 }

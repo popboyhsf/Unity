@@ -1,76 +1,122 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class SevenDaysManager : MonoBehaviour
 {
+    private static SevenDaysManager _instance;
+
     public GameObject self;
 
-
     public List<SevenDaysParam> aniList = new List<SevenDaysParam>();
+
+    [SerializeField]
+    List<SevenDayIcon> sevenDayIcons = new List<SevenDayIcon>();
+
+    [SerializeField]
+    TextMeshProUGUI lun, baifen;
+
+    [SerializeField]
+    float clickAniWait, clickAniWaitForWait = 0f;
 
     public Button click;
 
     public Animator ani;
 
+    private bool isShowed = false;
+
+    public static SevenDaysManager Instance { get => _instance; }
+    public bool IsShowed { get => isShowed; }
 
     private void Awake()
     {
         click.onClick.AddListener(Click);
+        _instance = this;
     }
 
-
-
-    private void Start()
+    public void Show()
     {
-        if (SevenDaysData.GetTime() >= 24) Init();
+        if (isShowed || !AnalysisController.IsNonOrganic) return;
+        if (SevenDaysData.GetTime() >= 1 && SevenDaysData.GetCount() < aniList.Count)
+        {
+            Init();
+            PopUIManager.Instance.ShowUI(PopUIEnum.signUI);
+            isShowed = true;
+            return;
+        }
+
+        if (SevenDaysData.GetTime() <= 0)
+        {
+            if (!GoldData.IsGet.Value)
+            {
+                PopUIManager.Instance.ShowUI(PopUIEnum.GiftCard_CashOut);
+                isShowed = true;
+            }
+        }
     }
 
     private void Click()
     {
-        click.interactable = false;
+        NetWorkTimerManager.Instance.PostTimer(()=> {
 
-        var index = SevenDaysData.GetCount();
+            click.interactable = false;
 
-        switch (index)
-        {
-            case 0:
-                break;
-            case 1:
-                break;
-            case 2:
-                break;
-            case 3:
-                break;
-            case 4:
-                break;
-            case 5:
-                break;
-            case 6:
-                break;
+            var index = Mathf.Clamp(SevenDaysData.GetCount(), 0, 6);
 
-            default:
-                break;
-        }
+            var count = SevenDaysData.SevenDayDataL[index];
+
+            SevenDaysData.flopEnum f = (SevenDaysData.flopEnum)Enum.Parse(typeof(SevenDaysData.flopEnum), count.count);
+
+            var num = SevenDaysData.GetNum(index);
+
+            switch (f)
+            {
+                case SevenDaysData.flopEnum.Gift:
+                    GoldData.AddGift(num, true, true);
+                    break;
+                case SevenDaysData.flopEnum.Unkonw:
+                    Debuger.LogError("签到奖励内容出错，请检查 === " + num);
+                    break;
+                default:
+                    break;
+            }
 
 
-        aniList[index].PlayGetAni();
-        SevenDaysData.SetTime();
-        SevenDaysData.SetCoun();
-        Invoke("WaitForAni", 1.0f);
+
+            aniList[index].PlayGetAni();
+            SevenDaysData.SetTime();
+            SevenDaysData.SetCoun();
+
+            GiftCardAchievementData.mission3.Value++;
+
+            AnalysisController.TraceEvent(EventName.luck_dayily);
+
+            Invoke("WaitForAni", clickAniWait);
+
+
+        });
 
     }
 
     private void WaitForAni()
     {
-        ani.SetTrigger("Closs");
-        Invoke("AniCallBack", 0.65f);
+        if (ani) ani.SetTrigger("Closs");
+        Invoke("AniCallBack", clickAniWaitForWait);
     }
 
     private void AniCallBack()
     {
         self.SetActive(false);
+
+        if (!GoldData.IsGet.Value) 
+            NetWorkTimerManager.Instance.PostTimer(() => {
+
+                PopUIManager.Instance.ShowUI(PopUIEnum.GiftCard_CashOut);
+
+            });
     }
 
     private void Init()
@@ -79,32 +125,37 @@ public class SevenDaysManager : MonoBehaviour
 
         self.SetActive(true);
 
-        var count = Mathf.Min(SevenDaysData.GetCount(), aniList.Count-1) ;
+        var count = Mathf.Min(SevenDaysData.GetCount(), aniList.Count - 1);
+
+        var _dayC = 1;
 
         for (int i = 0; i < aniList.Count; i++)
         {
-            if(i<count)
-                aniList[i].IsGet = true;
+            if (i < count)
+                aniList[i].IsGet();
             else
-                aniList[i].IsGet = false;
+            {
+                if (i == count)
+                    aniList[i].IsNow();
+                else
+                    aniList[i].IsNotGet();
+
+            }           
+            sevenDayIcons.ForEach(j => {
+                var countA = SevenDaysData.SevenDayDataL[i];
+                if (countA.count.Equals(j.flopEnum.ToString()))
+                {
+                    var s = j.sprite;
+                    aniList[i].Init(s, SevenDaysData.GetNum(i), _dayC++);
+                }
+            });
+
         }
-    }
 
-
-
-
-    //三个调用函数
-    private void GetMoney(long money)
-    {
-        MoneyManager.Instance.CallBackAMoney(money,1);
-    }
-    private void GetNewHook()
-    {
+        if (lun) lun.text = (SevenDaysData.GetLunCount()+1).ToString("0");
+        if (baifen) baifen.text = ((SevenDaysData.GetLunCount() + 1) * 100) + "%";
 
     }
-    private void GetGoleHook()
-    {
-        BSetBoxData.Instance.SetIsDouble = true;
-        Player.Instance.HookToGold();
-    }
+
+
 }
