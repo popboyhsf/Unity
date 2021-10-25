@@ -65,7 +65,7 @@ public static class SevenDaysData
     {
         if (PlayerPrefs.GetInt(flag + timeFlag, -1) == -1)
             return 1;
-        var i = (int)(NetWorkTimerManager.Instance.dateTime - new DateTime(1970, 01, 01)).TotalDays;
+        var i = (int)(DateTime.Now - new DateTime(1970, 01, 01)).TotalDays;
         return Mathf.Max(i - PlayerPrefs.GetInt(flag + timeFlag, i) , 0);
     }
 
@@ -74,7 +74,7 @@ public static class SevenDaysData
     /// </summary>
     public static void SetTime()
     {
-        var i = (int)(NetWorkTimerManager.Instance.dateTime - new DateTime(1970, 01, 01)).TotalDays;
+        var i = (int)(DateTime.Now - new DateTime(1970, 01, 01)).TotalDays;
         PlayerPrefs.SetInt(flag + timeFlag, i);
     }
 

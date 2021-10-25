@@ -26,10 +26,7 @@ public class SevenDaysManager : MonoBehaviour
 
     public Animator ani;
 
-    private bool isShowed = false;
-
     public static SevenDaysManager Instance { get => _instance; }
-    public bool IsShowed { get => isShowed; }
 
     private void Awake()
     {
@@ -39,65 +36,47 @@ public class SevenDaysManager : MonoBehaviour
 
     public void Show()
     {
-        if (isShowed || !AnalysisController.IsNonOrganic) return;
+        if (!AnalysisController.IsNonOrganic) return;
         if (SevenDaysData.GetTime() >= 1 && SevenDaysData.GetCount() < aniList.Count)
         {
             Init();
             PopUIManager.Instance.ShowUI(PopUIEnum.signUI);
-            isShowed = true;
-            return;
-        }
-
-        if (SevenDaysData.GetTime() <= 0)
-        {
-            if (!GoldData.IsGet.Value)
-            {
-                PopUIManager.Instance.ShowUI(PopUIEnum.GiftCard_CashOut);
-                isShowed = true;
-            }
         }
     }
 
     private void Click()
     {
-        NetWorkTimerManager.Instance.PostTimer(()=> {
+        click.interactable = false;
 
-            click.interactable = false;
+        var index = Mathf.Clamp(SevenDaysData.GetCount(), 0, 6);
 
-            var index = Mathf.Clamp(SevenDaysData.GetCount(), 0, 6);
+        var count = SevenDaysData.SevenDayDataL[index];
 
-            var count = SevenDaysData.SevenDayDataL[index];
+        SevenDaysData.flopEnum f = (SevenDaysData.flopEnum)Enum.Parse(typeof(SevenDaysData.flopEnum), count.count);
 
-            SevenDaysData.flopEnum f = (SevenDaysData.flopEnum)Enum.Parse(typeof(SevenDaysData.flopEnum), count.count);
+        var num = SevenDaysData.GetNum(index);
 
-            var num = SevenDaysData.GetNum(index);
-
-            switch (f)
-            {
-                case SevenDaysData.flopEnum.Gift:
-                    GoldData.AddGift(num, true, true);
-                    break;
-                case SevenDaysData.flopEnum.Unkonw:
-                    Debuger.LogError("签到奖励内容出错，请检查 === " + num);
-                    break;
-                default:
-                    break;
-            }
+        switch (f)
+        {
+            case SevenDaysData.flopEnum.Gift:
+                GoldData.AddGift(num, true, true);
+                break;
+            case SevenDaysData.flopEnum.Unkonw:
+                Debuger.LogError("签到奖励内容出错，请检查 === " + num);
+                break;
+            default:
+                break;
+        }
 
 
 
-            aniList[index].PlayGetAni();
-            SevenDaysData.SetTime();
-            SevenDaysData.SetCoun();
+        aniList[index].PlayGetAni();
+        SevenDaysData.SetTime();
+        SevenDaysData.SetCoun();
 
-            GiftCardAchievementData.mission3.Value++;
+        GiftCardAchievementData.mission3.Value++;
 
-            AnalysisController.TraceEvent(EventName.luck_dayily);
-
-            Invoke("WaitForAni", clickAniWait);
-
-
-        });
+        Invoke("WaitForAni", clickAniWait);
 
     }
 
@@ -110,13 +89,6 @@ public class SevenDaysManager : MonoBehaviour
     private void AniCallBack()
     {
         self.SetActive(false);
-
-        if (!GoldData.IsGet.Value) 
-            NetWorkTimerManager.Instance.PostTimer(() => {
-
-                PopUIManager.Instance.ShowUI(PopUIEnum.GiftCard_CashOut);
-
-            });
     }
 
     private void Init()
