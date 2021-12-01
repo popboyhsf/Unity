@@ -1,7 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Data;
+using System.IO;
+using UnityEditor;
 using UnityEditor.Experimental.AssetImporters;
 using UnityEngine.Events;
+using UnityEngine;
 
 namespace XlsxParser
 {
@@ -16,6 +19,37 @@ namespace XlsxParser
         }
     }
 
+    public class XlsxImporterEditer : EditorWindow
+    {
+        const string fullPath = "Assets/Designs/Xlsx" + "/";
+
+        [MenuItem("Tools/YuanJi/XlsxImporter")]
+        public static void ImportAsset()
+        {
+            //获取指定路径下面的所有资源文件  
+            if (Directory.Exists(fullPath))
+            {
+                DirectoryInfo direction = new DirectoryInfo(fullPath);
+                FileInfo[] files = direction.GetFiles("*", SearchOption.AllDirectories);
+
+                //Debug.Log(files.Length);
+
+                for (int i = 0; i < files.Length; i++)
+                {
+                    if (files[i].Name.EndsWith(".xlsx"))
+                    {
+                        XlsxReader.Excute(files[i].FullName);
+                        
+                    }
+                    
+                }
+
+                Debug.Log("重新根据xlsx文件生成Json");
+            }
+
+            
+        }
+    }
 }
 
 
