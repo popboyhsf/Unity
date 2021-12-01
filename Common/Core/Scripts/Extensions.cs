@@ -413,6 +413,29 @@ public static class Extensions
         }
     }
 
+    public static string ToPriceStringNoDot(this int num)
+    {
+        if (num > 1000000000)
+        {
+            int head = num / 1000000000;
+            return head + "G";
+        }
+        else if (num > 1000000)
+        {
+            int head = num / 1000000;
+            return head + "M";
+        }
+        else if (num > 1000)
+        {
+            int head = num / 1000;
+            return head + "K";
+        }
+        else
+        {
+            return num.ToString();
+        }
+    }
+
     public static string ToPriceString(this long num)
     {
         if (num > 1000000000)

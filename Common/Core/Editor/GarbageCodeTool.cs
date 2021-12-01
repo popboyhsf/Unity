@@ -43,7 +43,7 @@ public class GarbageCodeTool : EditorWindow
 	private static string  codeFilePath=                                 //已有C#代码路径
 		UnityEngine.Application.dataPath + "/Script"; 
     //生成C#垃圾代码
-	[MenuItem("Tools/生成C#垃圾代码")]
+	[MenuItem("Tools/垃圾话/生成C#垃圾代码")]
     static void GenerateGarbageCode() {
         isGenerateXcode = false;
 
@@ -182,7 +182,7 @@ public class GarbageCodeTool : EditorWindow
     }
 
     //生成Xcode垃圾代码
-	[MenuItem("Tools/生成Xcode垃圾代码")]
+	[MenuItem("Tools/垃圾话/生成Xcode垃圾代码")]
     static void GenerateXCodeGarbageCodes()
     {
         isGenerateXcode = true;
@@ -287,7 +287,7 @@ public class GarbageCodeTool : EditorWindow
 		EditorUtility.DisplayDialog("xcode垃圾代码", "生成完毕！", "确定");
     }
 
-	[MenuItem("Tools/C#加入混淆代码")]
+	[MenuItem("Tools/垃圾话/C#加入混淆代码")]
 
 	public  static void addGarbageCodeForExistCSFile() {
 		#if !UNITY_IPHONE

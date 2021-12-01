@@ -5,17 +5,18 @@ using UnityEditor;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using UnityEditor.Animations;
 
 public class CusEditor
 {
-    [MenuItem("CusEditor/GameData/ClearPlayerPrefs(清理玩家数据) &c")]
+    [MenuItem("Tools/GameData/ClearPlayerPrefs(清理玩家数据) &c")]
     public static void ClearPlayerPrefs()
     {
         PlayerPrefs.DeleteAll();
         PlayerPrefs.Save();
     }
 
-    [MenuItem("CusEditor/GameObject/SwithcGameObjectVisible(切换物体显隐状态) &q")]
+    [MenuItem("Tools/GameObject/SwithcGameObjectVisible(切换物体显隐状态) &q")]
     public static void SetObjActive()
     {
         GameObject[] selectObjs = Selection.gameObjects;
@@ -37,7 +38,7 @@ public class CusEditor
     /// 使用方法:
     /// 右键Controller选择CusTool/Nest AnimClips in Controller即可
     /// </summary>
-    [MenuItem("Assets/CusEditor/Animation/Merge AnimClips to Controller(将AnimClips移到Animator Controller中)")]
+    [MenuItem("Assets/Tools/Animation/Merge AnimClips to Controller(将AnimClips移到Animator Controller中)")]
     static public void MergeAnimClips()
     {
         UnityEditor.Animations.AnimatorController anim_controller = null;
@@ -74,8 +75,49 @@ public class CusEditor
 
     }
 
+
+    [MenuItem("Assets/Tools/Animation/Separate(将AnimClips与Animator Controller分离)")]
+    public static void SeparateFromController()
+    {
+        if (Selection.activeObject)
+        {
+            AnimationClip clip = (AnimationClip)Selection.activeObject;
+            if (clip)
+            {
+                string clipPath = AssetDatabase.GetAssetPath(clip);
+                if (clipPath.EndsWith(".controller"))
+                {
+                    AnimatorController controller = (AnimatorController)AssetDatabase.LoadAssetAtPath(clipPath, typeof(AnimatorController));
+                    string controllerPath = AssetDatabase.GetAssetPath(controller);
+                    //寻找引用该Clip的State
+
+                    string newPath = clipPath.Remove(clipPath.LastIndexOf("/") + 1);
+                    newPath += clip.name + ".anim";
+                    var newClip = Object.Instantiate(clip);
+                    AssetDatabase.CreateAsset(newClip, newPath);
+                    AssetDatabase.RemoveObjectFromAsset(clip);
+                    GameObject.DestroyImmediate(clip);
+                    AssetDatabase.SaveAssets();
+                }
+            }
+        }
+    }
+
+    [MenuItem("Assets/Tools/RenameOrder(给选取的所有物体从1到N重命名)", false, 100)]
+    public static void RenameOrder()
+    {
+        Object[] objects = Selection.objects;
+        List<Object> objectList = new List<Object>(objects);
+        objectList.Sort((a, b) => { return (int.Parse(a.name) - int.Parse(b.name)); });
+        for (int i = 0; i < objectList.Count; i++)
+        {
+            var acAssetPath = AssetDatabase.GetAssetPath(objectList[i]);
+            AssetDatabase.RenameAsset(acAssetPath, (i + 1).ToString());
+        }
+    }
+
     #region FindReferences
-    [MenuItem("Assets/CusEditor/Find References", false, 10)]
+    [MenuItem("Assets/Tools/Find References", false, 10)]
     static private void Find()
     {
         EditorSettings.serializationMode = SerializationMode.ForceText;

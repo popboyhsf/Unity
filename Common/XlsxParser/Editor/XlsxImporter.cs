@@ -32,19 +32,18 @@ namespace XlsxParser
                 DirectoryInfo direction = new DirectoryInfo(fullPath);
                 FileInfo[] files = direction.GetFiles("*", SearchOption.AllDirectories);
 
-                //Debug.Log(files.Length);
 
                 for (int i = 0; i < files.Length; i++)
                 {
                     if (files[i].Name.EndsWith(".xlsx"))
                     {
                         XlsxReader.Excute(files[i].FullName);
-                        
+                        Debug.Log("重新生成："+ files[i].FullName);
                     }
                     
                 }
 
-                Debug.Log("重新根据xlsx文件生成Json");
+                Debug.Log("重新根据xlsx文件生成Json结束");
             }
 
             

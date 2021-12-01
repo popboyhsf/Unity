@@ -33,8 +33,15 @@ public static class JsonStructureLoader
         }
         catch (NullReferenceException)
         {
-
-            Debug.LogError("Json Read Name Is Null By " + encrptName);
+            if (encrptName.IndexOf("stage") >= 0 || encrptName.IndexOf("ghost") >= 0)
+            {
+                Debug.LogWarning("缺少关卡 = " + encrptName.Substring(6));
+            }
+            else
+            {
+                Debug.LogError("Json Read Name Is Null By " + encrptName);
+            }
+                
             return null;
         }
 #endif
