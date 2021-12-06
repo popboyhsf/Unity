@@ -10,7 +10,7 @@ public class PopUIManager : MonoBehaviour
     GameObject self;
 
 
-    private Dictionary<int, PopUIBase> popUIDic = new Dictionary<int, PopUIBase>();
+    private Dictionary<string, PopUIBase> popUIDic = new Dictionary<string, PopUIBase>();
 
     private static PopUIManager _instance;
 
@@ -22,7 +22,7 @@ public class PopUIManager : MonoBehaviour
         }
     }
 
-    public Dictionary<int, PopUIBase> GetPopUIDic { get => popUIDic;}
+    public Dictionary<string, PopUIBase> GetPopUIDic { get => popUIDic;}
 
     public UnityAction BeforShowAction;
     public UnityAction AfterHiddenAction;
@@ -33,7 +33,7 @@ public class PopUIManager : MonoBehaviour
         foreach (Transform item in self.transform)
         {
             PopUIBase _base = item.GetComponent<PopUIBase>();
-            popUIDic.Add((int)_base.thisPopUIEnum, _base);
+            popUIDic.Add(_base.thisPopUIEnum.ToString(), _base);
         }
 
         self.SetActive(false);
@@ -42,13 +42,28 @@ public class PopUIManager : MonoBehaviour
     public void ShowUI(PopUIEnum uIEnum)
     {
         self.SetActive(true);
-        PopUISound(uIEnum);
+        if (UIBase(uIEnum) == null) return;
+        if (UIBase(uIEnum).UseBaseBeforActive) BeforShowAction?.Invoke();
+        UIBase(uIEnum).ShowUI();
+    }
+
+    public void ShowUI(string uIEnum)
+    {
+        self.SetActive(true);
+        if (UIBase(uIEnum) == null) return;
         if (UIBase(uIEnum).UseBaseBeforActive) BeforShowAction?.Invoke();
         UIBase(uIEnum).ShowUI();
     }
 
     public void HiddenUI(PopUIEnum uIEnum)
     {
+        if (UIBase(uIEnum) == null) return;
+        if (UIBase(uIEnum).UseBaseAfterActive) AfterHiddenAction?.Invoke();
+        UIBase(uIEnum).HiddenUIAI();
+    }
+    public void HiddenUI(string uIEnum)
+    {
+        if (UIBase(uIEnum) == null) return;
         if (UIBase(uIEnum).UseBaseAfterActive) AfterHiddenAction?.Invoke();
         UIBase(uIEnum).HiddenUIAI();
     }
@@ -63,16 +78,29 @@ public class PopUIManager : MonoBehaviour
         return UIBase(uIEnum) as T;
     }
 
+    public T SpawnUI<T>(string uIEnum) where T : PopUIBase
+    {
+        return UIBase(uIEnum) as T;
+    }
 
     private PopUIBase UIBase(PopUIEnum uIEnum)
     {
-        return popUIDic[(int)uIEnum];
+        if (!popUIDic.ContainsKey(uIEnum.ToString()))
+        {
+            Debuger.LogError("不含有："+ uIEnum.ToString());
+            return null;
+        }
+        return popUIDic[uIEnum.ToString()];
     }
 
-    private void PopUISound(PopUIEnum uIEnum)
+    private PopUIBase UIBase(string uIEnum)
     {
-
-        
+        if (!popUIDic.ContainsKey(uIEnum))
+        {
+            Debuger.LogError("不含有：" + uIEnum);
+            return null;
+        }
+        return popUIDic[uIEnum.ToString()];
     }
 
     public int ActiveUINum()
