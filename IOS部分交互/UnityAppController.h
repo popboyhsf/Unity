@@ -6,13 +6,13 @@
 
 #import <OSAttributionStatistics/OSAttributionStatistics.h>
 #import <AdMediationMax/AdMediationMax.h>
-#import <LuckDrawSDK/LuckDrawSDK.h>
+//#import <LuckDrawSDK/LuckDrawSDK.h>
 
 @class UnityView;
 @class UnityViewControllerBase;
 @class DisplayConnection;
 
-@interface UnityAppController : NSObject<UIApplicationDelegate,AppsFlyerConversionListener, AdManagerDelegate,LuckDrawManagerDelegate>
+@interface UnityAppController : NSObject<UIApplicationDelegate,AppsFlyerConversionListener, AdManagerDelegate>
 {
     UnityView*          _unityView;
     CADisplayLink*      _displayLink;

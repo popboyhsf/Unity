@@ -7,7 +7,7 @@
 
 #import <Foundation/Foundation.h>
 #import <OSAttributionStatistics/OSAttributionStatistics.h>
-#import <LuckDrawSDK/LuckDrawSDK.h>
+//#import <LuckDrawSDK/LuckDrawSDK.h>
 #import <AdMediationMax/AdMediationMax.h>
 #import <AudioToolbox/AudioToolbox.h>
 
@@ -121,22 +121,28 @@ extern "C" {
         //if(isAppsFlyerReturn)
         //UnitySendMessage("CrossIosObject", "AppsFlyerState",  [NSString stringWithFormat:@"%d",status].UTF8String );
         //else CLog(@"appsFlayerIsOrganicIsSafeChannel is Fail . Wait for AF");
-        [LuckDrawManager getEventEntryRes];
+        //[LuckDrawManager getEventEntryRes];
             
-            int result = [AppsFlyerProxy getPhoneLanguage];
+            LanguageEnum result = [AppsFlyerProxy getPhoneLanguage];
             NSString* resStr;
             switch (result) {
-                case 1:
-                    resStr = @"1";
+                case LANG_JP:
+                    resStr = @"JP";
                     break;
-                case 2:
-                    resStr = @"2";
+                case LANG_KR:
+                    resStr = @"KR";
+                    break;
+                case LANG_ZHTW:
+                    resStr = @"EN";
+                    break;  
+                case LANG_OTH:
+                    resStr = @"EN";
                     break;
                 default:
-                    resStr = @"0";
+                    resStr = @"EN";
                     break;
             }
-            CLog(@"LanguageResStr:%@",resStr);
+            CLog(@"LanguageResStr === %@",resStr);
             UnitySendMessage("CrossIosObject","ReturnContry", resStr.UTF8String);
         }];
 }
@@ -144,7 +150,7 @@ extern "C" {
 void GetUnityPostInt(int type){
     
     CLog(@"点击回报_%i",type);
-    [LuckDrawManager showLuckDraw:type];
+    //[LuckDrawManager showLuckDraw:type];
     UnityPause(true);
     [AdManager hideBannerAd];
 }
@@ -159,6 +165,12 @@ void CashOutI(float i,const char* s){
 
 void GetUrlForIcon(){
     //SDK 控制
+}
+    
+void GetTimerFromUnity(){
+    NSLog(@"GetTimerFromUnity_AS");
+    [AdManager getServerTime];
+        
 }
 
 void LogEvetnForTrackLuckBalance(int j,float i){

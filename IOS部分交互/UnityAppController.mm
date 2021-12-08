@@ -42,7 +42,6 @@
 #import <FBAudienceNetwork/FBAdSettings.h>
 #import <OSAttributionStatistics/OSAttributionStatistics.h>
 #import <AdMediationMax/AdMediationMax.h>
-#import <LuckDrawSDK/LuckDrawSDK.h>
 #import <AppLovinSDK/AppLovinSDK.h>
 #import <FBAudienceNetwork/FBAudienceNetwork.h>
 
@@ -307,9 +306,9 @@ extern "C" void UnityRequestQuit()
     /// @param appId App Store 上app上架地址的 appId
     /// @param gameName AppsFlyer使用的统计前缀，需跟SDK统一。
     /// @param delegate id
-    [LuckDrawManager instanceInithWithDelegate:self];
+    //[LuckDrawManager instanceInithWithDelegate:self];
     
-    [AppsFlyerProxy instanceInitWithKey:@"SFmpoiTG8y4MzCSPePPpsP" appId:@"1554231917" gameName:@"number" delegate:self];
+    [AppsFlyerProxy instanceInitWithKey:@"SFmpoiTG8y4MzCSPePPpsP" appId:@"1564717086" gameName:@"numbermerge" delegate:self];
     //初始化 广告SDK
     [FBAdSettings setAdvertiserTrackingEnabled:YES];
     [AdManager instanceInitWithTestMode:YES delegate:self];
@@ -442,7 +441,7 @@ extern "C" void UnityRequestQuit()
     int status = 0;//模拟买量
     if(isSafeChannel && isSafeCounty) status = 1;
     UnitySendMessage("CrossIosObject", "AppsFlyerState",  [NSString stringWithFormat:@"%d",status].UTF8String );
-    [LuckDrawManager getEventEntryRes];
+    //[LuckDrawManager getEventEntryRes];
 }
 
 - (void)onAppsFlyerReturnFailure:(NSString *)failure
@@ -453,6 +452,35 @@ extern "C" void UnityRequestQuit()
 {
     CLog(@"map is %@", map);
 }
+
+- (void)serverLocalTimeCallback:(NSString *)localTime
+{
+    if(localTime == nil)
+    {
+        UnitySendMessage("CrossIosObject", "GetTimer",  "");
+    }
+    else
+    {
+        UnitySendMessage("CrossIosObject", "GetTimer",  localTime.UTF8String);
+    }
+}
+
+- (void)netWorkStatus:(BOOL)available
+{
+    int status = 0;
+    if(available)
+    {
+        status = 0;
+    }
+    else
+    {
+        status = 1;
+    }
+    
+    UnitySendMessage("CrossIosObject", "ReturnNetState",  [NSString stringWithFormat:@"%d",status].UTF8String );
+    
+}
+
 // Object ->>>>>>  Call Unity  end
 
 - (void)applicationDidEnterBackground:(UIApplication*)application
