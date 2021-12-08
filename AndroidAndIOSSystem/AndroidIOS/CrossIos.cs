@@ -78,6 +78,13 @@ public class CrossIos : MonoBehaviour
     [DllImport("__Internal")]
     public static extern void PushMessage();
 
+    
+    [DllImport("__Internal")]
+    public static extern void GetTimerFromUnity();
+
+
+    
+
 #endif
 
 
@@ -439,7 +446,7 @@ public class CrossIos : MonoBehaviour
         Debuger.Log("抽中的奖品 === " + name + "    数量 ==== " + num);
         if (name.ToLower().Equals("hammer"))
         {
-            ItemSystemData.AddItem(ItemSystemData.ItemEnum.chuizi,num);
+            ItemSystemData.AddItem(ItemSystemData.ItemEnum.chuizi, num);
         }
     }
 
@@ -464,11 +471,11 @@ public class CrossIos : MonoBehaviour
     }
 
     //CashOut
-    public static void CashOut(float balance,string s)
+    public static void CashOut(float balance, string s)
     {
         balance = (float)Math.Round(balance, 2);
 
-        Debuger.Log("CashOut === " + balance); 
+        Debuger.Log("CashOut === " + balance);
         Debuger.Log("CashOut === " + s);
 
         if (!CheckInited())
@@ -483,6 +490,68 @@ public class CrossIos : MonoBehaviour
     }
 
     #endregion
+
+    #region 联网与时间
+
+    /// <summary>
+    /// 返回网络状态
+    /// </summary>
+    /// <param name="returnState">返回状态</param>
+    public void ReturnNetState(string returnState)
+    {
+        if (returnState == "1")
+        {
+            NetWorkStateController.Instance.Show();
+        }
+        else
+        {
+            NetWorkStateController.Instance.Hidden();
+        }
+    }
+
+    public static void PostTimer()
+    {
+        if (!CheckInited())
+        {
+            return;
+        }
+#if UNITY_IPHONE && !UNITY_EDITOR && !SafeMode
+            GetTimerFromUnity();         
+#endif
+    }
+
+    public void GetTimer(string s)
+    {
+        NetWorkTimerManager.Instance.GetTimeFromAndroid(s);
+        Debuger.Log("Get Timer From IOS == " + s);
+    }
+
+    #endregion
+
+    /// <summary>
+    /// 返回国家 --- 需要在Android - GetAF后执行
+    /// </summary>
+    /// <param name="returnC"></param>
+    public void ReturnContry(string returnC)
+    {
+        var _s = returnC.ToUpper();
+        if (_s.IndexOf("KR") >= 0)
+        {
+            I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.KO);
+        }
+        else if (_s.IndexOf("JP") >= 0)
+        {
+            I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.JP);
+        }
+        else if (_s.IndexOf("RU") >= 0)
+        {
+            I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.RU);
+        }
+        else
+        {
+            I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.EN);
+        }
+    }
 
 
     /// <summary>

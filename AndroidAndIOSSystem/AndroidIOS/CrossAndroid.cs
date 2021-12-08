@@ -70,7 +70,7 @@ public class CrossAndroid : MonoBehaviour
         {
             Init();
         }
-        //Debug.Log("CanInvoke is :" + (activity != null));
+        Debug.Log("CanInvoke is :" + (activity != null));
         return activity != null;
     }
 
@@ -81,7 +81,7 @@ public class CrossAndroid : MonoBehaviour
     {
         if (!CheckInited())
         {
-            //Debuger.Log("CheckInited ==== false");
+            Debuger.Log("CheckInited ==== false");
             return;
         }
         string version = activity.Call<string>("getVersionInfo");
@@ -91,7 +91,7 @@ public class CrossAndroid : MonoBehaviour
 
         //GameData.VersionCode = versionCode;
         //GameData.VersionName = versionName;
-        //Debuger.Log("CheckInited ==== true");
+        Debuger.Log("CheckInited ==== true");
     }
 
     /// <summary>
@@ -169,7 +169,7 @@ public class CrossAndroid : MonoBehaviour
 
     private static IIsViedoReady thisIsReadyI;
 
-#region 请求广告
+    #region 请求广告
 
     /// <summary>
     /// 请求广告是否加载完毕
@@ -217,7 +217,7 @@ public class CrossAndroid : MonoBehaviour
         Debug.Log("rewardVideoCancel ====== " + thisIsReadyI);
     }
 
-#endregion
+    #endregion
 
     /// <summary>
     ///  开始震动,
@@ -402,6 +402,22 @@ public class CrossAndroid : MonoBehaviour
     }
 
     /// <summary>
+    /// 观看插屏结束,,unity需在此发放奖励
+    /// </summary>
+    /// <param name="returnCode"></param>
+    public void WatchInterstitialComplete(string returnCode)
+    {
+        Debuger.Log("WatchInterstitialComplete");
+        AdController.ShowInterstitialCallBack();
+    }
+
+    public void WatchInterstitialFail()
+    {
+        Debuger.Log("WatchInterstitialFail");
+        AdController.ShowInterstitialFail();
+    }
+
+    /// <summary>
     /// 播放视频广告
     /// </summary>
     public static void ShowRewardedVideo(int entry)
@@ -438,23 +454,6 @@ public class CrossAndroid : MonoBehaviour
     {
         Debuger.Log("WatchRewardVideoFail");
         AdController.ShowRewardedVideoFail();
-    }
-
-
-    /// <summary>
-    /// 观看插屏结束,,unity需在此发放奖励
-    /// </summary>
-    /// <param name="returnCode"></param>
-    public void WatchInterstitialComplete(string returnCode)
-    {
-        Debuger.Log("WatchInterstitialComplete");
-        AdController.ShowInterstitialCallBack();
-    }
-
-    public void WatchInterstitialFail()
-    {
-        Debuger.Log("WatchInterstitialFail");
-        AdController.ShowInterstitialFail();
     }
 
     public void ShowLoadingRewardVideoWindow(string returnCode)
@@ -584,7 +583,7 @@ public class CrossAndroid : MonoBehaviour
         Debuger.Log("抽中的奖品 === " + name + "    数量 ==== " + num);
         if (name.ToLower().Equals("hammer"))
         {
-            //ItemSystemData.AddItem(ItemSystemData.ItemEnum.timeStop,num);
+            ItemSystemData.AddItem(ItemSystemData.ItemEnum.chuizi,num);
         }
 
     }
@@ -603,7 +602,7 @@ public class CrossAndroid : MonoBehaviour
     //接受url
     public void GetUrlForIconCallBack(string url)
     {
-        //PostAndGetIcon.Instance.GetIcon(url);
+        PostAndGetIcon.Instance.GetIcon(url);
     }
 
     //CashOut
@@ -699,45 +698,14 @@ public class CrossAndroid : MonoBehaviour
     /// <param name="returnC"></param>
     public void ReturnContry(string returnC)
     {
-        if (I2Language.Instance == null) return;
-
         var _s = returnC.ToUpper();
-
         if (_s.IndexOf("KR") >= 0)
         {
-            I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.KR);
+            I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.KO);
         }
         else if (_s.IndexOf("JP") >= 0)
         {
             I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.JP);
-        }
-        else if (_s.IndexOf("RU") >= 0)
-        {
-            I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.RU);
-        }
-        else if (_s.IndexOf("PT") >= 0)
-        {
-            I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.BR);
-        }
-        else if (_s.IndexOf("ID") >= 0)
-        {
-            I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.ID);
-        }
-        else if (_s.IndexOf("PH") >= 0)
-        {
-            I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.PH);
-        }
-        else if (_s.IndexOf("TH") >= 0)
-        {
-            I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.TH);
-        }
-        else if (_s.IndexOf("VN") >= 0)
-        {
-            I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.VN);
-        }
-        else if (_s.IndexOf("MX") >= 0)
-        {
-            I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.MX);
         }
         else
         {
@@ -747,49 +715,59 @@ public class CrossAndroid : MonoBehaviour
 
     public void ReturnContryChangeUI(string returnC)
     {
-        if (I2Language.Instance == null) return;
-
         var _s = returnC.ToUpper();
         if (_s.IndexOf("KR") >= 0)
         {
-            I2Language.Instance.ChangeUI(I2Language.LanguageEnum.KR);
+            I2Language.Instance.ChangeUI(I2Language.LanguageEnum.KO);
         }
         else if (_s.IndexOf("JP") >= 0)
         {
             I2Language.Instance.ChangeUI(I2Language.LanguageEnum.JP);
         }
-        else if (_s.IndexOf("RU") >= 0)
-        {
-            I2Language.Instance.ChangeUI(I2Language.LanguageEnum.RU);
-        }
-        else if (_s.IndexOf("PT") >= 0)
-        {
-            I2Language.Instance.ChangeUI(I2Language.LanguageEnum.BR);
-        }
-        else if (_s.IndexOf("ID") >= 0)
-        {
-            I2Language.Instance.ChangeUI(I2Language.LanguageEnum.ID);
-        }
-        else if (_s.IndexOf("PH") >= 0)
-        {
-            I2Language.Instance.ChangeUI(I2Language.LanguageEnum.PH);
-        }
-        else if (_s.IndexOf("TH") >= 0)
-        {
-            I2Language.Instance.ChangeUI(I2Language.LanguageEnum.TH);
-        }
-        else if (_s.IndexOf("VN") >= 0)
-        {
-            I2Language.Instance.ChangeUI(I2Language.LanguageEnum.VN);
-        }
-        else if (_s.IndexOf("MX") >= 0)
-        {
-            I2Language.Instance.ChangeUI(I2Language.LanguageEnum.MX);
-        }
         else
         {
             I2Language.Instance.ChangeUI(I2Language.LanguageEnum.EN);
         }
+    }
+
+    /// <summary>
+    /// 返回网络状态
+    /// </summary>
+    /// <param name="returnState">返回状态</param>
+    public void ReturnNetState(string returnState)
+    {
+        if (returnState == "1")
+        {
+            NetWorkStateController.Instance.Show();
+        }
+        else
+        {
+            NetWorkStateController.Instance.Hidden();
+        }
+    }
+
+    public static void PostTimer()
+    {
+        if (!CheckInited())
+        {
+            return;
+        }
+        activity.Call("GetTimerFromUnity");
+    }
+
+    public void GetTimer(string s)
+    {
+        NetWorkTimerManager.Instance.GetTimeFromAndroid(s);
+        Debuger.Log("Get Timer From Android == " + s);
+    }
+
+    public static void PostEmail(String address, String title, String gameName, String userID, String packageName, String OSVersion)
+    {
+        if (!CheckInited())
+        {
+            return;
+        }
+        activity.Call("SendEmailFromUnity", address, title, gameName, userID, packageName, OSVersion);
     }
 
 }
