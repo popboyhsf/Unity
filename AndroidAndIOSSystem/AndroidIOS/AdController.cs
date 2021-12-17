@@ -62,7 +62,7 @@ public class AdController
 #elif UNITY_ANDROID && !UNITY_EDITOR
         CrossAndroid.ShowInterstitial();
 #elif UNITY_IPHONE// && !UNITY_EDITOR
-        CrossIos.ShowInterstitial(pos,null, null);
+        CrossIos.ShowInterstitial(pos,null, watchCompletedAction);
 #endif
         //TODO 还没写IOS方面的交互 记得写
     }

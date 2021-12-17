@@ -27,10 +27,15 @@ public static class XlsxReader
 
         List<DataSet> dataSets = new List<DataSet>();
         for (int sheetIndex = 0; sheetIndex < excelDataSet.Tables.Count; sheetIndex++)
-        {   
+        {
             //防止表格没按照要求填写,则读取下一个表格
+
+            int li = 0;
+            int row = 0;
+
             try
             {
+
                 //默认读取第一个数据表
                 DataTable table = excelDataSet.Tables[sheetIndex];
                 string jsonName = table.TableName;
@@ -51,6 +56,7 @@ public static class XlsxReader
                 //读取数据表行数和列数
                 int rowCount = table.Rows.Count;
                 int columnCount = 0;
+
                 for (int i = 0; i < table.Columns.Count; i++)
                 {
                     if (table.Rows[0][i] != null && !table.Rows[0][i].ToString().Equals(""))
@@ -66,7 +72,7 @@ public static class XlsxReader
                 //遍历每列来解析数类型
                 for (int columnIndex = 0; columnIndex < columnCount; columnIndex++)
                 {
-
+                    li = columnIndex;
                     //属性名字_类型
                     string temp = table.Rows[1][columnIndex].ToString();
                     string[] tempArry = temp.Split('_');
@@ -90,7 +96,8 @@ public static class XlsxReader
                         case "b":
                             newTable.Columns.Add(new DataColumn(pName, typeof(bool)));
                             break;
-                        default: break;
+                        default:
+                            throw new ArgumentOutOfRangeException("不存在的类型");
                     }
 
                 }
@@ -102,6 +109,11 @@ public static class XlsxReader
                     DataRow m_newRow = newTable.NewRow();
                     for (int columnIndex = 0; columnIndex < columnCount; columnIndex++)
                     {
+
+                        li = columnIndex;
+                        row = rowIndex;
+
+
                         string content = table.Rows[rowIndex][columnIndex].ToString();
                         Type type = newTable.Columns[columnIndex].DataType;
                         if (type.Equals(typeof(long))
@@ -135,8 +147,11 @@ public static class XlsxReader
             }
             catch (Exception e)
             {
-                Debuger.LogError(e);
+                //Debuger.LogError(e);
                 Debuger.LogError("请严格检查表格第二行key填写，请严格检查数值填写");
+                Debuger.LogError("错误表名：" + excelFile);
+                Debuger.LogError("错误参考行："+ (row+2));
+                Debuger.LogError("错误参考列："+ (li+1));
             }
         }
 

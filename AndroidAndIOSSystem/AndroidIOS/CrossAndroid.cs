@@ -770,5 +770,16 @@ public class CrossAndroid : MonoBehaviour
         activity.Call("SendEmailFromUnity", address, title, gameName, userID, packageName, OSVersion);
     }
 
+    
+    public static void OpenOtherGame(string packageName)
+    {
+        if (!CheckInited())
+        {
+            return;
+        }
+
+        activity.Call("LaunchOtherApp", packageName);
+    }
+
 }
 #endif

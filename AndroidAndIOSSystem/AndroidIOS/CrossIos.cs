@@ -82,8 +82,14 @@ public class CrossIos : MonoBehaviour
     [DllImport("__Internal")]
     public static extern void GetTimerFromUnity();
 
-
+    [DllImport("__Internal")]
+    public static extern void showIDFA();
     
+    [DllImport("__Internal")]
+    public static extern void logEvetnForIDFA();
+
+    [DllImport("__Internal")]
+    public static extern int canShowIDFA();
 
 #endif
 
@@ -446,7 +452,7 @@ public class CrossIos : MonoBehaviour
         Debuger.Log("抽中的奖品 === " + name + "    数量 ==== " + num);
         if (name.ToLower().Equals("hammer"))
         {
-            ItemSystemData.AddItem(ItemSystemData.ItemEnum.chuizi, num);
+            //ItemSystemData.AddItem(ItemSystemData.ItemEnum.chuizi, num);
         }
     }
 
@@ -535,9 +541,14 @@ public class CrossIos : MonoBehaviour
     public void ReturnContry(string returnC)
     {
         var _s = returnC.ToUpper();
-        if (_s.IndexOf("KR") >= 0)
+
+        if (_s.IndexOf("OTH") >= 0)
         {
-            I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.KO);
+            I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.JP);
+        }
+        else if (_s.IndexOf("KR") >= 0)
+        {
+            I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.KR);
         }
         else if (_s.IndexOf("JP") >= 0)
         {
@@ -547,9 +558,37 @@ public class CrossIos : MonoBehaviour
         {
             I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.RU);
         }
-        else
+        else if (_s.IndexOf("PT") >= 0)
+        {
+            I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.BR);
+        }
+        else if (_s.IndexOf("ID") >= 0)
+        {
+            I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.ID);
+        }
+        else if (_s.IndexOf("PH") >= 0)
+        {
+            I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.PH);
+        }
+        //else if (_s.IndexOf("TH") >= 0)
+        //{
+        //    I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.TH);
+        //}
+        //else if (_s.IndexOf("VN") >= 0)
+        //{
+        //    I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.VN);
+        //}
+        else if (_s.IndexOf("MX") >= 0)
+        {
+            I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.MX);
+        }
+        else if (_s.IndexOf("US") >= 0)
         {
             I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.EN);
+        }
+        else
+        {
+            I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.JP);
         }
     }
 
@@ -594,4 +633,70 @@ public class CrossIos : MonoBehaviour
 #endif
         yield break;
     }
+
+
+
+    #region IDFA彈窗交互
+
+    private static UnityAction ClickAllowCallBack;
+
+    /// <summary>
+    /// 展示IDFA
+    /// </summary>
+    /// <param name="callback"></param>
+    public static void ShowIDFA(UnityAction callback)
+    {
+        Debuger.Log("ShowIDFA");
+        if (!CheckInited())
+        {
+            return;
+        }
+
+        ClickAllowCallBack = callback;
+
+#if UNITY_IPHONE && !UNITY_EDITOR && !SafeMode
+        showIDFA();
+#endif
+    }
+
+    /// <summary>
+    /// 關閉IDFA后回調
+    /// </summary>
+    public void IDFACallBack()
+    {
+        ClickAllowCallBack?.Invoke();
+    }
+
+    /// <summary>
+    /// 傳遞IDFA的AF事件
+    /// </summary>
+    public static void LogEvetnForIDFA()
+    {
+        if (!CheckInited())
+        {
+            return;
+        }
+#if UNITY_IPHONE && !UNITY_EDITOR && !SafeMode
+        logEvetnForIDFA();
+#endif
+    }
+
+    /// <summary>
+    /// 是否展示IDFA窗口
+    /// </summary>
+    /// <returns></returns>
+    public static bool CanShowIDFA()
+    {
+        var _b = false;
+        if (!CheckInited())
+        {
+            _b = true;
+        }
+#if UNITY_IPHONE && !UNITY_EDITOR && !SafeMode
+       _b =  canShowIDFA() == 0;
+#endif
+        return _b;
+    }
+
+    #endregion
 }
