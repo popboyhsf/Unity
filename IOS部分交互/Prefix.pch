@@ -1,0 +1,33 @@
+//
+// Prefix header
+//
+
+#include "Preprocessor.h"
+
+#ifdef __OBJC__
+    #import <Foundation/Foundation.h>
+    #import <UIKit/UIKit.h>
+#endif
+
+#include "UnityTrampolineConfigure.h"
+#include "UnityInterface.h"
+
+#ifndef __OBJC__
+    #if USE_IL2CPP_PCH
+        #include "il2cpp_precompiled_header.h"
+    #endif
+#endif
+
+#ifndef TARGET_IPHONE_SIMULATOR
+    #define TARGET_IPHONE_SIMULATOR 0
+#endif
+
+#define printf_console printf
+
+
+#define _ios14_5_user @"_ios14.5_user"//系统为14.5玩家记录一次
+#define _screen_tracking @"_screen_tracking"//弹出授权引导弹窗
+#define _tracking_show @"_tracking_show"//显示系统授权引导
+#define _tracking_allow @"_tracking_allow"//玩家同意授权
+#define _tracking_no @"_tracking_no"//玩家拒绝授权
+#define _tracking_close @"_tracking_close"//启动时用户设置里idfa关闭

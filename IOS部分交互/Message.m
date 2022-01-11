@@ -105,7 +105,7 @@ extern "C" {
         [AdManager initBanner:AdBannerPosBottom];
         [AdManager showBannerAd:true];
         
-}
+    }
 
     void getAF(){
         [AppsFlyerProxy appsFlayerIsOrganicIsSafeChannel:^(BOOL isAppsFlyerReturn, BOOL isOrganic, BOOL isSafeChannel) {
@@ -123,61 +123,43 @@ extern "C" {
         //else CLog(@"appsFlayerIsOrganicIsSafeChannel is Fail . Wait for AF");
         //[LuckDrawManager getEventEntryRes];
             
-            LanguageEnum result = [AppsFlyerProxy getPhoneLanguage];
-            NSString* resStr;
-            switch (result) {
-                case LANG_JP:
-                    resStr = @"JP";
-                    break;
-                case LANG_KR:
-                    resStr = @"KR";
-                    break;
-                case LANG_ZHTW:
-                    resStr = @"EN";
-                    break;  
-                case LANG_OTH:
-                    resStr = @"EN";
-                    break;
-                default:
-                    resStr = @"EN";
-                    break;
-            }
+            NSString* resStr = [AppsFlyerProxy getPhoneLanguageStr];
             CLog(@"LanguageResStr === %@",resStr);
             UnitySendMessage("CrossIosObject","ReturnContry", resStr.UTF8String);
         }];
-}
+    }
 
-void GetUnityPostInt(int type){
-    
-    CLog(@"点击回报_%i",type);
-    //[LuckDrawManager showLuckDraw:type];
-    UnityPause(true);
-    [AdManager hideBannerAd];
-}
-
-
-void CashOutI(float i,const char* s){
-    NSString* ss = [NSString stringWithUTF8String:s];
-    NSLog(@" CashOutI_%@",ss);
-    UnityPause(true);
-    [AdManager hideBannerAd];
-}
-
-void GetUrlForIcon(){
-    //SDK 控制
-}
-    
-void GetTimerFromUnity(){
-    NSLog(@"GetTimerFromUnity_AS");
-    [AdManager getServerTime];
+    void GetUnityPostInt(int type){
         
-}
+        CLog(@"点击回报_%i",type);
+        //[LuckDrawManager showLuckDraw:type];
+        UnityPause(true);
+        [AdManager hideBannerAd];
+    }
 
-void LogEvetnForTrackLuckBalance(int j,float i){
+
+    void CashOutI(float i,const char* s){
+        NSString* ss = [NSString stringWithUTF8String:s];
+        NSLog(@" CashOutI_%@",ss);
+        UnityPause(true);
+        [AdManager hideBannerAd];
+    }
+
+    void GetUrlForIcon(){
+        //SDK 控制
+    }
     
-    [AppsFlyerProxy trackLuckBalance:(float)j curBalance:(float)i];
+    void GetTimerFromUnity(){
+        NSLog(@"GetTimerFromUnity_AS");
+        [AdManager getServerTime];
+        
+    }
+
+    void LogEvetnForTrackLuckBalance(int j,float i){
     
-}
+        [AppsFlyerProxy trackLuckBalance:(float)j curBalance:(float)i];
+    
+    }
 
     void RateUs(bool isScoreEnogh){
         if(isScoreEnogh){
@@ -186,27 +168,69 @@ void LogEvetnForTrackLuckBalance(int j,float i){
     }
 
 
-void PushMessage(){
+    void PushMessage(){
     
-    NSString* iddAM = [NSString stringWithUTF8String:"1"];
-    NSString* iddPM = [NSString stringWithUTF8String:"2"];
-    NSString* mTitled = [NSString stringWithUTF8String:"T"];
-    NSString* mSubTitled = [NSString stringWithUTF8String:"T"];
-    NSString* mess1d = [NSString stringWithUTF8String:"🎻 Your energy is full! Start the event now! 🎻"];
-    NSString* mess2d = [NSString stringWithUTF8String:"🥁 Someone asks for a challenge! Can you win? 🥁"];
-    NSString* mess3d = [NSString stringWithUTF8String:"🎉 So lucky! A special gift is waiting for you! 🎉"];
-    NSString* mess4d = [NSString stringWithUTF8String:"🧐 Where this sound comes from? Can you find it out? 🧐"];
-    NSString* mess5d = [NSString stringWithUTF8String:"😱 Someone breaks your record! Win it back! 😱"];
+        NSString* iddAM = [NSString stringWithUTF8String:"1"];
+        NSString* iddPM = [NSString stringWithUTF8String:"2"];
+        NSString* mTitled = [NSString stringWithUTF8String:"T"];
+        NSString* mSubTitled = [NSString stringWithUTF8String:"T"];
+        NSString* mess1d = [NSString stringWithUTF8String:"🎻 Your energy is full! Start the event now! 🎻"];
+        NSString* mess2d = [NSString stringWithUTF8String:"🥁 Someone asks for a challenge! Can you win? 🥁"];
+        NSString* mess3d = [NSString stringWithUTF8String:"🎉 So lucky! A special gift is waiting for you! 🎉"];
+        NSString* mess4d = [NSString stringWithUTF8String:"🧐 Where this sound comes from? Can you find it out? 🧐"];
+        NSString* mess5d = [NSString stringWithUTF8String:"😱 Someone breaks your record! Win it back! 😱"];
 
-    NSLog(@" setPushNormal: 1");
-    NSArray *message=@[mess1d,mess2d,mess3d,mess4d,mess5d];
-    NSLog(@" setPushNormal: 2");
-    //[OSUtil removeOneNotificationWithID:idd];
-    NSLog(@" setPushNormal: 3");
+        NSLog(@" setPushNormal: 1");
+        NSArray *message=@[mess1d,mess2d,mess3d,mess4d,mess5d];
+        NSLog(@" setPushNormal: 2");
+        //[OSUtil removeOneNotificationWithID:idd];
+        NSLog(@" setPushNormal: 3");
+        
+        NSLog(@" setPushNormal: 4");
     
-    NSLog(@" setPushNormal: 4");
+    }
     
-}
+    //展示idfaview
+    void showIDFA() {
+            [AppsFlyerProxy firstRequestATTDialog];
+            [AppsFlyerProxy logEvent:[AppsFlyerProxy getEventName:_tracking_show]];
+    }
+
+    //获取是否展示过授权请求，1展示过，0没展示
+    int canShowIDFA() {
+        BOOL result = [AppsFlyerProxy attDialogCanShow];
+        if (!result) {
+            [AppsFlyerProxy logEvent:[AppsFlyerProxy getEventName:_screen_tracking]];
+        }
+        return result?1:0;
+    }
+
+    //unity调用展示idfa之前调用，每个用户只调用一次
+    void logEvetnForIDFA() {
+        BOOL result = [AppsFlyerProxy attDialogStatus];
+        if (result) {
+            [AppsFlyerProxy logEvent:[AppsFlyerProxy getEventName:_tracking_close]];
+            }
+    }
+    
+    void rateUS(int count,int max,const char* patch)
+    {
+        NSString* patchNS = [NSString stringWithUTF8String:patch];
+        
+        NSString * result = [NSString stringWithFormat:@"_rate_score_ %d",count];
+        
+        [AppsFlyerProxy logEvent:[AppsFlyerProxy getEventName:result]];
+        
+        
+        if(count == max)
+        {
+            [AppsFlyerProxy logEvent:[AppsFlyerProxy getEventName:@"_rate_show_sys"]];
+            [AppsFlyerProxy appScoring];
+            
+        }
+           
+        
+    }
 
     
 #ifdef __cplusplus

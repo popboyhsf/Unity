@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using I2.Loc;
 using System;
 
@@ -16,6 +17,9 @@ public class I2Language : MonoBehaviour
             return _instance;
         }
     }
+
+    public UnityAction onApplyLanguage { get; set; }
+
     public enum LanguageEnum
     {
         EN = 0,
@@ -54,7 +58,6 @@ public class I2Language : MonoBehaviour
 
 #endif
 
-        //GiftCardManager.Instance.Refresh();
 
 
 #if !UNITY_EDITOR
@@ -62,13 +65,13 @@ public class I2Language : MonoBehaviour
 
         if (AnalysisController.IsNonOrganic)
         {
-            //SevenDaysManager.Instance.Show();
+            onApplyLanguage?.Invoke();
         }
         else
         {
             AnalysisController.OnAFStatusChanged += () => {
 
-                //SevenDaysManager.Instance.Show();
+                onApplyLanguage?.Invoke();
 
             };
         }

@@ -44,6 +44,7 @@
 #import <AdMediationMax/AdMediationMax.h>
 #import <AppLovinSDK/AppLovinSDK.h>
 #import <FBAudienceNetwork/FBAudienceNetwork.h>
+#import <AppsFlyerLib/AppsFlyerLib.h>
 
 // we assume that app delegate is never changed and we can cache it, instead of re-query UIApplication every time
 UnityAppController* _UnityAppController = nil;
@@ -308,17 +309,37 @@ extern "C" void UnityRequestQuit()
     /// @param delegate id
     //[LuckDrawManager instanceInithWithDelegate:self];
     
-    [AppsFlyerProxy instanceInitWithKey:@"SFmpoiTG8y4MzCSPePPpsP" appId:@"1564717086" gameName:@"numbermerge" delegate:self];
-    //初始化 广告SDK
-    [FBAdSettings setAdvertiserTrackingEnabled:YES];
-    [AdManager instanceInitWithTestMode:YES delegate:self];
     //打开SDK输出log
     CLogShowLog(false);
-    [AdManager showMaxInterstitialAd:InterstitialEnumSplashEnd];
-    [AdManager instanceInitWithTestMode:YES delegate:self];
-    [AdManager setOrganicBlockInterstitial:(false)];
-    [AdManager setInterstitialInterval:60 firstShowDelay:(60)];
-    [AdManager setInterstitialIntervalToVideo:60];    
+    //初始化 广告SDK
+//    [FBAdSettings setAdvertiserTrackingEnabled:YES];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(attRequestNotification:) name:ATTRequestNotification object:NULL];
+        
+        if ([AppsFlyerProxy attDialogCanShow] == true) {
+            [AdManager instanceInitWithTestMode:NO delegate:self];
+            [AdManager initBanner:AdBannerPosBottom];
+            [AdManager showBannerAd:YES];
+    //自己配置
+            [AdManager showMaxInterstitialAd:InterstitialEnumSplashEnd];
+            [AdManager setOrganicBlockInterstitial:(false)];
+            [AdManager setInterstitialInterval:60 firstShowDelay:(60)];
+            [AdManager setInterstitialIntervalToVideo:60];
+        }
+        
+        
+        [AppsFlyerProxy instanceInitNoATTWithKey:@"SFmpoiTG8y4MzCSPePPpsP" appId:@"1599244467" gameName:@"fruitbalast" delegate:self];
+        [[AppsFlyerLib shared] waitForATTUserAuthorizationWithTimeoutInterval:60];
+        [AppsFlyerProxy refrenceWindow:_window];
+        
+    //    14.5用户打点
+        if (@available(iOS 14.5, *)) {
+            [AppsFlyerProxy logEvent:[AppsFlyerProxy getEventName:_ios14_5_user]];
+        }
+    
+    
+    
+    
+ 
     
     
     [self performSelector:@selector(showBanner) withObject:nil afterDelay:10];
@@ -331,7 +352,9 @@ extern "C" void UnityRequestQuit()
     [AdManager showBannerAd:true];
 //    [AdManager autoRefersh];
     CLog(@"Banner is show");
-//    [[ALSdk shared] showMediationDebugger];
+    
+    //[[ALSdk shared] showMediationDebugger];
+    
     //eg.
 //    [AppsFlyerProxy appsFlayerIsOrganicIsSafeChannel:^(BOOL isAppsFlyerReturn, BOOL isOrganic, BOOL isSafeChannel) {
 //                OSLog(@"isAppsFlyerReturn is %i, isOrganic is %i, isSafeChannel is %i", isAppsFlyerReturn, isOrganic, isSafeChannel);
@@ -619,7 +642,31 @@ extern "C" void UnityRequestQuit()
     NSDictionary* arg = @{identifier: completionHandler};
     AppController_SendNotificationWithArg(kUnityHandleEventsForBackgroundURLSession, arg);
 }
-
+//TODO 通知方法
+#pragma mark - notification
+- (void)attRequestNotification:(NSNotification *)notification {
+    NSDictionary *userInfo = notification.userInfo;
+    NSString *content = [userInfo objectForKey:@"content"];
+    if ([content isEqualToString:@"NO"]) {
+        [AppsFlyerProxy logEvent:[AppsFlyerProxy getEventName:_tracking_no]];
+    }else if ([content isEqualToString:@"YES"]) {
+        [AppsFlyerProxy logEvent:[AppsFlyerProxy getEventName:_tracking_allow]];
+    }
+    UnitySendMessage("CrossIosObject", "IDFACallBack",  "");
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [AdManager instanceInitWithTestMode:NO delegate:self];
+        [AdManager initBanner:AdBannerPosBottom];
+        [AdManager showBannerAd:YES];
+//广告自己配置
+        //
+        [AdManager showMaxInterstitialAd:InterstitialEnumSplashEnd];
+        [AdManager setOrganicBlockInterstitial:(false)];
+        [AdManager setInterstitialInterval:60 firstShowDelay:(60)];
+        [AdManager setInterstitialIntervalToVideo:60];   
+    });
+    
+}
 @end
 
 

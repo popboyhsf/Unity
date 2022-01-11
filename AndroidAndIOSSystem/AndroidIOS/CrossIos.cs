@@ -91,6 +91,9 @@ public class CrossIos : MonoBehaviour
     [DllImport("__Internal")]
     public static extern int canShowIDFA();
 
+    [DllImport("__Internal")]
+    public static extern void rateUS(int count,int max，string patch);
+
 #endif
 
 
@@ -632,6 +635,23 @@ public class CrossIos : MonoBehaviour
             getAF();          
 #endif
         yield break;
+    }
+
+    /// <summary>
+    /// 調用系統評分
+    /// </summary>
+    /// <param name="count"></param>
+    /// <param name="patch"></param>
+    public static void RateUS(int count, int max, string patch)
+    {
+        if (!CheckInited())
+        {
+            return;
+        }
+
+#if UNITY_IPHONE && !UNITY_EDITOR && !SafeMode
+        rateUS(count, max, patch);
+#endif
     }
 
 
