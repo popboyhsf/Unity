@@ -554,4 +554,21 @@ public static class Extensions
         else return 0;
     }
 
+
+    public static float FloatToFackInt(this float self, string format)
+    {
+        if (format.Equals("0") || format.Equals("f0"))
+        {
+            return (float)Math.Round(self, 0);
+        }
+        else if (format.Equals("0.0") || format.Equals("f1"))
+        {
+            return (float)Math.Round(self, 1);
+        }
+        else if (format.Equals("0.00") || format.Equals("f2"))
+        {
+            return (float)Math.Round(self, 2);
+        }
+        else return self;
+    }
 }

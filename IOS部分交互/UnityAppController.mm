@@ -322,8 +322,8 @@ extern "C" void UnityRequestQuit()
     //自己配置
             [AdManager showMaxInterstitialAd:InterstitialEnumSplashEnd];
             [AdManager setOrganicBlockInterstitial:(false)];
-            [AdManager setInterstitialInterval:60 firstShowDelay:(60)];
-            [AdManager setInterstitialIntervalToVideo:60];
+            [AdManager setInterstitialInterval:15 firstShowDelay:(15)];
+            [AdManager setInterstitialIntervalToVideo:15];
         }
         
         
@@ -462,9 +462,20 @@ extern "C" void UnityRequestQuit()
     CLog(@"isOrganic is %i", isOrganic);
     CLog(@"isSafeCountry is %i",isSafeCounty);
     int status = 0;//模拟买量
-    if(isSafeChannel && isSafeCounty) status = 1;
+    //if(isSafeChannel && isSafeCounty) status = 1;
+    if(!isOrganic) status = 1;
     UnitySendMessage("CrossIosObject", "AppsFlyerState",  [NSString stringWithFormat:@"%d",status].UTF8String );
     //[LuckDrawManager getEventEntryRes];
+    
+    if(!isOrganic) {
+        NSString *systemCode = [[NSUserDefaults standardUserDefaults] objectForKey:@"AppleLanguages"][0];
+            NSArray *codeArray = [systemCode componentsSeparatedByString:@"-"];
+            if ([codeArray count] > 0) {
+                NSString *languageStr = [NSString stringWithFormat:@"_af_succ_%@",[codeArray firstObject]];
+                [AppsFlyerProxy logEvent:[AppsFlyerProxy getEventName:languageStr]];
+            }
+    }
+    
 }
 
 - (void)onAppsFlyerReturnFailure:(NSString *)failure
@@ -662,8 +673,8 @@ extern "C" void UnityRequestQuit()
         //
         [AdManager showMaxInterstitialAd:InterstitialEnumSplashEnd];
         [AdManager setOrganicBlockInterstitial:(false)];
-        [AdManager setInterstitialInterval:60 firstShowDelay:(60)];
-        [AdManager setInterstitialIntervalToVideo:60];   
+        [AdManager setInterstitialInterval:15 firstShowDelay:(15)];
+        [AdManager setInterstitialIntervalToVideo:15];
     });
     
 }
