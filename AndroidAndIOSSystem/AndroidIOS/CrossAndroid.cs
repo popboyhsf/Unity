@@ -692,37 +692,79 @@ public class CrossAndroid : MonoBehaviour
         activity.Call("LogEvetnForTrackLuckBalance", j, i);
     }
 
-    /// <summary>
     /// 返回国家 --- 需要在Android - GetAF后执行
     /// </summary>
     /// <param name="returnC"></param>
     public void ReturnContry(string returnC)
     {
         var _s = returnC.ToUpper();
-        if (_s.IndexOf("KR") >= 0)
+
+        if (_s.IndexOf("TH") >= 0)
         {
-            I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.KO);
+            I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.EN);
+        }
+        else if (_s.IndexOf("KR") >= 0)
+        {
+            I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.KR);
         }
         else if (_s.IndexOf("JP") >= 0)
         {
             I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.JP);
         }
+        else if (_s.IndexOf("RU") >= 0)
+        {
+            I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.RU);
+        }
+        else if (_s.IndexOf("PT") >= 0)
+        {
+            I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.BR);
+        }
+        else if (_s.IndexOf("ID") >= 0)
+        {
+            I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.ID);
+        }
+        else if (_s.IndexOf("PH") >= 0)
+        {
+            I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.PH);
+        }
         else
         {
             I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.EN);
         }
+
     }
 
     public void ReturnContryChangeUI(string returnC)
     {
         var _s = returnC.ToUpper();
-        if (_s.IndexOf("KR") >= 0)
+
+        if (_s.IndexOf("TH") >= 0)
         {
-            I2Language.Instance.ChangeUI(I2Language.LanguageEnum.KO);
+            I2Language.Instance.ChangeUI(I2Language.LanguageEnum.EN);
+        }
+        else if (_s.IndexOf("KR") >= 0)
+        {
+            I2Language.Instance.ChangeUI(I2Language.LanguageEnum.KR);
         }
         else if (_s.IndexOf("JP") >= 0)
         {
             I2Language.Instance.ChangeUI(I2Language.LanguageEnum.JP);
+        }
+        else if (_s.IndexOf("RU") >= 0)
+        {
+            I2Language.Instance.ChangeUI(I2Language.LanguageEnum.RU);
+        }
+        else if (_s.IndexOf("PT") >= 0)
+        {
+            I2Language.Instance.ChangeUI(I2Language.LanguageEnum.BR);
+        }
+        else if (_s.IndexOf("ID") >= 0)
+        {
+            I2Language.Instance.ChangeUI(I2Language.LanguageEnum.ID);
+        }
+        else if (_s.IndexOf("PH") >= 0)
+        {
+            I2Language.Instance.ChangeUI(I2Language.LanguageEnum.PH);
         }
         else
         {

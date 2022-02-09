@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
+[CheatableAttribute("是否禁用广告")]
 #if !ADV2
 public class AdController
 {
@@ -18,7 +19,10 @@ public class AdController
         }
     }
 
-    public static bool isDebug = false;
+    [CheatableAttribute("是否禁用广告")]
+    public static BoolData IsDebug { get; set; } = new BoolData("AdController_IsDebug", false);
+
+    public static bool isDebug { get => IsDebug.Value; }
 
     /// <summary>
     /// 播放插屏广告
@@ -200,7 +204,10 @@ public class AdController
         }
     }
 
-    public static bool isDebug = false;
+    [CheatableAttribute("是否禁用广告")]
+    public static BoolData IsDebug { get; set; } = new BoolData("AdController_IsDebug",false);
+
+    public static bool isDebug { get => IsDebug.Value; }
 
     private static UnityAction watchCompletedActionSelf;
     private static UnityAction watchFailActionSelf;
@@ -354,6 +361,19 @@ public class AdController
         
 #elif UNITY_IPHONE
         CrossIos.Instance.ShowGameStartInterstitial(isShow);
+#endif
+    }
+
+    public static void OpenOtherGame(String packageName)
+    {
+        Debug.Log("打开包名 " + packageName + " 的游戏");
+#if UNITY_EDITOR || NoAd || SafeMode
+
+        return;
+#elif UNITY_ANDROID && !UNITY_EDITOR
+       CrossAndroid.OpenOtherGame(packageName);
+#elif UNITY_IPHONE && !UNITY_EDITOR
+                        
 #endif
     }
 

@@ -210,6 +210,7 @@ public static class EventName
     #endregion
 }
 
+[CheatableAttribute("ANA")]
 public static class AnalysisController
 {
     public enum AFStatus
@@ -221,6 +222,8 @@ public static class AnalysisController
     public static UnityAction OnAFStatusChanged;
     public static UnityAction OffAFStatusChanged;
     private static AFStatus afStatus = AFStatus.Unknow;
+    [CheatableAttribute("是否是强制买量1是0否-1不启用")]
+    public static IntData fixOrganic { get; set; } = new IntData("AnalysisController_fixOrganic", -1);
     /// <summary>
     /// AF识别
     /// </summary>
@@ -265,6 +268,7 @@ public static class AnalysisController
 #if UNITY_EDITOR
             if (FackAF.isFackAF) return true;
 #endif
+            if (fixOrganic.Value >= 0) return fixOrganic.Value.IntToBool();
             return MustNonOrganic || (AfStatus == AFStatus.NonOrganic);
         }
     }

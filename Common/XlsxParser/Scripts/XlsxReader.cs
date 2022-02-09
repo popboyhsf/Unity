@@ -117,7 +117,7 @@ public static class XlsxReader
                         string content = table.Rows[rowIndex][columnIndex].ToString();
                         Type type = newTable.Columns[columnIndex].DataType;
                         if (type.Equals(typeof(long))
-                            && (content.EndsWith("k")|| content.EndsWith("m")|| content.EndsWith("g")))
+                            && (content.EndsWith("k") || content.EndsWith("m") || content.EndsWith("g")))
                         {
                             int unit = 0;
                             if (content.EndsWith("k"))
@@ -150,8 +150,8 @@ public static class XlsxReader
                 //Debuger.LogError(e);
                 Debuger.LogError("请严格检查表格第二行key填写，请严格检查数值填写");
                 Debuger.LogError("错误表名：" + excelFile);
-                Debuger.LogError("错误参考行："+ (row+2));
-                Debuger.LogError("错误参考列："+ (li+1));
+                Debuger.LogError("错误参考行：" + (row + 2));
+                Debuger.LogError("错误参考列：" + (li + 1));
             }
         }
 
@@ -181,13 +181,15 @@ public static class XlsxReader
             }
 #if ENCRYPT
             string enJson = Utils.AESEncrypt(json);
+            string name=Utils.AESEncrypt(dataSet.DataSetName.ToLower()).Replace("/","").Replace(@"\","");
 #else 
             string enJson = json;
+            string name = dataSet.DataSetName.ToLower();
 #endif
 
             //写入文件
             using (FileStream fileStream = new FileStream(jsonOutputPath + "/" +
-                dataSet.DataSetName.ToLower() + ".json", FileMode.Create, FileAccess.Write))
+                                                          name + ".json", FileMode.Create, FileAccess.Write))
             {
                 using (TextWriter textWriter = new StreamWriter(fileStream, encoding))
                 {

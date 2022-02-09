@@ -20,13 +20,33 @@ public static class JsonStructureLoader
                 "please add it!");
         }
 #if ENCRYPT
-        string encrptName = Utils.AESEncrypt(fileName);
+        string encrptName = Utils.AESEncrypt(fileName.ToLower()).Replace("/","").Replace(@"\","");
         TextAsset jsonText = Resources.Load<TextAsset>("Jsons\\" + encrptName);
-        string decryptJson = Utils.AESDecrypt(jsonText.text);
+        string decryptJson = "";
+
+        try
+        {
+            decryptJson = Utils.AESDecrypt(jsonText.text);
+        }
+        catch (NullReferenceException)
+        {
+            if (encrptName.IndexOf("stage") >= 0 || encrptName.IndexOf("ghost") >= 0)
+            {
+                Debug.LogWarning("缺少关卡 = " + encrptName.Substring(6));
+            }
+            else
+            {
+                Debug.LogError("Json Read Name Is Null By " + encrptName);
+            }
+
+            return null;
+        }
 #else
         string encrptName = fileName; 
         TextAsset jsonText = Resources.Load<TextAsset>("Jsons\\" + encrptName);
         string decryptJson = "";
+#endif
+
         try
         {
             decryptJson = jsonText.text;
@@ -41,10 +61,11 @@ public static class JsonStructureLoader
             {
                 Debug.LogError("Json Read Name Is Null By " + encrptName);
             }
-                
+
             return null;
         }
-#endif
+
+
         return JsonUtility.FromJson<JsonStructure<T>>(decryptJson).data;
     }
 

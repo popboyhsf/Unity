@@ -5,6 +5,7 @@ using UnityEngine.Profiling;
 using UnityEngine.Events;
 using System.Diagnostics;
 
+[CheatableAttribute("Debuger")]
 public class DebugerManager : MonoBehaviour
 {
 
@@ -50,24 +51,28 @@ public class DebugerManager : MonoBehaviour
 
     private List<ListData> dataList = new List<ListData>();
 
+    [CheatableAttribute("下次关闭模块下下次展示")]
+    public static BoolData IsNoDebuger { get; set; } = new BoolData("DebugerManager_IsNoDebuger", false);
+
     private void Awake()
     {
-        AllowDebugging = Application.version.IndexOf("99") >= 1;
-        Debuger.EnableLog = Application.version.IndexOf("99") >= 1;
+        var _on = Application.version.IndexOf("99") >= 1
+            &&
+            !IsNoDebuger.Value
+            ||
+            Application.platform == RuntimePlatform.WindowsEditor;
 
-        DestroySelf();
+        AllowDebugging = _on;
+        Debuger.EnableLog = _on;
+
+        if (IsNoDebuger.Value)
+            IsNoDebuger.Value = false;
+
         if (!AllowDebugging)
             Destroy(this.gameObject);
     }
 
-    [Conditional("DEBUG")]
-    private void DestroySelf()
-    {
-        AllowDebugging = true;
-        Debuger.EnableLog = true;
 
-        //TODO
-    }
 
     private void Start()
     {
@@ -75,9 +80,9 @@ public class DebugerManager : MonoBehaviour
         {
             Application.logMessageReceived += LogHandler;
         }
-
         DebugDataManager.Init();
     }
+
     private void Update()
     {
         if (AllowDebugging)
