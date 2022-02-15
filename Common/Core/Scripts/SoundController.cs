@@ -185,6 +185,17 @@ public class SoundController : SingletonMonoBehaviour<SoundController>
 
         if (audioClipPaths.TryGetValue(soundType, out string path))
         {
+#if ENCRYPT
+            string[] str = path.Split('/');
+            for (int i = 0; i < str.Length - 1; i++)
+            {
+                path += str[i] + @"/";
+            }
+
+            path += Utils.AESEncrypt(str[1]).Replace("/", "").Replace(@"\", "");
+#endif
+
+
             AudioClip audioClip = ResourceManager.LoadResource<AudioClip>(path, true);
             return audioClip;
         }

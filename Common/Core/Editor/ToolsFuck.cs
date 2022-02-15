@@ -54,6 +54,33 @@ public class ToolsFuck
         }
     }
 
+
+    [MenuItem("Assets/Tools/EncryptName(加密资源名字)", false, 100)]
+    public static void EncryptName()
+    {
+        Object[] objects = Selection.objects;
+        for (int i = 0; i < objects.Length; i++)
+        {
+            var acAssetPath = AssetDatabase.GetAssetPath(objects[i]);
+
+            string name = Utils.AESEncrypt(objects[i].name).Replace("/", "").Replace(@"\", "");
+            Debug.Log(name);
+            AssetDatabase.RenameAsset(acAssetPath, name);
+        }
+    }
+
+    [MenuItem("Assets/Tools/DecryptName(解密资源名字)", false, 100)]
+    public static void DecryptName()
+    {
+
+        Object[] objects = Selection.objects;
+        for (int i = 0; i < objects.Length; i++)
+        {
+            var acAssetPath = AssetDatabase.GetAssetPath(objects[i]);
+            AssetDatabase.RenameAsset(acAssetPath, CoreUtils.Utils.AESDecrypt(objects[i].name));
+        }
+    }
+
     /// <summary>
     /// 将Controller外部的 Animation Clip嵌入 Controller中
     /// 
