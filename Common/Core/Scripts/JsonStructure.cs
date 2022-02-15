@@ -45,8 +45,6 @@ public static class JsonStructureLoader
         string encrptName = fileName; 
         TextAsset jsonText = Resources.Load<TextAsset>("Jsons\\" + encrptName);
         string decryptJson = "";
-#endif
-
         try
         {
             decryptJson = jsonText.text;
@@ -64,6 +62,9 @@ public static class JsonStructureLoader
 
             return null;
         }
+#endif
+
+
 
 
         return JsonUtility.FromJson<JsonStructure<T>>(decryptJson).data;

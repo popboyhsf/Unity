@@ -55,6 +55,8 @@ public class ToolsFuck
     }
 
 
+    private static DictionaryData<string, string> EncryptNameDic = new DictionaryData<string, string>("EncryptNameDic", new Dictionary<string, string>());
+
     [MenuItem("Assets/Tools/EncryptName(加密资源名字)", false, 100)]
     public static void EncryptName()
     {
@@ -64,7 +66,8 @@ public class ToolsFuck
             var acAssetPath = AssetDatabase.GetAssetPath(objects[i]);
 
             string name = Utils.AESEncrypt(objects[i].name).Replace("/", "").Replace(@"\", "");
-            Debug.Log(name);
+
+            EncryptNameDic.Add(name, objects[i].name);
             AssetDatabase.RenameAsset(acAssetPath, name);
         }
     }
@@ -77,7 +80,14 @@ public class ToolsFuck
         for (int i = 0; i < objects.Length; i++)
         {
             var acAssetPath = AssetDatabase.GetAssetPath(objects[i]);
-            AssetDatabase.RenameAsset(acAssetPath, CoreUtils.Utils.AESDecrypt(objects[i].name));
+
+            EncryptNameDic.TryGetValue(objects[i].name, out string name);
+            if (name == "" || name == null)
+            {
+                Debuger.LogError("解密 " + objects[i].name + "错误");
+                return;
+            }
+            AssetDatabase.RenameAsset(acAssetPath, name);
         }
     }
 
