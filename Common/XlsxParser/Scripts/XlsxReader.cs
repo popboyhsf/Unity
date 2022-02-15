@@ -181,7 +181,7 @@ public static class XlsxReader
             }
 #if ENCRYPT
             string enJson = Utils.AESEncrypt(json);
-            string name=Utils.AESEncrypt(dataSet.DataSetName.ToLower()).Replace("/","").Replace(@"\","");
+            string name = Utils.AESEncrypt(dataSet.DataSetName.ToLower()).Replace("/","").Replace(@"\","");
 #else 
             string enJson = json;
             string name = dataSet.DataSetName.ToLower();
