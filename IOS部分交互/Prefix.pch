@@ -25,9 +25,7 @@
 #define printf_console printf
 
 
-#define _ios14_5_user @"_ios14.5_user"//系统为14.5玩家记录一次
+static int isOrganicInt = 0;
 #define _screen_tracking @"_screen_tracking"//弹出授权引导弹窗
-#define _tracking_show @"_tracking_show"//显示系统授权引导
-#define _tracking_allow @"_tracking_allow"//玩家同意授权
-#define _tracking_no @"_tracking_no"//玩家拒绝授权
-#define _tracking_close @"_tracking_close"//启动时用户设置里idfa关闭
+#define _rate_show @"_rate_show"//引导弹窗出现
+#define _rate_score_ @"_rate_score_"//提交时用户打星 _rate_score_1

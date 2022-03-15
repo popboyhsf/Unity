@@ -9,8 +9,6 @@ public class SevenDaysManager : MonoBehaviour
 {
     private static SevenDaysManager _instance;
 
-    public GameObject self;
-
     public List<SevenDaysParam> aniList = new List<SevenDaysParam>();
 
     [SerializeField]
@@ -20,7 +18,7 @@ public class SevenDaysManager : MonoBehaviour
     TextMeshProUGUI lun, baifen;
 
     [SerializeField]
-    float clickAniWait, clickAniWaitForWait = 0f;
+    float clickAniWait = 0f;
 
     public Button click;
 
@@ -36,11 +34,11 @@ public class SevenDaysManager : MonoBehaviour
 
     public void Show()
     {
-        if (!AnalysisController.IsNonOrganic) return;
+
         if (SevenDaysData.GetTime() >= 1 && SevenDaysData.GetCount() < aniList.Count)
         {
             Init();
-            PopUIManager.Instance.ShowUI(PopUIEnum.signUI);
+            PopUIManager.Instance.ShowUI("signUI");
         }
     }
 
@@ -58,8 +56,8 @@ public class SevenDaysManager : MonoBehaviour
 
         switch (f)
         {
-            case SevenDaysData.flopEnum.Gift:
-                GoldData.AddGift(num, true, true);
+            case SevenDaysData.flopEnum.Coin:
+                GoldManager.Instance.AddGold(num);
                 break;
             case SevenDaysData.flopEnum.Unkonw:
                 Debuger.LogError("签到奖励内容出错，请检查 === " + num);
@@ -74,8 +72,6 @@ public class SevenDaysManager : MonoBehaviour
         SevenDaysData.SetTime();
         SevenDaysData.SetCoun();
 
-        GiftCardAchievementData.mission3.Value++;
-
         Invoke("WaitForAni", clickAniWait);
 
     }
@@ -83,19 +79,17 @@ public class SevenDaysManager : MonoBehaviour
     private void WaitForAni()
     {
         if (ani) ani.SetTrigger("Closs");
-        Invoke("AniCallBack", clickAniWaitForWait);
+        Invoke("AniCallBack", ani.GetAnimationClipLength("pop close"));
     }
 
     private void AniCallBack()
     {
-        self.SetActive(false);
+        PopUIManager.Instance.HiddenUI("signUI");
     }
 
     private void Init()
     {
         click.interactable = true;
-
-        self.SetActive(true);
 
         var count = Mathf.Min(SevenDaysData.GetCount(), aniList.Count - 1);
 

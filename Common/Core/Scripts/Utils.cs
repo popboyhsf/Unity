@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
+using System.Globalization;
 /// <summary>
 /// 工具类
 /// </summary>
@@ -34,7 +35,7 @@ public static class Utils
     /// <returns></returns>
     public static List<int> RandomUnduplicated(int min, int max, int returnCount)
     {
-        if(max - min +1 < returnCount)
+        if (max - min + 1 < returnCount)
         {
             Debug.LogError("UnduplicatedRandom error! num Count doesn't enought");
         }
@@ -55,7 +56,7 @@ public static class Utils
         return randomList;
     }
 
-    public static string floatToData(this float self,bool useFix = false)
+    public static string floatToData(this float self, bool useFix = false)
     {
         TimeSpan ts = new TimeSpan(0, 0, Convert.ToInt32(self));
         string str = "";
@@ -113,6 +114,35 @@ public static class Utils
         return Random(0, 1) > 0 ? 1 : -1;
     }
 
+    public static string ChangeDataToD(string strData)
+    {
+        decimal dData = 0.0M;
+        if (strData.Contains("E"))
+        {
+            dData = decimal.Parse(strData, System.Globalization.NumberStyles.Float);
+        }
+        else
+        {
+            return strData;
+        }
+        return dData.ToString();
+    }
+
+    public static float StringToFloat(this string self)
+    {
+        try
+        {
+            return float.Parse(self, CultureInfo.InvariantCulture);
+        }
+        catch (System.FormatException)
+        {
+
+            Debuger.LogError("对于转换成Float出错 ：" + self);
+            return 0;
+        }
+    }
+
+    #region AES
 
     private static string AESKey = "fjkasdjJdA4178A0";
 
@@ -160,19 +190,7 @@ public static class Utils
 
         return Encoding.UTF8.GetString(resultArray);
     }
+    #endregion
 
 
-    public static string ChangeDataToD(string strData)
-    {
-        decimal dData = 0.0M;
-        if (strData.Contains("E"))
-        {
-            dData = decimal.Parse(strData, System.Globalization.NumberStyles.Float);
-        }
-        else
-        {
-            return strData;
-        }
-        return dData.ToString();
-    }
 }

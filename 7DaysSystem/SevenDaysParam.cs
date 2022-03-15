@@ -19,9 +19,15 @@ public class SevenDaysParam : MonoBehaviour
 
     public void Init(Sprite sprite,int num,int day)
     {
-        //if (icon) icon.sprite = sprite;
-        if (numT) numT.text = I2Language.Instance.ChangeMoney(num, false);
-        if (dayT && dayT.GetComponent<LocalizationParamsManager>()) dayT.GetComponent<LocalizationParamsManager>().SetParameterValue("X", day.ToString("0"));
+        if (icon) icon.sprite = sprite;
+        if (numT) numT.text = num.ToPriceString();
+        if (dayT)
+        {
+            if (dayT.GetComponent<LocalizationParamsManager>())
+                dayT.GetComponent<LocalizationParamsManager>().SetParameterValue("X", day.ToString("0"));
+            else
+                dayT.text = "Day " + day;
+        }
     }
 
     public void IsGet()

@@ -8,6 +8,8 @@ public class PopUIManager : MonoBehaviour
 {
     [SerializeField]
     GameObject self;
+    [SerializeField]
+    Transform Top, Pop;
 
 
     private Dictionary<string, PopUIBase> popUIDic = new Dictionary<string, PopUIBase>();
@@ -24,35 +26,71 @@ public class PopUIManager : MonoBehaviour
 
     public Dictionary<string, PopUIBase> GetPopUIDic { get => popUIDic;}
 
-    public UnityAction BeforShowAction;
-    public UnityAction AfterHiddenAction;
+    public UnityAction BeforShowAction { get; set; }
+    public UnityAction AfterHiddenAction { get; set; }
 
     private void Awake()
     {
         _instance = this;
-        foreach (Transform item in self.transform)
+
+        List<Transform> childrenTr = new List<Transform>(self.transform.childCount);
+        for (int i = 0; i < self.transform.childCount; i++)
+        {
+            childrenTr.Add(self.transform.GetChild(i));
+        }
+
+        foreach (Transform item in childrenTr)
         {
             PopUIBase _base = item.GetComponent<PopUIBase>();
-            popUIDic.Add(_base.thisPopUIEnum.ToString(), _base);
+            if (_base == null)
+            {
+                Debuger.LogError(item.name + " 没有包含UI脚本");
+            }
+            else
+            {
+                if (!popUIDic.ContainsKey(_base.thisPopUIEnum))
+                    popUIDic.Add(_base.thisPopUIEnum, _base);
+                else
+                    Debuger.LogError("重复添加：" + _base.thisPopUIEnum);
+
+
+                if (_base.thisUIType.ToLower().Equals("pop"))
+                {
+                    _base.transform.SetParent(Pop);
+                }
+
+                if (_base.thisUIType.ToLower().Equals("top"))
+                {
+                    _base.transform.SetParent(Top);
+                }
+            }
         }
 
         self.SetActive(false);
+        Top.gameObject.SetActive(false);
+        Pop.gameObject.SetActive(false);
     }
 
     public void ShowUI(PopUIEnum uIEnum)
     {
-        self.SetActive(true);
-        if (UIBase(uIEnum) == null) return;
-        if (UIBase(uIEnum).UseBaseBeforActive) BeforShowAction?.Invoke();
-        UIBase(uIEnum).ShowUI();
+        var _ui = UIBase(uIEnum);
+        if (_ui == null) return;
+
+        _ui.transform.parent.gameObject.SetActive(true);
+
+        if (_ui.UseBaseBeforActive) BeforShowAction?.Invoke();
+        _ui.ShowUI();
     }
 
     public void ShowUI(string uIEnum)
     {
-        self.SetActive(true);
-        if (UIBase(uIEnum) == null) return;
-        if (UIBase(uIEnum).UseBaseBeforActive) BeforShowAction?.Invoke();
-        UIBase(uIEnum).ShowUI();
+        var _ui = UIBase(uIEnum);
+        if (_ui == null) return;
+
+        _ui.transform.parent.gameObject.SetActive(true);
+
+        if (_ui.UseBaseBeforActive) BeforShowAction?.Invoke();
+        _ui.ShowUI();
     }
 
     public void HiddenUI(PopUIEnum uIEnum)
@@ -68,9 +106,9 @@ public class PopUIManager : MonoBehaviour
         UIBase(uIEnum).HiddenUIAI();
     }
 
-    public void HiddenUIForAni()
+    public void HiddenUIForAni(PopUIBase uIEnum)
     {
-        self.SetActive(false);
+        uIEnum.transform.parent.gameObject.SetActive(true);
     }
 
     public T SpawnUI<T>(PopUIEnum uIEnum) where T : PopUIBase

@@ -116,7 +116,7 @@ extern "C" {
         CLog(@"isOrganic is %i", isOrganic);
         
         int status = 0;//模拟买量
-        if(isSafeChannel) status = 1;
+        if(!isOrganic) status = 1;
         
         //if(isAppsFlyerReturn)
         //UnitySendMessage("CrossIosObject", "AppsFlyerState",  [NSString stringWithFormat:@"%d",status].UTF8String );
@@ -217,14 +217,12 @@ extern "C" {
     {
         NSString* patchNS = [NSString stringWithUTF8String:patch];
         
-        NSString * result = [NSString stringWithFormat:@"_rate_score_ %d",count];
-        
-        [AppsFlyerProxy logEvent:[AppsFlyerProxy getEventName:result]];
-        
+        NSString *starStr = [NSString stringWithFormat:@"%@%d", _rate_score_, count];
+        [AppsFlyerProxy logEvent:[AppsFlyerProxy getEventName:starStr]];
         
         if(count == max)
         {
-            [AppsFlyerProxy logEvent:[AppsFlyerProxy getEventName:@"_rate_show_sys"]];
+            [AppsFlyerProxy logEvent:[AppsFlyerProxy getEventName:_rate_show]];
             [AppsFlyerProxy appScoring];
             
         }

@@ -38,7 +38,7 @@ public static class SevenDaysData
 
     public enum flopEnum
     {
-        Gift = 0,
+        Coin = 0,
 
 
         Unkonw = 99,
@@ -82,19 +82,18 @@ public static class SevenDaysData
     /// 获得次数
     /// </summary>
     /// <returns>返回第几次签到</returns>
-    public static int GetCount()
+    public static int GetCount(bool useLun = false)
     {
-        return PlayerPrefs.GetInt(flag + countFlag, 0) % 7;
+        return useLun?PlayerPrefs.GetInt(flag + countFlag, 0) % 7: PlayerPrefs.GetInt(flag + countFlag, 0);
     }
 
     /// <summary>
     /// 获得轮回次数
     /// </summary>
     /// <returns>返回第几次签到</returns>
-    public static int GetLunCount()
-    {
-        return 1;
-        return (PlayerPrefs.GetInt(flag + countFlag, 0) / 7 + 1);
+    public static int GetLunCount(bool useLun = false)
+    { 
+        return useLun?(PlayerPrefs.GetInt(flag + countFlag, 0) / 7 + 1):1;
     }
 
     /// <summary>

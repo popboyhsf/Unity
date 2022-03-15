@@ -327,7 +327,7 @@ extern "C" void UnityRequestQuit()
         }
         
         
-        [AppsFlyerProxy instanceInitNoATTWithKey:@"SFmpoiTG8y4MzCSPePPpsP" appId:@"1599244467" gameName:@"fruitbalast" delegate:self];
+        [AppsFlyerProxy instanceInitNoATTWithKey:@"SFmpoiTG8y4MzCSPePPpsP" appId:@"1609201485" gameName:@"tileconnect" delegate:self];
         [[AppsFlyerLib shared] waitForATTUserAuthorizationWithTimeoutInterval:60];
         [AppsFlyerProxy refrenceWindow:_window];
         
@@ -458,6 +458,9 @@ extern "C" void UnityRequestQuit()
 //    UnitySendMessage("CrossIosObject", "AppsFlyerState",  [NSString stringWithFormat:@"%d",status].UTF8String );
 //}
 - (void)onAppsFlyerReturn:(BOOL)isOrganic channel:(BOOL)isSafeChannel isSafeCounty:(BOOL)isSafeCounty{
+    isOrganicInt = isOrganic?1:0;
+    [self performSelector:@selector(afSuccessAfterSeconds) withObject:nil afterDelay:3];
+    
     CLog(@"isSafeChannel is %i", isSafeChannel);
     CLog(@"isOrganic is %i", isOrganic);
     CLog(@"isSafeCountry is %i",isSafeCounty);
@@ -476,6 +479,27 @@ extern "C" void UnityRequestQuit()
             }
     }
     
+}
+
+- (void)afSuccessAfterSeconds
+{
+
+    BOOL isOrganic = isOrganicInt == 1;
+    
+    int status = 0;//模拟买量
+    //if(isSafeChannel && isSafeCounty) status = 1;
+    if(!isOrganic) status = 1;
+    UnitySendMessage("CrossIosObject", "AppsFlyerState",  [NSString stringWithFormat:@"%d",status].UTF8String );
+    //[LuckDrawManager getEventEntryRes];
+    
+    if(!isOrganic) {
+        NSString *systemCode = [[NSUserDefaults standardUserDefaults] objectForKey:@"AppleLanguages"][0];
+            NSArray *codeArray = [systemCode componentsSeparatedByString:@"-"];
+            if ([codeArray count] > 0) {
+                NSString *languageStr = [NSString stringWithFormat:@"_af_succ_%@",[codeArray firstObject]];
+                [AppsFlyerProxy logEvent:[AppsFlyerProxy getEventName:languageStr]];
+            }
+    }
 }
 
 - (void)onAppsFlyerReturnFailure:(NSString *)failure

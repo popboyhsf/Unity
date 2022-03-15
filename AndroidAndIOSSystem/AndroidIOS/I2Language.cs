@@ -36,6 +36,8 @@ public class I2Language : MonoBehaviour
 
     public LanguageEnum Language { private set; get; } = LanguageEnum.EN;
 
+    public UnityAction OnChangeLanguage { get; set; }
+
     private void Awake()
     {
         _instance = this;
@@ -77,7 +79,7 @@ public class I2Language : MonoBehaviour
         }
 
 #endif
-
+        OnChangeLanguage?.Invoke();
     }
 
     public void ChangeUI(LanguageEnum language)
@@ -88,6 +90,7 @@ public class I2Language : MonoBehaviour
         {
             LocalizationManager.CurrentLanguage = _l;
         }
+        OnChangeLanguage?.Invoke();
     }
 
     public string ChangeMoney(float i, bool usFolat = true)

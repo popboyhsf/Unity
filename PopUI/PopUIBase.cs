@@ -14,7 +14,8 @@ public abstract class PopUIBase : MonoBehaviour
 
     protected float aniTime = 0.38f;
 
-    public abstract PopUIEnum thisPopUIEnum { get; }
+    public abstract string thisPopUIEnum { get; }
+    public abstract string thisUIType { get; }
 
     public virtual bool UseBaseBeforActive { get; } = false;
     public virtual bool UseBaseAfterActive { get; } = false;
@@ -91,7 +92,7 @@ public abstract class PopUIBase : MonoBehaviour
     private void AniCallBack()
     {
         self.SetActive(false);
-        PopUIManager.Instance.HiddenUIForAni();
+        PopUIManager.Instance.HiddenUIForAni(this);
         AfterHiddenUI();
     }
     private void AniCallBack2()

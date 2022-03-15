@@ -15,6 +15,9 @@ public class PowerSystem : MonoBehaviour
     List<Text> numT;
     [SerializeField]
     List<TextMeshProUGUI> numTPro;
+    [Header("0是否隐藏")]
+    [SerializeField]
+    bool isHiddenZero = false;
 
     [Header("扣体力特效相关")]
     [SerializeField]
@@ -72,7 +75,7 @@ public class PowerSystem : MonoBehaviour
     /// 开始一局游戏
     /// </summary>
     /// <returns>返回能否开始</returns>
-    public bool StartOnGame()
+    public bool StartOneGame()
     {
         if (PowerData.GetPower <= 0) return false;
         else
@@ -111,10 +114,12 @@ public class PowerSystem : MonoBehaviour
             {
                 reTime -= dt;
 
-                timeT.ForEach(t=> { 
+                timeT.ForEach(t=> {
+                    if (isHiddenZero) t.gameObject.SetActive(true);
                     t.text = reTime.doubleToData();
                 });
                 timeTPro.ForEach(t => {
+                    if (isHiddenZero) t.gameObject.SetActive(true);
                     t.text = reTime.doubleToData();
                 });
                 //console.log("倒计时 == " + this.Timer);
@@ -125,9 +130,11 @@ public class PowerSystem : MonoBehaviour
         {
             timeT.ForEach(t => {
                 t.text = "00:00";
+                if (isHiddenZero) t.gameObject.SetActive(false);
             });
             timeTPro.ForEach(t => {
                 t.text = "00:00";
+                if(isHiddenZero) t.gameObject.SetActive(false);
             });
             //if (timeTxt.gameObject.activeSelf) timeTxt.gameObject.SetActive(false);
         }
@@ -194,7 +201,6 @@ public class PowerSystem : MonoBehaviour
         Refresh();
 
     }
-
 
     /// <summary>
     /// 刷新

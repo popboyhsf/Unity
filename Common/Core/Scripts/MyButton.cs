@@ -18,6 +18,8 @@ public class MyButton : Selectable, IPointerClickHandler, ISubmitHandler
     [Header("冷却时间")]
     [SerializeField]
     float cdTime = 1f;
+    [SerializeField]
+    bool interactableAutoCD = false;
 
     [Serializable]
     /// <summary>
@@ -77,9 +79,15 @@ public class MyButton : Selectable, IPointerClickHandler, ISubmitHandler
 
     private float my_curPointDownTime = 0f;
 
+    private float my_curDoublePointDownTime = 0f;
+
     private float my_longPressTime = 0.6f;
 
+    private float my_doublePressTime = 0.23f;
+
     private bool my_longPressTrigger = false;
+
+    private int my_clickCount = 0;
 
     private float my_cdPressTime = 0f;
 
@@ -97,6 +105,7 @@ public class MyButton : Selectable, IPointerClickHandler, ISubmitHandler
     void Update()
     {
         CheckIsLongPress();
+        CheckDoublePress();
         CheckCD();
     }
 
@@ -107,6 +116,7 @@ public class MyButton : Selectable, IPointerClickHandler, ISubmitHandler
             if (my_cdPressTime <= 0)
             {
                 my_ISCDing = false;
+                if (interactableAutoCD) interactable = !my_ISCDing;
             }
             else
             {
@@ -121,6 +131,7 @@ public class MyButton : Selectable, IPointerClickHandler, ISubmitHandler
     {
         my_ISCDing = true;
         my_cdPressTime = cdTime;
+        if (interactableAutoCD) interactable = !my_ISCDing;
     }
 
     void CheckIsLongPress()
@@ -134,10 +145,22 @@ public class MyButton : Selectable, IPointerClickHandler, ISubmitHandler
                 InitCD();
                 my_longPressTrigger = true;
                 my_isStartPress = false;
-                if (m_onLongPress != null)
-                {
-                    m_onLongPress.Invoke();
-                }
+                m_onLongPress?.Invoke();
+            }
+        }
+    }
+
+    void CheckDoublePress()
+    {
+        if (my_ISCDing) return;
+        if (my_clickCount == 1)
+        {
+            if (Time.time > my_curDoublePointDownTime + my_doublePressTime)
+            {
+                //Debuger.Log("单击");
+                InitCD();
+                onClick?.Invoke();
+                my_clickCount = 0;
             }
         }
     }
@@ -150,25 +173,16 @@ public class MyButton : Selectable, IPointerClickHandler, ISubmitHandler
         //(避免已經點擊進入長按后，擡起的情況)
         if (!my_longPressTrigger)
         {
-            
+            my_clickCount = eventData.clickCount;
+
             if (eventData.clickCount == 2)// 双击
             {
                 //Debuger.Log("双击");
-                
-                if (m_onDoubleClick.GetPersistentEventCount() > 0)
-                {
-                    m_onDoubleClick?.Invoke();
-                    InitCD();
-                }
 
-            }
-            else if (eventData.clickCount == 1)// 正常单击 
-            {
-                //Debuger.Log("单击");
-                if (m_onDoubleClick.GetPersistentEventCount() <= 0) InitCD();
-                else return;
+                m_onDoubleClick?.Invoke();
+                my_clickCount = 0;
+                InitCD();
 
-                onClick?.Invoke();
             }
         }
     }
@@ -207,6 +221,7 @@ public class MyButton : Selectable, IPointerClickHandler, ISubmitHandler
         // 按下刷新當前時間
         base.OnPointerDown(eventData);
         my_curPointDownTime = Time.time;
+        if(my_clickCount == 0) my_curDoublePointDownTime = Time.time;
         my_isStartPress = true;
         my_longPressTrigger = false;
     }
