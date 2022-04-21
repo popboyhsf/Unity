@@ -20,7 +20,7 @@ public static class JsonStructureLoader
                 "please add it!");
         }
 #if ENCRYPT
-        string encrptName = Utils.AESEncrypt(fileName.ToLower()).Replace("/","").Replace(@"\","");
+        string encrptName = Utils.AESEncrypt(fileName.ToLower()).Replace("/","_");
         TextAsset jsonText = Resources.Load<TextAsset>("Jsons\\" + encrptName);
         string decryptJson = "";
 

@@ -142,9 +142,14 @@ public static class Utils
         }
     }
 
+    public static string FloatToString(this float self)
+    {
+        return self.ToString(CultureInfo.InvariantCulture);
+    }
+
     #region AES
 
-    private static string AESKey = "fjkasdjJdA4178A0";
+    private static string AESKey = About.GPID.Replace(".", "").Remove(16);
 
     ///  AES 加密
     /// </summary>

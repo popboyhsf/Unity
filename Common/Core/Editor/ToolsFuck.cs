@@ -65,32 +65,26 @@ public class ToolsFuck
         {
             var acAssetPath = AssetDatabase.GetAssetPath(objects[i]);
 
-            string name = Utils.AESEncrypt(objects[i].name).Replace("/", "").Replace(@"\", "");
+            string name = Utils.AESEncrypt(objects[i].name).Replace("/", "_");
 
             EncryptNameDic.Add(name, objects[i].name);
             AssetDatabase.RenameAsset(acAssetPath, name);
         }
     }
 
-    [MenuItem("Assets/Tools/DecryptName(解密资源名字)", false, 100)]
+    [MenuItem("Assets/Tools/DecryptName(解密资源名字)", false, 101)]
     public static void DecryptName()
     {
-
         Object[] objects = Selection.objects;
         for (int i = 0; i < objects.Length; i++)
         {
             var acAssetPath = AssetDatabase.GetAssetPath(objects[i]);
 
-            EncryptNameDic.TryGetValue(objects[i].name, out string name);
-            if (name == "" || name == null)
-            {
-                Debuger.LogError("解密 " + objects[i].name + "错误");
-                return;
-            }
+            string name = Utils.AESDecrypt(objects[i].name.Replace("/", "_"));
+            Debug.Log(name);
             AssetDatabase.RenameAsset(acAssetPath, name);
         }
     }
-
     /// <summary>
     /// 将Controller外部的 Animation Clip嵌入 Controller中
     /// 

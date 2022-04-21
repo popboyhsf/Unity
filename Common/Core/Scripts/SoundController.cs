@@ -192,7 +192,7 @@ public class SoundController : SingletonMonoBehaviour<SoundController>
                 path += str[i] + @"/";
             }
 
-            path += Utils.AESEncrypt(str[1]).Replace("/", "").Replace(@"\", "");
+            path += Utils.AESEncrypt(str[1]).Replace("/", "_");
 #endif
 
 
