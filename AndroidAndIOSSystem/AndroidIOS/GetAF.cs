@@ -16,15 +16,19 @@ public class GetAF : MonoBehaviour
     {
         yield return new WaitForSeconds(4f);
 
-#if ADV2
+#if !SafeMode
 
-        AnalysisController.AfStatus = CrossAndroid.GetAF();
+    #if ADV2
+
+            AnalysisController.AfStatus = CrossAndroid.GetAF();
 
 
-#else
+    #else
 
-        //AdController.ShowGameStartInterstitial(PlayerData.CashCount >= 0.01f);
-        CrossIos.Instance.GetAF(0);
+            //AdController.ShowGameStartInterstitial(PlayerData.CashCount >= 0.01f);
+            CrossIos.Instance.GetAF(0);
+
+    #endif
 
 #endif
 

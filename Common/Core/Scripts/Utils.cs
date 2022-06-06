@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 using System.Globalization;
+using UnityEngine.Events;
 /// <summary>
 /// 工具类
 /// </summary>
@@ -56,6 +57,12 @@ public static class Utils
         return randomList;
     }
 
+    /// <summary>
+    /// 转成日期格式
+    /// </summary>
+    /// <param name="self"></param>
+    /// <param name="useFix">00:00:00多显示少不显示</param>
+    /// <returns></returns>
     public static string floatToData(this float self, bool useFix = false)
     {
         TimeSpan ts = new TimeSpan(0, 0, Convert.ToInt32(self));
@@ -83,6 +90,12 @@ public static class Utils
         return str;
     }
 
+    /// <summary>
+    /// 转成日期格式
+    /// </summary>
+    /// <param name="self"></param>
+    /// <param name="useFix">00:00:00多显示少不显示</param>
+    /// <returns></returns>
     public static string doubleToData(this double self, bool useFix = false)
     {
         TimeSpan ts = new TimeSpan(0, 0, Convert.ToInt32(self));
@@ -128,6 +141,11 @@ public static class Utils
         return dData.ToString();
     }
 
+    /// <summary>
+    /// String转Float（国际化）
+    /// </summary>
+    /// <param name="self"></param>
+    /// <returns></returns>
     public static float StringToFloat(this string self)
     {
         try
@@ -142,15 +160,40 @@ public static class Utils
         }
     }
 
+    /// <summary>
+    /// Float转String（国际化）
+    /// </summary>
+    /// <param name="self"></param>
+    /// <returns></returns>
     public static string FloatToString(this float self)
     {
         return self.ToString(CultureInfo.InvariantCulture);
     }
 
+    /// <summary>
+    /// String转Float数组
+    /// </summary>
+    /// <param name="self"></param>
+    /// <param name="splitValue"></param>
+    /// <returns></returns>
+    public static List<float> ChangeToFloatList(this string self, char splitValue)
+    {
+        var _list = new List<float>();
+
+        foreach (var item in self.Split(splitValue))
+        {
+            _list.Add(float.Parse(item, CultureInfo.InvariantCulture));
+        }
+
+        return _list;
+    }
+
     #region AES
 
-    private static string AESKey = About.GPID.Replace(".", "").Remove(16);
+    //private static string AESKey = GPID.Replace(".", "").Remove(16);
+    private static string AESKey = "1234567890qwerty";
 
+    /// <summary>
     ///  AES 加密
     /// </summary>
     /// <param name="str">明文（待加密）</param>
@@ -171,6 +214,29 @@ public static class Utils
         Byte[] resultArray = cTransform.TransformFinalBlock(toEncryptArray, 0, toEncryptArray.Length);
 
         return Convert.ToBase64String(resultArray, 0, resultArray.Length);
+    }
+
+    /// <summary>
+    ///  AES 加密
+    /// </summary>
+    /// <param name="str">明文（待加密）</param>
+    /// <returns></returns>
+    public static byte[] AESEncrypt(byte[] bit)
+    {
+
+        Byte[] toEncryptArray = bit;
+
+        System.Security.Cryptography.RijndaelManaged rm = new System.Security.Cryptography.RijndaelManaged
+        {
+            Key = Encoding.UTF8.GetBytes(AESKey),
+            Mode = System.Security.Cryptography.CipherMode.ECB,
+            Padding = System.Security.Cryptography.PaddingMode.PKCS7
+        };
+
+        System.Security.Cryptography.ICryptoTransform cTransform = rm.CreateEncryptor();
+        Byte[] resultArray = cTransform.TransformFinalBlock(toEncryptArray, 0, toEncryptArray.Length);
+
+        return resultArray;
     }
 
     /// <summary>
@@ -195,6 +261,30 @@ public static class Utils
 
         return Encoding.UTF8.GetString(resultArray);
     }
+
+    /// <summary>
+    ///  AES 解密
+    /// </summary>
+    /// <param name="str">明文（待解密）</param>
+    /// <returns></returns>
+    public static byte[] AESDecrypt(byte[] bit)
+    {
+
+        Byte[] toEncryptArray = bit;
+
+        System.Security.Cryptography.RijndaelManaged rm = new System.Security.Cryptography.RijndaelManaged
+        {
+            Key = Encoding.UTF8.GetBytes(AESKey),
+            Mode = System.Security.Cryptography.CipherMode.ECB,
+            Padding = System.Security.Cryptography.PaddingMode.PKCS7
+        };
+
+        System.Security.Cryptography.ICryptoTransform cTransform = rm.CreateDecryptor();
+        Byte[] resultArray = cTransform.TransformFinalBlock(toEncryptArray, 0, toEncryptArray.Length);
+
+        return resultArray;
+    }
+
     #endregion
 
 

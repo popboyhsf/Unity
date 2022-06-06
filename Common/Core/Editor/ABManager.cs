@@ -19,7 +19,7 @@ public class ABManager : EditorWindow
     {
         NONE,
         FirstOrderInverse,
-        FirstRemoval,
+        AES,
     }
 
     private encryption Encryption;
@@ -41,7 +41,7 @@ public class ABManager : EditorWindow
 
         EditorGUILayout.LabelField("选择的合法物体数量为：" + SelectObjs.Length);
 
-        
+
 
         ABName = EditorGUILayout.TextField("AB包名字:", ABName);
 
@@ -114,16 +114,16 @@ public class ABManager : EditorWindow
             {
                 goto B;
             }
-            
+
         }
 
-        string _newUrl = Application.streamingAssetsPath +@"/"+ PackPatch;
+        string _newUrl = Application.streamingAssetsPath + @"/" + PackPatch;
         if (Directory.Exists(_newUrl) == false)
         {
             Directory.CreateDirectory(_newUrl);
         }
         FileStream fs = new FileStream(_newUrl + @"/" + PackName, FileMode.Create);
-        string _oldUrl = @"file://" + _url +@"/"+ ABName;
+        string _oldUrl = @"file://" + _url + @"/" + ABName;
         WWW www = new WWW(_oldUrl);
         byte[] bytes = www.bytes;
 
@@ -154,27 +154,18 @@ public class ABManager : EditorWindow
             case encryption.FirstOrderInverse:
                 bytes[0] = (byte)~bytes[0];
                 break;
-            case encryption.FirstRemoval:
-                byteHead = bytes[0];
+            case encryption.AES:
+                bytes = Utils.AESEncrypt(bytes);
                 break;
             default:
                 break;
         }
 
-        if (byteHead == bytes[0])
-        {
-            FileStream fs2 = new FileStream(_newUrl + @"/" + "EncryptionBpack", FileMode.Create);
-            fs2.Write(bytes, 0, 1);
-            fs2.Close();
-            fs.Write(bytes, 1, bytes.Length-1);
-            fs.Close();
-            goto A;
-        }
 
         fs.Write(bytes, 0, bytes.Length);
         fs.Close();
 
-        A: if (Directory.Exists(dir) == true)
+    A: if (Directory.Exists(dir) == true)
         {
             DirectoryInfo file1 = new DirectoryInfo(dir);
             deleteDirs(file1);
