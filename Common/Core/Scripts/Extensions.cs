@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using UnityEngine.UI;
 using UnityEngine.Events;
-
+using Spine.Unity;
 
 /// <summary>
 /// 拓展类
@@ -390,6 +390,25 @@ public static class Extensions
 
     #endregion
 
+    #region 骨骼动画
+
+    /// <summary>
+    /// 切换骨骼动画资源
+    /// </summary>
+    /// <param name="skeleton"></param>
+    /// <param name="patch">地址</param>
+    public static void ChangeSpineData(this GameObject skeleton, string patch, ref SkeletonAnimation animation)
+    {
+        var data = Resources.Load<SkeletonDataAsset>(patch);
+        if (data == null) Debuger.LogError("皮肤资源地址错误：" + patch);
+        else
+        {
+            animation = SkeletonAnimation.AddToGameObject(skeleton, data);
+        }
+    }
+
+    #endregion
+
     public static void AddListener(this Button btn, UnityAction onClick)
     {
         btn.onClick.AddListener(onClick);
@@ -437,6 +456,58 @@ public static class Extensions
         {
             long head = num / 1000;
             long behind = (num % 1000) / 100;
+            return head + "." + behind + "k";
+        }
+        else
+        {
+            return num.ToString();
+        }
+    }
+
+    public static string ToPriceString(this int num)
+    {
+        if (num > 1000000000)
+        {
+            long head = num / 1000000000;
+            long behind = (num % 1000000000) / 100000000;
+            return head + "." + behind + "g";
+        }
+        else if (num > 1000000)
+        {
+            long head = num / 1000000;
+            long behind = (num % 1000000) / 100000;
+            return head + "." + behind + "m";
+        }
+        else if (num > 1000)
+        {
+            long head = num / 1000;
+            long behind = (num % 1000) / 100;
+            return head + "." + behind + "k";
+        }
+        else
+        {
+            return num.ToString();
+        }
+    }
+
+    public static string ToPriceString(this float num)
+    {
+        if (num > 1000000000)
+        {
+            double head = num / 1000000000;
+            double behind = (num % 1000000000) / 100000000;
+            return head + "." + behind + "g";
+        }
+        else if (num > 1000000)
+        {
+            double head = num / 1000000;
+            double behind = (num % 1000000) / 100000;
+            return head + "." + behind + "m";
+        }
+        else if (num > 1000)
+        {
+            double head = num / 1000;
+            double behind = (num % 1000) / 100;
             return head + "." + behind + "k";
         }
         else

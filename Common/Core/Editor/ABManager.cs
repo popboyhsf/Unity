@@ -30,6 +30,12 @@ public class ABManager : EditorWindow
 
     private string PackName = "HeadCode.YJ";
 
+#if UNITY_ANDROID
+    private BuildTarget buildTarget = BuildTarget.Android;
+#elif UNITY_IPHONE
+    private BuildTarget buildTarget = BuildTarget.iOS;
+#endif
+
     private Object[] SelectObjs;
 
 
@@ -49,6 +55,11 @@ public class ABManager : EditorWindow
         PackName = EditorGUILayout.TextField("转换包名字:", PackName);
 
         Encryption = (encryption)EditorGUILayout.EnumPopup("加密方式：", Encryption);
+
+        buildTarget = (BuildTarget)EditorGUILayout.EnumPopup("AB包环境：", buildTarget);
+
+
+
         EditorGUILayout.BeginHorizontal();
         if (GUILayout.Button("开始作业"))
         {
@@ -102,7 +113,7 @@ public class ABManager : EditorWindow
         {
             Directory.CreateDirectory(dir);
         }
-        var ab = BuildPipeline.BuildAssetBundles(_url, BuildAssetBundleOptions.None, BuildTarget.Android);
+        var ab = BuildPipeline.BuildAssetBundles(_url, BuildAssetBundleOptions.None, buildTarget);
 
         if (!ab)
         {
@@ -144,8 +155,6 @@ public class ABManager : EditorWindow
         //}
         #endregion
 
-
-        byte byteHead = (byte)' ';
 
         switch (Encryption)
         {
@@ -237,5 +246,10 @@ public class ABManager : EditorWindow
         Debug.Log("删除文件夹:" + dirs.FullName + "__over");
         dirs.Delete();
     }
+
+
+
 }
+
+
 

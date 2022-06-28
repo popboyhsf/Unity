@@ -61,7 +61,7 @@ public class SoundController : SingletonMonoBehaviour<SoundController>
     //背景音乐
     private AudioSource musicAudioSource;
     //音效
-    private ComponentPool<AudioSource> audioSourcePool = new ComponentPool<AudioSource>(null,null,"音效");
+    private ComponentPool<AudioSource> audioSourcePool = new ComponentPool<AudioSource>();
 
     //音频路径
     private Dictionary<SoundType, string> audioClipPaths = new Dictionary<SoundType, string>();
@@ -187,12 +187,13 @@ public class SoundController : SingletonMonoBehaviour<SoundController>
         {
 #if ENCRYPT
             string[] str = path.Split('/');
+            path = "";
             for (int i = 0; i < str.Length - 1; i++)
             {
                 path += str[i] + @"/";
             }
 
-            path += Utils.AESEncrypt(str[1]).Replace("/", "_");
+            path += Utils.AESEncrypt(str[str.Length - 1]).Replace("/", "_");
 #endif
 
 
