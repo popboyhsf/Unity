@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Reflection;
 using UnityEngine;
 
@@ -261,11 +262,11 @@ public class DateTimeData : PlayerPrefsData
     {
         get
         {
-            return DateTime.Parse(PlayerPrefs.GetString(key, DateTime.MinValue.ToString()));
+            return DateTime.Parse(PlayerPrefs.GetString(key, DateTime.MinValue.ToString()), CultureInfo.InvariantCulture);
         }
         set
         {
-            PlayerPrefs.SetString(key, value.ToString());
+            PlayerPrefs.SetString(key, value.ToString(CultureInfo.InvariantCulture));
         }
     }
 
