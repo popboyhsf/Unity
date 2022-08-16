@@ -65,6 +65,7 @@ public class ToolsFuck
             var acAssetPath = AssetDatabase.GetAssetPath(objects[i]);
 
             string name = Utils.AESEncrypt(objects[i].name).Replace("/", "_");
+            Debug.Log(objects[i].name + " = 加密资源 = " + name);
             AssetDatabase.RenameAsset(acAssetPath, name);
         }
     }
@@ -78,7 +79,7 @@ public class ToolsFuck
             var acAssetPath = AssetDatabase.GetAssetPath(objects[i]);
 
             string name = Utils.AESDecrypt(objects[i].name.Replace("_", "/"));
-            Debug.Log(name);
+            Debug.Log(objects[i].name + " = 解密资源 = " + name);
             AssetDatabase.RenameAsset(acAssetPath, name);
         }
     }
