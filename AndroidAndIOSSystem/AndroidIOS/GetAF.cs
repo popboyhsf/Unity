@@ -15,18 +15,24 @@ public class GetAF : MonoBehaviour
     IEnumerator Delay()
     {
         yield return new WaitForSeconds(4f);
+#if UNITY_EDITOR
+
+        I2Language.Instance.ApplyLanguage(FackI2Language.Instance == null ? I2Language.LanguageEnum.EN : FackI2Language.Instance.LanguageLocal);
+
+#endif
+
 
 #if !SafeMode
 
-    #if ADV2
+#if ADV2
 
             CrossAndroid.GetAF();
 
 
-    #else
+#else
 
-            //AdController.ShowGameStartInterstitial(PlayerData.CashCount >= 0.01f);
-            CrossIos.Instance.GetAF(0);
+        //AdController.ShowGameStartInterstitial(PlayerData.CashCount >= 0.01f);
+        CrossIos.Instance.GetAF(0);
 
 #endif
 
@@ -115,11 +121,14 @@ public class GetAF : MonoBehaviour
         }
         else
         {
-            if (_gold >= 0.1f)
+            AnalysisController.OnAFStatusChanged += () =>
             {
-                if (!AnalysisController.IsNonOrganic)
-                    AnalysisController.TraceEvent(EventName.luck_miss);
-            }
+                if (_gold >= 0.1f)
+                {
+                    if (!AnalysisController.IsNonOrganic)
+                        AnalysisController.TraceEvent(EventName.luck_miss);
+                }
+            };
         }
 
 
