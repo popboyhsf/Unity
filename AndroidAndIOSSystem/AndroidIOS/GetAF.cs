@@ -20,7 +20,7 @@ public class GetAF : MonoBehaviour
 
     #if ADV2
 
-            AnalysisController.AfStatus = CrossAndroid.GetAF();
+            CrossAndroid.GetAF();
 
 
     #else
