@@ -28,15 +28,20 @@ public class GetAF : MonoBehaviour
             //AdController.ShowGameStartInterstitial(PlayerData.CashCount >= 0.01f);
             CrossIos.Instance.GetAF(0);
 
-    #endif
+#endif
 
 #endif
 
 
+        float _gold = -996; //TODO 后期接入礼品卡金额
+
+        _gold = GoldData.giftNum.Value;
+
+        if (_gold == -996) Debug.LogError("尚未接入礼品卡");
 
         if (isNotCallAF.Value)
         {
-            if (GoldData.giftNum.Value <= 0f)
+            if (_gold <= 0f)
             {
                 if (AnalysisController.IsNonOrganic)
                 {
@@ -48,7 +53,7 @@ public class GetAF : MonoBehaviour
 
             yield return new WaitForSeconds(6f); //6+4
 
-            if (GoldData.giftNum.Value <= 0f)
+            if (_gold <= 0f)
             {
                 if (AnalysisController.IsNonOrganic)
                 {
@@ -61,7 +66,7 @@ public class GetAF : MonoBehaviour
 
             yield return new WaitForSeconds(10f); //10+6+4
 
-            if (GoldData.giftNum.Value <= 0f)
+            if (_gold <= 0f)
             {
                 if (AnalysisController.IsNonOrganic)
                 {
@@ -73,7 +78,7 @@ public class GetAF : MonoBehaviour
 
             yield return new WaitForSeconds(10f); //10+10+6+4
 
-            if (GoldData.giftNum.Value <= 0f)
+            if (_gold <= 0f)
             {
                 if (AnalysisController.IsNonOrganic)
                 {
@@ -85,7 +90,7 @@ public class GetAF : MonoBehaviour
 
             yield return new WaitForSeconds(30f); //30+10+10+6+4
 
-            if (GoldData.giftNum.Value <= 0f)
+            if (_gold <= 0f)
             {
                 if (AnalysisController.IsNonOrganic)
                 {
@@ -97,7 +102,7 @@ public class GetAF : MonoBehaviour
 
             yield return new WaitForSeconds(60f); //60+30+10+10+6+4
 
-            if (GoldData.giftNum.Value <= 0f)
+            if (_gold <= 0f)
             {
                 if (AnalysisController.IsNonOrganic)
                 {
@@ -110,7 +115,7 @@ public class GetAF : MonoBehaviour
         }
         else
         {
-            if (GoldData.giftNum.Value >= 0.1f)
+            if (_gold >= 0.1f)
             {
                 if (!AnalysisController.IsNonOrganic)
                     AnalysisController.TraceEvent(EventName.luck_miss);
