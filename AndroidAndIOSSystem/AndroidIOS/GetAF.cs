@@ -7,6 +7,19 @@ public class GetAF : MonoBehaviour
 
     BoolData isNotCallAF = new BoolData("GetAF_AnalysisControllerLuckReady", true);
 
+    private bool allowDebug = false;
+    public bool AllowDebug
+    {
+        get => allowDebug;
+        set
+        {
+            allowDebug = value;
+            AnalysisController.AfStatus = allowDebug ? AnalysisController.AFStatus.NonOrganic : AnalysisController.AFStatus.Organic;
+        }
+    }
+
+    public string AllowName => "FackAF";
+
     void Start()
     {
         StartCoroutine(Delay());

@@ -692,6 +692,7 @@ public class CrossAndroid : MonoBehaviour
         activity.Call("LogEvetnForTrackLuckBalance", j, i);
     }
 
+    /// <summary>
     /// 返回国家 --- 需要在Android - GetAF后执行
     /// </summary>
     /// <param name="returnC"></param>
@@ -699,7 +700,11 @@ public class CrossAndroid : MonoBehaviour
     {
         var _s = returnC.ToUpper();
 
-        if (_s.IndexOf("TH") >= 0)
+        if (_s.IndexOf("OTH") >= 0)
+        {
+            I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.EN);
+        }
+        else if (_s.IndexOf("US") >= 0)
         {
             I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.EN);
         }
@@ -727,18 +732,48 @@ public class CrossAndroid : MonoBehaviour
         {
             I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.PH);
         }
+        else if (_s.IndexOf("DE") >= 0)
+        {
+            I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.DE);
+        }
+        else if (_s.IndexOf("FR") >= 0)
+        {
+            I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.FR);
+        }
+        //else if (_s.IndexOf("TH") >= 0)
+        //{
+        //    I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.TH);
+        //}
+        //else if (_s.IndexOf("VN") >= 0)
+        //{
+        //    I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.VN);
+        //}
+        else if (_s.IndexOf("MX") >= 0)
+        {
+            I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.MX);
+        }
+        else if (_s.IndexOf("TR") >= 0)
+        {
+            I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.TR);
+        }
+        else if (_s.IndexOf("EG") >= 0)
+        {
+            I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.EG);
+        }
         else
         {
             I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.EN);
         }
-
     }
 
     public void ReturnContryChangeUI(string returnC)
     {
         var _s = returnC.ToUpper();
-
-        if (_s.IndexOf("TH") >= 0)
+        if (_s.IndexOf("OTH") >= 0)
+        {
+            I2Language.Instance.ChangeUI(I2Language.LanguageEnum.EN);
+        }
+        else if (_s.IndexOf("US") >= 0)
         {
             I2Language.Instance.ChangeUI(I2Language.LanguageEnum.EN);
         }
@@ -766,11 +801,40 @@ public class CrossAndroid : MonoBehaviour
         {
             I2Language.Instance.ChangeUI(I2Language.LanguageEnum.PH);
         }
+        else if (_s.IndexOf("DE") >= 0)
+        {
+            I2Language.Instance.ChangeUI(I2Language.LanguageEnum.DE);
+        }
+        else if (_s.IndexOf("FR") >= 0)
+        {
+            I2Language.Instance.ChangeUI(I2Language.LanguageEnum.FR);
+        }
+        //else if (_s.IndexOf("TH") >= 0)
+        //{
+        //    I2Language.Instance.ChangeUI(I2Language.LanguageEnum.TH);
+        //}
+        //else if (_s.IndexOf("VN") >= 0)
+        //{
+        //    I2Language.Instance.ChangeUI(I2Language.LanguageEnum.VN);
+        //}
+        else if (_s.IndexOf("MX") >= 0)
+        {
+            I2Language.Instance.ChangeUI(I2Language.LanguageEnum.MX);
+        }
+        else if (_s.IndexOf("TR") >= 0)
+        {
+            I2Language.Instance.ChangeUI(I2Language.LanguageEnum.TR);
+        }
+        else if (_s.IndexOf("EG") >= 0)
+        {
+            I2Language.Instance.ChangeUI(I2Language.LanguageEnum.EG);
+        }
         else
         {
             I2Language.Instance.ChangeUI(I2Language.LanguageEnum.EN);
         }
     }
+
 
     /// <summary>
     /// 返回网络状态
