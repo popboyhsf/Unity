@@ -39,7 +39,8 @@ public class GetAF : MonoBehaviour
 
 #if ADV2
 
-            CrossAndroid.GetAF();
+         if(!allowDebug) 
+             CrossAndroid.GetAF();
 
 
 #else

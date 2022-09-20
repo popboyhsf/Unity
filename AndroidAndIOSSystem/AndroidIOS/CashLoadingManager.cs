@@ -77,10 +77,12 @@ public class CashLoadingManager : MonoBehaviour
         yield break;
     }
 
+
+
     IEnumerator endTimer()
     {
         timer = 0;
-
+        if (adFail.activeSelf) adFail.SetActive(false);
         while (adLoadingBack.activeSelf)
         {
             if (timer >= 1.5f)

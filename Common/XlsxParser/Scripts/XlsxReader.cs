@@ -147,7 +147,7 @@ public static class XlsxReader
             }
             catch (Exception e)
             {
-                //Debuger.LogError(e);
+                Debuger.LogError(e);
                 Debuger.LogError("请严格检查表格第二行key填写，请严格检查数值填写");
                 Debuger.LogError("错误表名：" + excelFile);
                 Debuger.LogError("错误参考行：" + (row + 2));

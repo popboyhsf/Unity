@@ -18,24 +18,29 @@ public class I2Language : MonoBehaviour
         }
     }
 
-    public UnityAction onApplyLanguage { get; set; }
+  
 
     public enum LanguageEnum
     {
-        EN = 0,
-        JP = 1,
-        KR = 2,
-        RU = 3,
-        BR = 4,
-        ID = 5,
-        PH = 6,
-        TH = 7,
-        VN = 8,
-        MX = 9,
+        EN,
+        JP,
+        KR,
+        RU,
+        BR,
+        ID,
+        PH,
+        //TH,
+        //VN,
+        MX,
+        DE,
+        FR,
+        EG,
+        TR,
     }
 
     public LanguageEnum Language { private set; get; } = LanguageEnum.EN;
 
+    public UnityAction onApplyLanguage { get; set; }
     public UnityAction OnChangeLanguage { get; set; }
 
     private void Awake()
@@ -64,12 +69,8 @@ public class I2Language : MonoBehaviour
 
 #if !UNITY_EDITOR
 
-
-        if (AnalysisController.IsNonOrganic)
-        {
-            onApplyLanguage?.Invoke();
-        }
-        else
+        onApplyLanguage?.Invoke();
+        if (!AnalysisController.IsNonOrganic)
         {
             AnalysisController.OnAFStatusChanged += () => {
 
@@ -93,55 +94,64 @@ public class I2Language : MonoBehaviour
         OnChangeLanguage?.Invoke();
     }
 
-    public string ChangeMoney(float i, bool usFolat = true)
+    public string ChangeMoney(float value, bool usFolat = true)
     {
         string _m = "";
 
-        if (usFolat) _m = i.ToString("0.00");
-        else _m = i.ToString("0");
+        if (usFolat) _m = value.ToString("0.00");
+        else _m = value.ToString("0");
 
 
         switch (Language)
         {
             case LanguageEnum.EN:
-                if (usFolat) _m = i.ToString("0.00");
-                else _m = i.ToString("0");
+                if (usFolat) _m = value.ToString("0.00");
+                else _m = value.ToString("0");
                 break;
             case LanguageEnum.JP:
-                var _i = Mathf.RoundToInt(i * 100);
+                var _i = Mathf.RoundToInt(value * 100);
                 _m = (_i).ToString();
                 break;
             case LanguageEnum.KR:
-                _i = Mathf.RoundToInt(i * 100);
+                _i = Mathf.RoundToInt(value * 100);
                 _m = (_i * 10).ToString();
                 break;
             case LanguageEnum.RU:
-                _i = Mathf.RoundToInt(i * 100);
+                _i = Mathf.RoundToInt(value * 100);
                 _m = (_i).ToString();
                 break;
             case LanguageEnum.BR:
-                var _ii = i * 5f;
-                _m = (_ii).ToString("0.00");
+                var _fi = value * 5;
+                if (usFolat) _m = (_fi).ToString("0.0");
+                else _m = _fi.ToString("0");
                 break;
             case LanguageEnum.ID:
-                _i = Mathf.RoundToInt(i * 100);
+                _i = Mathf.RoundToInt(value * 100);
                 _m = (_i * 150).ToString();
                 break;
             case LanguageEnum.PH:
-                var _iii = i * 50f;
-                _m = (_iii).ToString("0.00");
-                break;
-            case LanguageEnum.TH:
-                _iii = i * 30f;
-                _m = (_iii).ToString("0.00");
-                break;
-            case LanguageEnum.VN:
-                _i = Mathf.RoundToInt(i * 200);
-                _m = (_i * 100).ToString();
+                _fi = value * 50f;
+                _m = (_fi).ToString("0.0");
                 break;
             case LanguageEnum.MX:
-                _ii = i * 20f;
-                _m = (_ii).ToString("0.00");
+                _fi = value * 20f;
+                _m = (_fi).ToString("0.0");
+                break;
+            case LanguageEnum.DE:
+                if (usFolat) _m = value.ToString("0.00");
+                else _m = value.ToString("0");
+                break;
+            case LanguageEnum.FR:
+                if (usFolat) _m = value.ToString("0.00");
+                else _m = value.ToString("0");
+                break;
+            case LanguageEnum.EG:
+                _fi = value * 15f;
+                _m = (_fi).ToString("0.0");
+                break;
+            case LanguageEnum.TR:
+                _fi = value * 15f;
+                _m = (_fi).ToString("0.0");
                 break;
             default:
                 break;
@@ -156,6 +166,7 @@ public class I2Language : MonoBehaviour
 
         _m = "$";
 
+
         switch (Language)
         {
             case LanguageEnum.EN:
@@ -168,25 +179,31 @@ public class I2Language : MonoBehaviour
                 _m = "₩";
                 break;
             case LanguageEnum.RU:
-                _m = "^";
+                _m = "₽";
                 break;
             case LanguageEnum.BR:
                 _m = @"R$";
                 break;
             case LanguageEnum.ID:
-                _m = "RP"; 
+                _m = "§";
                 break;
             case LanguageEnum.PH:
-                _m = "PHP";
-                break;
-            case LanguageEnum.TH:
-                _m = "[";
-                break;
-            case LanguageEnum.VN:
-                _m = "]";
+                _m = "¤";
                 break;
             case LanguageEnum.MX:
-                _m = "MXN";
+                _m = "^";
+                break;
+            case LanguageEnum.DE:
+                _m = "€";
+                break;
+            case LanguageEnum.FR:
+                _m = "€";
+                break;
+            case LanguageEnum.EG:
+                _m = "→";
+                break;
+            case LanguageEnum.TR:
+                _m = "←";
                 break;
             default:
                 break;

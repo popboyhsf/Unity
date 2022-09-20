@@ -5,9 +5,6 @@ using UnityEngine;
 public class CreatCurve
 {
     private int vertexCount;
-
-    private List<Transform> positions;
-
     private List<Vector3> pointList;
 
     public List<Vector3> PointList { get => pointList; }
@@ -20,12 +17,20 @@ public class CreatCurve
     public CreatCurve(List<Transform> objs, int vertexCount)
     {
         pointList = new List<Vector3>();
-        this.positions = new List<Transform>(objs);
+        var positions = new List<Transform>(objs);
         this.vertexCount = vertexCount;
-        BezierCurveWithUnlimitPoints();
+        BezierCurveWithUnlimitPoints(positions);
     }
 
-    public void BezierCurveWithUnlimitPoints()
+    public CreatCurve(List<Vector3> objs, int vertexCount)
+    {
+        pointList = new List<Vector3>();
+        var positionsV3 = new List<Vector3>(objs);
+        this.vertexCount = vertexCount;
+        BezierCurveWithUnlimitPoints(positionsV3);
+    }
+
+    public void BezierCurveWithUnlimitPoints(List<Transform> positions)
     {
         pointList.Clear();
         for (float ratio = 0; ratio <= 1; ratio += 1.0f / vertexCount)
@@ -35,7 +40,17 @@ public class CreatCurve
         pointList.Add(positions[positions.Count - 1].position);
     }
 
+    public void BezierCurveWithUnlimitPoints(List<Vector3> positions)
+    {
+        pointList.Clear();
+        for (float ratio = 0; ratio <= 1; ratio += 1.0f / vertexCount)
+        {
+            pointList.Add(UnlimitBezierCurve(positions, ratio));
+        }
+        pointList.Add(positions[positions.Count - 1]);
+    }
 
+    
     public Vector3 UnlimitBezierCurve(List<Transform> trans, float t)
     {
         Vector3[] temp = new Vector3[trans.Count];
@@ -53,5 +68,21 @@ public class CreatCurve
         }
         return temp[0];
     }
-
+    public Vector3 UnlimitBezierCurve(List<Vector3> trans, float t)
+    {
+        Vector3[] temp = new Vector3[trans.Count];
+        for (int i = 0; i < temp.Length; i++)
+        {
+            temp[i] = trans[i];
+        }
+        int n = temp.Length - 1;
+        for (int i = 0; i < n; i++)
+        {
+            for (int j = 0; j < n - i; j++)
+            {
+                temp[j] = Vector3.Lerp(temp[j], temp[j + 1], t);
+            }
+        }
+        return temp[0];
+    }
 }

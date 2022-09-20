@@ -1,16 +1,19 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEditor;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
-public class ABManager : EditorWindow
+
+public class ResAESManager : EditorWindow
 {
-    [MenuItem("Tools/YuanJi/ABManager", false, 0)]
+    [MenuItem("Tools/YuanJi/ResAESManager", false, 1)]
     private static void AddWindow()
     {
         Rect wr = new Rect(0, 0, 400, 150);
-        ABManager window = (ABManager)EditorWindow.GetWindowWithRect(typeof(ABManager), wr, true, "ABManager");
+        ResAESManager window = (ResAESManager)EditorWindow.GetWindowWithRect(typeof(ResAESManager), wr, true, "ResAESManager");
         window.Show();
     }
 
@@ -24,11 +27,7 @@ public class ABManager : EditorWindow
 
     private encryption Encryption = encryption.AES;
 
-    private string ABName = "headimg.abc";
-
-    private string PackPatch = "UnkonwPack";
-
-    private string PackName = "wibng.IS"; //TODO 
+    private string PackPatch = "Sprite";
 
 #if UNITY_ANDROID
     private BuildTarget buildTarget = BuildTarget.Android;
@@ -38,6 +37,7 @@ public class ABManager : EditorWindow
 
     private Object[] SelectObjs;
 
+    private Dictionary<string, AssetBundleManifest> abs = new Dictionary<string, AssetBundleManifest>();
 
     private void OnGUI()
     {
@@ -47,20 +47,14 @@ public class ABManager : EditorWindow
 
         EditorGUILayout.LabelField("选择的合法物体数量为：" + SelectObjs.Length);
 
-
-
-        ABName = EditorGUILayout.TextField("AB包名字:", ABName);
-
-        PackPatch = EditorGUILayout.TextField("转换包地址:", PackPatch);
-        PackName = EditorGUILayout.TextField("转换包名字:", PackName);
+        PackPatch = EditorGUILayout.TextField("目录：", PackPatch);
 
         Encryption = (encryption)EditorGUILayout.EnumPopup("加密方式：", Encryption);
 
         buildTarget = (BuildTarget)EditorGUILayout.EnumPopup("AB包环境：", buildTarget);
 
-
-
         EditorGUILayout.BeginHorizontal();
+
         if (GUILayout.Button("开始作业"))
         {
             BuildAllAssetBundles();
@@ -75,6 +69,7 @@ public class ABManager : EditorWindow
             Delete();
         }
 
+
         EditorGUILayout.EndHorizontal();
 
         EditorGUILayout.EndVertical();
@@ -87,17 +82,22 @@ public class ABManager : EditorWindow
         this.Repaint();
     }
 
+
     void BuildAllAssetBundles()
     {
+
         if (SelectObjs.Length <= 0)
         {
-            if (EditorUtility.DisplayDialog("ABManager", "打包失败：请选取至少一个物体！", "OK"))
+            if (EditorUtility.DisplayDialog("ResAESManager", "打包失败：请选取至少一个物体！", "OK"))
             {
                 return;
             }
         }
 
-        var ABNameList = ABName.Split('.');
+        Object[] _selectObjs = new Object[SelectObjs.Length];
+
+        Array.Copy(SelectObjs, _selectObjs, SelectObjs.Length);
+
 
         string _url = Application.streamingAssetsPath + @"/AB";
         string dir = _url;
@@ -112,52 +112,61 @@ public class ABManager : EditorWindow
             Directory.CreateDirectory(_newUrl);
         }
 
-        for (int i = 0; i < SelectObjs.Length; i++)
+        for (int i = 0; i < _selectObjs.Length; i++)
         {
-            AssetImporter.GetAtPath(AssetDatabase.GetAssetPath(SelectObjs[i])).assetBundleName = ABNameList[0];
-            AssetImporter.GetAtPath(AssetDatabase.GetAssetPath(SelectObjs[i])).assetBundleVariant = ABNameList[1];
-        }
+            var _name = _selectObjs[i].name;
+            AssetImporter.GetAtPath(AssetDatabase.GetAssetPath(_selectObjs[i])).assetBundleName = _name;
+            AssetImporter.GetAtPath(AssetDatabase.GetAssetPath(_selectObjs[i])).assetBundleVariant = Encryption.ToString();
 
+            var ab = BuildPipeline.BuildAssetBundles(_url, BuildAssetBundleOptions.None, buildTarget);
 
-
-        var ab = BuildPipeline.BuildAssetBundles(_url, BuildAssetBundleOptions.None, buildTarget);
-
-        if (!ab)
-        {
-            if (EditorUtility.DisplayDialog("ABManager", "打包失败：没有AB资源，是否删除错误目录？", "是", "否"))
+            if (!ab)
             {
-                goto A;
-            }
-            else
-            {
-                goto B;
+                if (EditorUtility.DisplayDialog("ResAESManager", "打包失败：没有AB资源，是否删除错误目录？", "是", "否"))
+                {
+                    goto A;
+                }
+                else
+                {
+                    goto B;
+                }
+
             }
 
+            abs.Add(_name, ab);
         }
 
 
-        FileStream fs = new FileStream(_newUrl + @"/" + PackName, FileMode.Create);
-        string _oldUrl = _url + @"/" + ABName;
-        byte[] bytes = File.ReadAllBytes(_oldUrl);
-
-
-        switch (Encryption)
+        foreach (var item in abs)
         {
-            case encryption.NONE:
-                break;
-            case encryption.FirstOrderInverse:
-                bytes[0] = (byte)~bytes[0];
-                break;
-            case encryption.AES:
-                bytes = Utils.AESEncrypt(bytes);
-                break;
-            default:
-                break;
+
+            FileStream fs = new FileStream(_newUrl + @"/" + item.Key, FileMode.Create);
+            string _oldUrl = _url + @"/" + item.Key.ToLower() + @"." + Encryption.ToString();
+
+            byte[] bytes = File.ReadAllBytes(_oldUrl);
+
+            switch (Encryption)
+            {
+                case encryption.NONE:
+                    break;
+                case encryption.FirstOrderInverse:
+                    bytes[0] = (byte)~bytes[0];
+                    break;
+                case encryption.AES:
+                    bytes = Utils.AESEncrypt(bytes);
+                    break;
+                default:
+                    break;
+            }
+
+
+            fs.Write(bytes, 0, bytes.Length);
+            fs.Close();
+
+            Debug.Log("AB :" + item.Key + "__Over");
         }
 
 
-        fs.Write(bytes, 0, bytes.Length);
-        fs.Close();
 
 
     A: if (Directory.Exists(dir) == true)
@@ -168,13 +177,22 @@ public class ABManager : EditorWindow
 
         }
 
-        if (ab)
-            if (EditorUtility.DisplayDialog("ABManager", "打包成功", "OK"))
+        bool isNot = false;
+        foreach (var item in abs)
+        {
+            if (item.Value == null)
+                isNot = true;
+        }
+
+        if (!isNot)
+            if (EditorUtility.DisplayDialog("ResAESManager", "打包成功", "OK"))
             {
                 this.Close();
             }
 
         B: AssetDatabase.Refresh();
+
+        abs.Clear();
     }
 
     void Delete()
