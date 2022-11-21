@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class OrganicEnable : MonoBehaviour
 {
+    [Header("是否是买量显示")]
+    public bool IsNonOrganicShow = true;
+
     void Start()
     {
         AnalysisController.OnAFStatusChanged += RefreshDisplay;
@@ -12,6 +15,6 @@ public class OrganicEnable : MonoBehaviour
 
     private void RefreshDisplay()
     {
-        gameObject.SetActive(!AnalysisController.IsNonOrganic);
+        if (this != null) gameObject.SetActive(!(AnalysisController.IsNonOrganic ^ IsNonOrganicShow));
     }
 }

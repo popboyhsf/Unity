@@ -5,7 +5,7 @@ using System.Linq;
 
 public class FindMiss : EditorWindow
 {
-    [MenuItem("Tools/FindMiss")]
+    [MenuItem("Tools/YuanJi/FindMiss")]
     static void ShowWindow()
     {
         prefabs.Clear();

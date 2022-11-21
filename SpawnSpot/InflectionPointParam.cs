@@ -7,6 +7,7 @@ public class InflectionPointParam : MonoBehaviour
 {
     private List<Vector3> objs;
     private int vertexCount;
+    private CreatCurve tempCurve;
 
     /// <summary>
     /// 开始移动
@@ -21,11 +22,17 @@ public class InflectionPointParam : MonoBehaviour
         StartCoroutine(StartMoveSin(callBack));
     }
 
-    IEnumerator StartMoveSin(UnityAction callBack)
+    private void MoveEnd(UnityAction callBack)
+    {
+        callBack?.Invoke();
+        Destroy(this.gameObject);
+    }
+
+    private IEnumerator StartMoveSin(UnityAction callBack)
     {
         int index = 0;
 
-        var bezier = new CreatCurve(objs, vertexCount);
+        var bezier = tempCurve = new CreatCurve(objs, vertexCount);
 
         while (index <= bezier.PointList.Count - 1)
         {
@@ -34,9 +41,10 @@ public class InflectionPointParam : MonoBehaviour
             yield return null;
         }
 
-        Destroy(this.gameObject);
 
-        callBack?.Invoke();
+        MoveEnd(callBack);
+
+
     }
 
 
@@ -53,10 +61,10 @@ public class InflectionPointParam : MonoBehaviour
 
         Gizmos.color = Color.red;
 
-        Vector3[] temp = new Vector3[objs.Count];
+        Vector3[] temp = new Vector3[tempCurve.PointList.Count];
         for (int i = 0; i < temp.Length; i++)
         {
-            temp[i] = objs[i];
+            temp[i] = tempCurve.PointList[i];
         }
         int n = temp.Length - 1;
         for (float ratio = 0.5f / vertexCount; ratio < 1; ratio += 1.0f / vertexCount)

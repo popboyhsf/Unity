@@ -27,13 +27,15 @@ public class FackAF : MonoBehaviour
             isFackAF = isAF;
             if (isFackAF)
             {
-                AnalysisController.OnAFStatusChanged?.Invoke();
+                
                 AnalysisController.AfStatus = AnalysisController.AFStatus.NonOrganic;
+                AnalysisController.OnAFStatusChanged?.Invoke();
             }
             else
             {
-                AnalysisController.OffAFStatusChanged?.Invoke();
+                
                 AnalysisController.AfStatus = AnalysisController.AFStatus.Organic;
+                AnalysisController.OffAFStatusChanged?.Invoke();
 
             }
         }

@@ -57,7 +57,7 @@ public class GetAF : MonoBehaviour
 
         _gold = GoldData.giftNum.Value;
 
-        if (_gold == -996) Debug.LogError("尚未接入礼品卡");
+        if (_gold == -996) Debuger.LogError("尚未接入礼品卡");
 
         if (isNotCallAF.Value)
         {

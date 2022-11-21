@@ -11,7 +11,10 @@ public class SpawnSpotManager : MonoBehaviour
     [SerializeField]
     float flySpeed;
 
-    [SerializeField, Range(0f, 90f)]
+    [SerializeField]
+    float endObjLarp = 1f;
+
+    [SerializeField, Range(0f, 180f)]
     float radian;
 
     [SerializeField, Range(0f, 1f)]
@@ -21,16 +24,17 @@ public class SpawnSpotManager : MonoBehaviour
     Transform targetPos;
 
     [SerializeField]
-    GameObject flyPointObj;
+    GameObject flyPointObj,endPointObj;
 
 
     private void Awake()
     {
         _instance = this;
         flyPointObj.SetActive(false);
+        endPointObj.SetActive(false);
     }
 
-    public void SpawnPoint(MainStageChild stageChild)
+    public void SpawnPoint(MainStageChild stageChild,int value)
     {
         //stageChild.ChangeBackImage(null);
 
@@ -44,7 +48,17 @@ public class SpawnSpotManager : MonoBehaviour
 
         SumPos(stageChild.transform.position, targetPos.position,out List<Vector3> newP);
 
-        _sc.StartSinMove(newP, null ,flySpeed);
+        _sc.StartSinMove(newP, ()=> {
+
+            EnergyData.AddEnergy(value);
+
+            var _obj = Instantiate(endPointObj, endPointObj.transform.parent);
+            _obj.SetActive(true);
+            _obj.transform.position = _sc.transform.position;
+            Destroy(_obj, endObjLarp);
+            
+
+        } ,flySpeed);
     }
 
 
@@ -59,7 +73,7 @@ public class SpawnSpotManager : MonoBehaviour
 
         _tempPoint += startPoint;
 
-        var _xOffset = Vector3.Distance(_tempPoint, startPoint) * Mathf.Tan(radian);
+        var _xOffset = Vector2.Distance(_tempPoint, startPoint) * Mathf.Tan(radian);
 
         var _offset = Random.Range(0, 2) == 1 ? 1 : -1;
 

@@ -24,6 +24,7 @@ public class CrossAndroid : MonoBehaviour
     {
         gameObject.name = "CrossAndroidObject";
         DontDestroyOnLoad(gameObject);
+        Application.targetFrameRate = 60;
         CheckInited();
         GetVersionInfo();
     }
@@ -284,7 +285,7 @@ public class CrossAndroid : MonoBehaviour
     private void Awake()
     {
         gameObject.name = "CrossAndroidObject";
-        //DontDestroyOnLoad(gameObject);
+        Application.targetFrameRate = 60;
         CheckInited();
         GetVersionInfo();
 #if !UNITY_ANDROID
@@ -654,6 +655,8 @@ public class CrossAndroid : MonoBehaviour
         if (!CheckInited())
         {
             Debuger.Log("CheckInited ==== false");
+            AnalysisController.AfStatus = AnalysisController.AFStatus.Unknow;
+            AnalysisController.OffAFStatusChanged?.Invoke();
             return AnalysisController.AFStatus.Unknow;
         }
 

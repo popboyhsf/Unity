@@ -268,7 +268,7 @@ public static class AnalysisController
 #if UNITY_EDITOR
             if (FackAF.isFackAF) return true;
 #endif
-            if (fixOrganic.Value >= 0) return fixOrganic.Value.IntToBool();
+            if (fixOrganic.Value > 0) return fixOrganic.Value.IntToBool();
             return MustNonOrganic || (AfStatus == AFStatus.NonOrganic);
         }
     }
