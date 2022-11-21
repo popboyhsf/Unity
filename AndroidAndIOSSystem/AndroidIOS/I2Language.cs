@@ -105,21 +105,20 @@ public class I2Language : MonoBehaviour
                 _m = (_i).ToString();
                 break;
             case LanguageEnum.BR:
-                var _fi = i * 5;
-                if (usFolat) _m = (_fi).ToString("0.0");
-                else _m = _fi.ToString("0");
+                if (usFolat) _m = (i * 5).ToString("0.0");
+                else _m = (i * 5).ToString("0");
                 break;
             case LanguageEnum.ID:
-                _i = Mathf.RoundToInt(i * 100);
-                _m = (_i * 150).ToString();
+                _i = Mathf.RoundToInt(i * 150);
+                _m = (_i * 100).ToString();
                 break;
             case LanguageEnum.PH:
-                var _iii = i * 50f;
-                _m = (_iii).ToString("0.0");
+                if (usFolat) _m = (i * 50f).ToString("0.0");
+                else _m = (i * 50f).ToString("0");
                 break;
             case LanguageEnum.MX:
-                _fi = i * 20f;
-                _m = (_fi).ToString("0.0");
+                if (usFolat) _m = (i * 20f).ToString("0.0");
+                else _m = (i * 20f).ToString("0");
                 break;
             case LanguageEnum.DE:
                 if (usFolat) _m = i.ToString("0.00");
@@ -142,7 +141,7 @@ public class I2Language : MonoBehaviour
                 else _m = (i * 35f).ToString("0");
                 break;
             case LanguageEnum.VN:
-                _i = Mathf.RoundToInt(i * 200);
+                _i = Mathf.RoundToInt(i * 250);
                 _m = (_i * 100).ToString();
                 break;
             case LanguageEnum.IN:
