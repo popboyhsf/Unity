@@ -29,13 +29,16 @@ public class I2Language : MonoBehaviour
         BR,
         ID,
         PH,
-        //TH,
-        //VN,
         MX,
         DE,
         FR,
         EG,
         TR,
+        TH,
+        VN,
+        IN,
+        PK,
+        BD,
     }
 
     public LanguageEnum Language { private set; get; } = LanguageEnum.EN;

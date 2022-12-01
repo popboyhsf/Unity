@@ -19,3 +19,9 @@ public enum PopUIEnum
     HTPTipUI_pop,
     RateUSUI_pop,
 }
+
+public enum PopUIType
+{
+    POP,
+    TOP,
+}

@@ -108,6 +108,7 @@ public class AtlasReader : SingletonMonoBehaviour<AtlasReader>
             GetGetItemHeadByABAES(item);
         }
 
+        packInfos[info.atlasName].Clear();
 
     }
 
@@ -129,3 +130,23 @@ public struct AtlasPackInfo
         this.img = img;
     }
 }
+
+/**
+ *   public void LoadImg(string name,Image img)
+    {
+
+#if ENCRYPT
+        var _atlasName = name.Split('/')[0];
+        var _iconName = name.Split('/')[1];
+        var _url = @"/" + path + @"/" + _atlasName;
+        AtlasPackInfo _info = new AtlasPackInfo(_url, _atlasName, _iconName, img);
+        AtlasReader.Instance.GetGetItemHeadByABAES(_info);
+
+#else
+        img.sprite = ResourceManager.LoadResource<Sprite>(path + "/" + name, true);
+#endif
+
+
+
+    }
+ * **/
