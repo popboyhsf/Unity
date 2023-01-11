@@ -36,9 +36,9 @@ public class I2Language : MonoBehaviour
         TR,
         TH,
         VN,
-        IN,
-        PK,
-        BD,
+        IN,//HI
+        PK,//UR
+        BD,//BN
     }
 
     public LanguageEnum Language { private set; get; } = LanguageEnum.EN;
@@ -146,6 +146,7 @@ public class I2Language : MonoBehaviour
             case LanguageEnum.VN:
                 _i = Mathf.RoundToInt(i * 250);
                 _m = (_i * 100).ToString();
+                //_m = _i .ToString("### ### ### ### ### ###").TrimStart().Replace(" ",".");
                 break;
             case LanguageEnum.IN:
                 _i = Mathf.RoundToInt(i * 100);
@@ -197,7 +198,7 @@ public class I2Language : MonoBehaviour
                 _m = "¤";
                 break;
             case LanguageEnum.MX:
-                _m = "^";
+                _m = "MXN";//Mex$
                 break;
             case LanguageEnum.DE:
                 _m = "€";

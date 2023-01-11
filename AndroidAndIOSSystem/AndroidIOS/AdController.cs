@@ -19,10 +19,8 @@ public class AdController
         }
     }
 
-    [CheatableAttribute("是否禁用广告")]
-    public static BoolData IsDebug { get; set; } = new BoolData("AdController_IsDebug", false);
 
-    public static bool isDebug { get => IsDebug.Value; }
+    public static bool isDebug { get; set; }
 
     /// <summary>
     /// 播放插屏广告
@@ -204,10 +202,8 @@ public class AdController
         }
     }
 
-    [CheatableAttribute("是否禁用广告")]
-    public static BoolData IsDebug { get; set; } = new BoolData("AdController_IsDebug",false);
 
-    public static bool isDebug { get => IsDebug.Value; }
+    public static bool isDebug { get; set; }
 
     private static UnityAction watchCompletedActionSelf;
     private static UnityAction watchFailActionSelf;

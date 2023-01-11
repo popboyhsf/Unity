@@ -100,6 +100,21 @@ public static class StringExtensions /*: ICalculator*/
         return prefix + suffix;
     }
 
+    public static int ToInt(this string str)
+    {
+        var _value = 0;
+        try
+        {
+            _value = str.GreaterOrEqual("2147483647") ? 2147483647 : int.Parse(str);
+        }
+        catch (Exception)
+        {
+
+            Debug.LogError("大整数转成Int失败");
+        }
+        return _value;
+    }
+
     //大整数加法
     public static string Add(this string param1, string param2)
     {
@@ -125,7 +140,7 @@ public static class StringExtensions /*: ICalculator*/
     //大整数减法
     public static string Sub(this string param1, string param2)
     {
-        if (param1.LessOrEqual( param2))
+        if (param1.LessOrEqual(param2))
         {
             return "0";
         }
@@ -174,7 +189,7 @@ public static class StringExtensions /*: ICalculator*/
     }
 
     static int divLength = 4;
-    public static string Div(this string param1, string param2, string minValue="1")
+    public static string Div(this string param1, string param2, string minValue = "1")
     {
         //Dbg.Log(param1 + " Div " + param2);
 
@@ -240,7 +255,7 @@ public static class StringExtensions /*: ICalculator*/
     }
 
     //大整数大于等于
-    public static bool GreaterOrEqual (this string param1, string param2)
+    public static bool GreaterOrEqual(this string param1, string param2)
     {
         return param1.Greater(param2) || param1 == param2;
     }
@@ -296,7 +311,7 @@ public static class StringExtensions /*: ICalculator*/
         //调用自定义方法代替规范化数组
         char[] cha = initArray(ch1, length);
         char[] chb = initArray(ch2, length);
-        char[] chc = initArray(length+1);
+        char[] chc = initArray(length + 1);
 
         for (int i = 0; i < length; i++)
         {
@@ -341,11 +356,11 @@ public static class StringExtensions /*: ICalculator*/
             {
                 return true;
             }
-            else if(num1 < num2)
+            else if (num1 < num2)
             {
                 return false;
             }
-            else if(num1 == num2)
+            else if (num1 == num2)
             {
                 continue;
             }
@@ -399,7 +414,7 @@ public static class StringExtensions /*: ICalculator*/
     }
 
     //个位整数与数组除法
-    private static string div(string param1,int n)
+    private static string div(string param1, int n)
     {
         string result = param1.Remove(param1.Length - n, n);
         return result;
