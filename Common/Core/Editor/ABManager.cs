@@ -30,7 +30,9 @@ public class ABManager : EditorWindow
 
     private string PackName = "wibng.IS"; //TODO 
 
-#if UNITY_ANDROID
+#if UNITY_STANDALONE_WIN
+    private BuildTarget buildTarget = BuildTarget.StandaloneWindows;
+#elif UNITY_ANDROID
     private BuildTarget buildTarget = BuildTarget.Android;
 #elif UNITY_IPHONE
     private BuildTarget buildTarget = BuildTarget.iOS;

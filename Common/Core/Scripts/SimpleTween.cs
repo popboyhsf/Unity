@@ -54,7 +54,7 @@ namespace Mkey
             SimpleTween sT = gO.AddComponent<SimpleTween>();
             Instance = sT;
             tweenObjects = new List<SimpleTweenObject>();
-            gO.AddComponent<DontDestroyObj>();
+            DontDestroyOnLoad(gO);
         }
 
         /// <summary>

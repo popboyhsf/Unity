@@ -32,13 +32,16 @@ public class I2Language : MonoBehaviour
         MX,
         DE,
         FR,
-        EG,
+        EG,//AR
         TR,
         TH,
-        VN,
+        VN,//VI
         IN,//HI
         PK,//UR
         BD,//BN
+
+        ZA,//AF
+        NG,
     }
 
     public LanguageEnum Language { private set; get; } = LanguageEnum.EN;
@@ -113,7 +116,7 @@ public class I2Language : MonoBehaviour
                 break;
             case LanguageEnum.ID:
                 _i = Mathf.RoundToInt(i * 150);
-                _m = (_i * 100).ToString();
+                _m = (_i * 100).ToString("###,###,####,###,###,###");
                 break;
             case LanguageEnum.PH:
                 if (usFolat) _m = (i * 50f).ToString("0.0");
@@ -145,8 +148,7 @@ public class I2Language : MonoBehaviour
                 break;
             case LanguageEnum.VN:
                 _i = Mathf.RoundToInt(i * 250);
-                _m = (_i * 100).ToString();
-                //_m = _i .ToString("### ### ### ### ### ###").TrimStart().Replace(" ",".");
+                _m = (_i * 100).ToString("###,###,####,###,###,###");
                 break;
             case LanguageEnum.IN:
                 _i = Mathf.RoundToInt(i * 100);
@@ -158,6 +160,14 @@ public class I2Language : MonoBehaviour
                 break;
             case LanguageEnum.BD:
                 _i = Mathf.RoundToInt(i * 100);
+                _m = (_i).ToString();
+                break;
+            case LanguageEnum.ZA:
+                _i = Mathf.RoundToInt(i * 20);
+                _m = (_i).ToString();
+                break;
+            case LanguageEnum.NG:
+                _i = Mathf.RoundToInt(i * 500);
                 _m = (_i).ToString();
                 break;
             default:
@@ -192,13 +202,13 @@ public class I2Language : MonoBehaviour
                 _m = @"R$";
                 break;
             case LanguageEnum.ID:
-                _m = "§";
+                _m = "Rp";
                 break;
             case LanguageEnum.PH:
-                _m = "¤";
+                _m = "₱";
                 break;
             case LanguageEnum.MX:
-                _m = "MXN";//Mex$
+                _m = "Mex$";//Mex$
                 break;
             case LanguageEnum.DE:
                 _m = "€";
@@ -207,10 +217,10 @@ public class I2Language : MonoBehaviour
                 _m = "€";
                 break;
             case LanguageEnum.EG:
-                _m = "→";
+                _m = "E£";
                 break;
             case LanguageEnum.TR:
-                _m = "←";
+                _m = "₺";
                 break;
             case LanguageEnum.VN:
                 _m = "₫";
@@ -227,11 +237,27 @@ public class I2Language : MonoBehaviour
             case LanguageEnum.BD:
                 _m = "৳";
                 break;
+            case LanguageEnum.ZA:
+                _m = "R.";
+                break;
+            case LanguageEnum.NG:
+                _m = "₦";
+                break;
             default:
                 break;
         }
 
         return _m;
+    }
+
+    public string ChangeMoneyAndIcon(float i, bool usFolat = true, string interval = "")
+    {
+        if (Language == LanguageEnum.ID)
+        {
+            return ChangeMoney(i, usFolat) + interval + ChangeMoneyIcon();
+        }
+
+        return ChangeMoneyIcon() + interval + ChangeMoney(i, usFolat);
     }
 
     public bool IsInI2(string _contry)
