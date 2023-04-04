@@ -140,6 +140,10 @@ namespace Mkey
        
        
     }
+
+    /// <summary>
+    /// 顺序序列
+    /// </summary>
     public class TweenSeq
     {
 
@@ -255,6 +259,9 @@ namespace Mkey
         }
     }
 
+    /// <summary>
+    /// 并行序列
+    /// </summary>
 
     public class ParallelTween
     {

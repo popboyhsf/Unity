@@ -12,6 +12,9 @@ public class GiftCardCheckTool : MonoBehaviour
     bool isUseWait = false;
     [SerializeField]
     Sprite localIcon;
+    [Space]
+    [SerializeField]
+    bool usResize = false;
 
     private Image icon;
     private Image Icon
@@ -46,7 +49,11 @@ public class GiftCardCheckTool : MonoBehaviour
 
         if (isUseWait && GiftCardChosseManager.Instance.RemeberGiftCardTypeID.Value < 0)
         {
-            if(localIcon) Icon.sprite = localIcon;
+            if (localIcon)
+            {
+                Icon.sprite = localIcon;
+                if (usResize) Icon.SetNativeSize();
+            }
             yield break;
         }
 
@@ -61,6 +68,7 @@ public class GiftCardCheckTool : MonoBehaviour
             }
 
             Icon.sprite = GiftCardChosseManager.Instance.GetGiftCardType(ID);
+            if (usResize) Icon.SetNativeSize();
         }
     }
 
