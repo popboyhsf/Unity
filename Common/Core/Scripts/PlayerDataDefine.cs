@@ -404,7 +404,7 @@ public class DictionaryData<TKey, TValue> : PlayerPrefsData, ICollection<KeyValu
         }
     }
 
-    public bool IsReadOnly => throw new NotImplementedException();
+    public bool IsReadOnly => false;
 
     public DictionaryData(string key, Dictionary<TKey, TValue> dic = null) : base(key, dic)
     {
@@ -464,7 +464,9 @@ public class DictionaryData<TKey, TValue> : PlayerPrefsData, ICollection<KeyValu
 
     public void Add(KeyValuePair<TKey, TValue> item)
     {
-        throw new NotImplementedException();
+        Dictionary<TKey, TValue> temp = Value;
+        temp.Add(item.Key, item.Value);
+        Value = temp;
     }
 
     public void Clear()
@@ -476,17 +478,29 @@ public class DictionaryData<TKey, TValue> : PlayerPrefsData, ICollection<KeyValu
 
     public bool Contains(KeyValuePair<TKey, TValue> item)
     {
-        throw new NotImplementedException();
+        return Value.ContainsKey(item.Key) && Value[item.Key].Equals(item.Value);
     }
 
     public void CopyTo(KeyValuePair<TKey, TValue>[] array, int arrayIndex)
     {
-        throw new NotImplementedException();
+        Dictionary<TKey, TValue> temp = Value;
+        foreach (var item in array)
+        {
+            temp.Add(item.Key, item.Value);
+        }
+        Value = temp;
     }
 
     public bool Remove(KeyValuePair<TKey, TValue> item)
     {
-        throw new NotImplementedException();
+        Dictionary<TKey, TValue> temp = Value;
+        if (temp.ContainsKey(item.Key) && temp[item.Key].Equals(item.Value))
+        {
+            temp.Remove(item.Key);
+            Value = temp;
+            return true;
+        }
+        else return false;
     }
 
     public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()

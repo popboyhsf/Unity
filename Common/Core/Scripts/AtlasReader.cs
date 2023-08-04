@@ -46,9 +46,13 @@ public class AtlasReader : SingletonMonoBehaviour<AtlasReader>
             if (!packInfos.ContainsKey(info.atlasName))
             {
                 packInfos.Add(info.atlasName, new List<AtlasPackInfo>());
+                packInfos[info.atlasName].Add(info);
                 StartCoroutine(GetABByAESI(info));
             }
-            packInfos[info.atlasName].Add(info);
+            else
+            {
+                packInfos[info.atlasName].Add(info);
+            }
 
             return;
         }
@@ -108,7 +112,7 @@ public class AtlasReader : SingletonMonoBehaviour<AtlasReader>
             GetGetItemHeadByABAES(item);
         }
 
-        packInfos[info.atlasName].Clear();
+        packInfos.Remove(info.atlasName);
 
     }
 
