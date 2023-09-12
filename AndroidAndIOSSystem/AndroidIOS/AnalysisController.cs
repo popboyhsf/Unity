@@ -224,6 +224,8 @@ public static class AnalysisController
     private static AFStatus afStatus = AFStatus.Unknow;
     [CheatableAttribute("是否是强制买量1是0否-1不启用")]
     public static IntData fixOrganic { get; set; } = new IntData("AnalysisController_fixOrganic", -1);
+
+
     /// <summary>
     /// AF识别
     /// </summary>
@@ -239,7 +241,7 @@ public static class AnalysisController
             {
                 afStatus = value;
                 OnAFStatusChanged?.Invoke();
-                Debug.Log("DoOnAFStatusChanged == ");
+                Debuger.Log("DoOnAFStatusChanged == " + afStatus);
             }
         }
     }

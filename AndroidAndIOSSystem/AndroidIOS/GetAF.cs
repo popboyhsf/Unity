@@ -14,7 +14,17 @@ public class GetAF : MonoBehaviour
         set
         {
             allowDebug = value;
-            AnalysisController.AfStatus = allowDebug ? AnalysisController.AFStatus.NonOrganic : AnalysisController.AFStatus.Organic;
+
+            if (!AnalysisController.IsNonOrganic)
+            {
+                AnalysisController.AfStatus =
+                    allowDebug
+                    ?
+                    AnalysisController.AFStatus.NonOrganic
+                    :
+                    AnalysisController.AFStatus.Organic;
+
+            }
         }
     }
 
@@ -23,6 +33,27 @@ public class GetAF : MonoBehaviour
     void Start()
     {
         StartCoroutine(Delay());
+    }
+
+    private void OnApplicationPause(bool pause)
+    {
+        if (!pause)
+        {
+            if (allowDebug)
+                StartCoroutine(nameof(DelayFackAF));
+        }
+    }
+
+    IEnumerator DelayFackAF()
+    {
+        yield return new WaitForSecondsRealtime(3f);
+
+        if (allowDebug)
+        {
+
+            AnalysisController.AfStatus = AnalysisController.AFStatus.NonOrganic;
+            Debuger.Log("OnApplicationPause AfSet == " + AnalysisController.AfStatus);
+        }
     }
 
     IEnumerator Delay()
@@ -39,8 +70,8 @@ public class GetAF : MonoBehaviour
 
 #if ADV2
 
-         if(!allowDebug) 
-             CrossAndroid.GetAF();
+        if (!allowDebug)
+            AnalysisController.AfStatus = CrossAndroid.GetAF();
 
 
 #else

@@ -187,6 +187,11 @@ public static class XlsxReader
             string name = dataSet.DataSetName.ToLower();
 #endif
 
+            if (!Directory.Exists(jsonOutputPath))
+            {
+                Directory.CreateDirectory(jsonOutputPath);
+            }
+
             //写入文件
             using (FileStream fileStream = new FileStream(jsonOutputPath + "/" +
                                                           name + ".json", FileMode.Create, FileAccess.Write))

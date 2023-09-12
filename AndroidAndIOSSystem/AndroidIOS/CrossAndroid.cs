@@ -154,7 +154,7 @@ public class CrossAndroid : MonoBehaviour
         {
             return;
         }
-        activity.Call("hideLoadingRewardVideoWindow");
+        activity.Call("hideLoadingRewardVideoWindow"); // hideLoadingRewardVideoWindow 改名  hideWindow
     }
 
     public static void LogEvent(String eventName, String jsonStr)
@@ -182,7 +182,7 @@ public class CrossAndroid : MonoBehaviour
         {
             return;
         }
-        activity.Call("rewardVideoIsReady");
+        activity.Call("rewardVideoIsReady");  // rewardVideoIsReady 改名 isPlaying
         thisIsReadyI = isViedoReady;
 
     }
@@ -438,7 +438,7 @@ public class CrossAndroid : MonoBehaviour
         {
             return;
         }
-        activity.Call("hideLoadingRewardVideoWindow");
+        activity.Call("hideLoadingRewardVideoWindow"); // hideLoadingRewardVideoWindow 改名  hideWindow
     }
 
     /// <summary>
@@ -480,7 +480,7 @@ public class CrossAndroid : MonoBehaviour
         {
             return;
         }
-        activity.Call("rewardVideoIsReady");
+        activity.Call("rewardVideoIsReady"); // rewardVideoIsReady 改名 isPlaying
         thisIsReadyI = isViedoReady;
 
     }
@@ -655,17 +655,19 @@ public class CrossAndroid : MonoBehaviour
         if (!CheckInited())
         {
             Debuger.Log("CheckInited ==== false");
-            AnalysisController.AfStatus = AnalysisController.AFStatus.Unknow;
+            AnalysisController.AfStatus = AnalysisController.AFStatus.Organic;
             AnalysisController.OffAFStatusChanged?.Invoke();
-            return AnalysisController.AFStatus.Unknow;
+            return AnalysisController.AFStatus.Organic;
         }
 
         var status = activity.Call<string>("getAF");
 
-        AnalysisController.AFStatus afStatus = AnalysisController.AfStatus;
+        AnalysisController.AFStatus afStatus = AnalysisController.AFStatus.Organic;
 
-        if ((AnalysisController.AFStatus)(int.Parse(status)) == AnalysisController.AFStatus.NonOrganic)
-            afStatus = (AnalysisController.AFStatus)(int.Parse(status));
+        var _status = (AnalysisController.AFStatus)int.Parse(status);
+
+        if (_status == AnalysisController.AFStatus.NonOrganic)
+            afStatus = _status;
 
         Debug.LogWarning("GetAF Function Start And Value == " + afStatus);
 
@@ -695,14 +697,27 @@ public class CrossAndroid : MonoBehaviour
         activity.Call("LogEvetnForTrackLuckBalance", j, i);
     }
 
+
+
     /// <summary>
     /// 返回国家 --- 需要在Android - GetAF后执行
     /// </summary>
     /// <param name="returnC"></param>
     public void ReturnContry(string returnC)
-
     {
+        if (I2Language.Instance == null) return;
+
         var _s = returnC.ToUpper();
+
+        try
+        {
+            _s = _s.Split('_')[1];
+        }
+        catch (Exception e)
+        {
+
+            Debuger.LogError("返回國家Error");
+        }
 
         if (_s.IndexOf("OTH") >= 0)
         {
@@ -776,6 +791,62 @@ public class CrossAndroid : MonoBehaviour
         {
             I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.BD);
         }
+        else if (_s.IndexOf("ZA") >= 0)
+        {
+            I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.ZA);
+        }
+        else if (_s.IndexOf("NG") >= 0)
+        {
+            I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.NG);
+        }
+        else if (_s.IndexOf("CO") >= 0)
+        {
+            I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.CO);
+        }
+        else if (_s.IndexOf("AR") >= 0)
+        {
+            I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.AR);
+        }
+        else if (_s.IndexOf("SA") >= 0)
+        {
+            I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.SA);
+        }
+        else if (_s.IndexOf("AE") >= 0)
+        {
+            I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.AE);
+        }
+        else if (_s.IndexOf("IQ") >= 0)
+        {
+            I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.EN);
+        }
+        else if (_s.IndexOf("ES") >= 0)
+        {
+            I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.ES);
+        }
+        else if (_s.IndexOf("IT") >= 0)
+        {
+            I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.IT);
+        }
+        else if (_s.IndexOf("PL") >= 0)
+        {
+            I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.PL);
+        }
+        else if (_s.IndexOf("NL") >= 0)
+        {
+            I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.NL);
+        }
+        else if (_s.IndexOf("RO") >= 0)
+        {
+            I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.RO);
+        }
+        else if (_s.IndexOf("SE") >= 0)
+        {
+            I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.SE);
+        }
+        else if (_s.IndexOf("GR") >= 0)
+        {
+            I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.GR);
+        }
         else
         {
             I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.EN);
@@ -783,9 +854,21 @@ public class CrossAndroid : MonoBehaviour
     }
 
     public void ReturnContryChangeUI(string returnC)
-    
     {
+        if (I2Language.Instance == null) return;
+
         var _s = returnC.ToUpper();
+
+        try
+        {
+            _s = _s.Split('_')[1];
+        }
+        catch (Exception e)
+        {
+
+            Debuger.LogError("返回國家Error");
+        }
+
         if (_s.IndexOf("OTH") >= 0)
         {
             I2Language.Instance.ChangeUI(I2Language.LanguageEnum.EN);
@@ -858,6 +941,62 @@ public class CrossAndroid : MonoBehaviour
         {
             I2Language.Instance.ChangeUI(I2Language.LanguageEnum.BD);
         }
+        else if (_s.IndexOf("ZA") >= 0)
+        {
+            I2Language.Instance.ChangeUI(I2Language.LanguageEnum.ZA);
+        }
+        else if (_s.IndexOf("NG") >= 0)
+        {
+            I2Language.Instance.ChangeUI(I2Language.LanguageEnum.NG);
+        }
+        else if (_s.IndexOf("CO") >= 0)
+        {
+            I2Language.Instance.ChangeUI(I2Language.LanguageEnum.CO);
+        }
+        else if (_s.IndexOf("AR") >= 0)
+        {
+            I2Language.Instance.ChangeUI(I2Language.LanguageEnum.AR);
+        }
+        else if (_s.IndexOf("SA") >= 0)
+        {
+            I2Language.Instance.ChangeUI(I2Language.LanguageEnum.SA);
+        }
+        else if (_s.IndexOf("AE") >= 0)
+        {
+            I2Language.Instance.ChangeUI(I2Language.LanguageEnum.AE);
+        }
+        else if (_s.IndexOf("IQ") >= 0)
+        {
+            I2Language.Instance.ChangeUI(I2Language.LanguageEnum.EN);
+        }
+        else if (_s.IndexOf("ES") >= 0)
+        {
+            I2Language.Instance.ChangeUI(I2Language.LanguageEnum.ES);
+        }
+        else if (_s.IndexOf("IT") >= 0)
+        {
+            I2Language.Instance.ChangeUI(I2Language.LanguageEnum.IT);
+        }
+        else if (_s.IndexOf("PL") >= 0)
+        {
+            I2Language.Instance.ChangeUI(I2Language.LanguageEnum.PL);
+        }
+        else if (_s.IndexOf("NL") >= 0)
+        {
+            I2Language.Instance.ChangeUI(I2Language.LanguageEnum.NL);
+        }
+        else if (_s.IndexOf("RO") >= 0)
+        {
+            I2Language.Instance.ChangeUI(I2Language.LanguageEnum.RO);
+        }
+        else if (_s.IndexOf("SE") >= 0)
+        {
+            I2Language.Instance.ChangeUI(I2Language.LanguageEnum.SE);
+        }
+        else if (_s.IndexOf("GR") >= 0)
+        {
+            I2Language.Instance.ChangeUI(I2Language.LanguageEnum.GR);
+        }
         else
         {
             I2Language.Instance.ChangeUI(I2Language.LanguageEnum.EN);
@@ -906,6 +1045,12 @@ public class CrossAndroid : MonoBehaviour
     }
 
     
+    public void PostEmail(string address, string title, string gameName, string playerID, string amount)
+    {
+        var _data = DateTime.Now.ToString("MM/dd/yyyy HH:mm");
+        activity.Call("SendEmailFromUnity", address, title, gameName, playerID, amount, _data);
+    }
+
     public static void OpenOtherGame(string packageName)
     {
         if (!CheckInited())
