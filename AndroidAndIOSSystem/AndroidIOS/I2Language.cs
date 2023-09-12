@@ -42,6 +42,20 @@ public class I2Language : MonoBehaviour
 
         ZA,//AF
         NG,
+
+        CO,
+        AR,
+        SA,
+        AE,
+
+
+        ES,//西班牙
+        IT,//意大利
+        PL,//波兰
+        NL,//荷兰
+        RO,//罗马尼亚
+        SE,//瑞典
+        GR,//希腊
     }
 
     public LanguageEnum Language { private set; get; } = LanguageEnum.EN;
@@ -170,6 +184,52 @@ public class I2Language : MonoBehaviour
                 _i = Mathf.RoundToInt(i * 500);
                 _m = (_i).ToString();
                 break;
+            case LanguageEnum.CO:
+                _i = Mathf.RoundToInt(i * 5000);
+                _m = (_i).ToString();
+                break;
+            case LanguageEnum.AR:
+                _i = Mathf.RoundToInt(i * 200);
+                _m = (_i).ToString();
+                break;
+            case LanguageEnum.SA:
+                if (usFolat) _m = (i * 3).ToString("0.0");
+                else _m = (i * 3).ToString("0");
+                break;
+            case LanguageEnum.AE:
+                if (usFolat) _m = (i * 3).ToString("0.0");
+                else _m = (i * 3).ToString("0");
+                break;
+
+
+            case LanguageEnum.ES:
+                if (usFolat) _m = i.ToString("0.00");
+                else _m = i.ToString("0");
+                break;
+            case LanguageEnum.IT:
+                if (usFolat) _m = i.ToString("0.00");
+                else _m = i.ToString("0");
+                break;
+            case LanguageEnum.PL:
+                if (usFolat) _m = (i * 4).ToString("0.0");
+                else _m = (i * 4).ToString("0");
+                break;
+            case LanguageEnum.NL:
+                if (usFolat) _m = i.ToString("0.00");
+                else _m = i.ToString("0");
+                break;
+            case LanguageEnum.RO:
+                if (usFolat) _m = (i * 5).ToString("0.0");
+                else _m = (i * 5).ToString("0");
+                break;
+            case LanguageEnum.SE:
+                if (usFolat) _m = (i * 10).ToString("0.0");
+                else _m = (i * 10).ToString("0");
+                break;
+            case LanguageEnum.GR:
+                if (usFolat) _m = i.ToString("0.00");
+                else _m = i.ToString("0");
+                break;
             default:
                 break;
         }
@@ -242,6 +302,40 @@ public class I2Language : MonoBehaviour
                 break;
             case LanguageEnum.NG:
                 _m = "₦";
+                break;
+            case LanguageEnum.CO:
+                _m = "$";
+                break;
+            case LanguageEnum.AR:
+                _m = "$";
+                break;
+            case LanguageEnum.SA:
+                _m = "﷼";
+                break;
+            case LanguageEnum.AE:
+                _m = "د.إ";
+                break;
+
+            case LanguageEnum.ES:
+                _m = "€";
+                break;
+            case LanguageEnum.IT:
+                _m = "€";
+                break;
+            case LanguageEnum.PL:
+                _m = "zł";
+                break;
+            case LanguageEnum.NL:
+                _m = "€";
+                break;
+            case LanguageEnum.RO:
+                _m = "L";
+                break;
+            case LanguageEnum.SE:
+                _m = "kr";
+                break;
+            case LanguageEnum.GR:
+                _m = "€";
                 break;
             default:
                 break;

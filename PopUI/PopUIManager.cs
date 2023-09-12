@@ -71,7 +71,7 @@ public class PopUIManager : MonoBehaviour
         Pop.gameObject.SetActive(false);
     }
 
-    public void ShowUI(PopUIEnum uIEnum)
+    public void ShowUI(PopUIEnum uIEnum, params object[] value)
     {
         var _ui = UIBase(uIEnum);
         if (_ui == null) return;
@@ -79,10 +79,10 @@ public class PopUIManager : MonoBehaviour
         _ui.transform.parent.gameObject.SetActive(true);
 
         if (_ui.UseBaseBeforActive) BeforShowAction?.Invoke();
-        _ui.ShowUI();
+        _ui.ShowUI(value);
     }
 
-    public void ShowUI(string uIEnum)
+    public void ShowUI(string uIEnum, params object[] value)
     {
         var _ui = UIBase(uIEnum);
         if (_ui == null) return;
@@ -90,7 +90,7 @@ public class PopUIManager : MonoBehaviour
         _ui.transform.parent.gameObject.SetActive(true);
 
         if (_ui.UseBaseBeforActive) BeforShowAction?.Invoke();
-        _ui.ShowUI();
+        _ui.ShowUI(value);
     }
 
     public void HiddenUI(PopUIEnum uIEnum)

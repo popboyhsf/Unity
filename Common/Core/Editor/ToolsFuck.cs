@@ -13,7 +13,27 @@ using UnityEditor.Animations;
 /// 编辑器拓展工具类
 /// </summary>
 public class ToolsFuck
+{
+    [MenuItem("Tools/GameData/ClearPlayerPrefs(清理玩家数据) &c")]
+    public static void ClearPlayerPrefs()
     {
+        PlayerPrefs.DeleteAll();
+        PlayerPrefs.Save();
+    }
+
+    [MenuItem("Tools/GameObject/SwithcGameObjectVisible(切换物体显隐状态) &q")]
+    public static void SetObjActive()
+    {
+        GameObject[] selectObjs = Selection.gameObjects;
+        int objCtn = selectObjs.Length;
+        for (int i = 0; i < objCtn; i++)
+        {
+            bool isAcitve = selectObjs[i].activeSelf;
+            selectObjs[i].SetActive(!isAcitve);
+        }
+    }
+
+
     [MenuItem("Assets/Tools/RenameOrder", false, 100)]
     public static void RenameOrder()
     {
@@ -99,38 +119,86 @@ public class ToolsFuck
     /// </summary>
     [MenuItem("Assets/Tools/Animation/MergeAnimatorClipsToController", false, 1000)]
     public static void MergeAnimClips()
+    {
+        UnityEditor.Animations.AnimatorController animatorController = null;
+        AnimationClip[] clips = null;
+
+        if (Selection.activeObject.GetType() == typeof(UnityEditor.Animations.AnimatorController))
         {
-            UnityEditor.Animations.AnimatorController animatorController = null;
-            AnimationClip[] clips = null;
+            animatorController = (UnityEditor.Animations.AnimatorController)Selection.activeObject;
+            clips = animatorController.animationClips;
 
-            if (Selection.activeObject.GetType() == typeof(UnityEditor.Animations.AnimatorController))
+            if (animatorController != null && clips.Length > 0)
             {
-                animatorController = (UnityEditor.Animations.AnimatorController)Selection.activeObject;
-                clips = animatorController.animationClips;
-
-                if (animatorController != null && clips.Length > 0)
+                foreach (AnimationClip clip in clips)
                 {
-                    foreach (AnimationClip clip in clips)
+                    var acAssetPath = AssetDatabase.GetAssetPath(clip);
+                    if (acAssetPath.EndsWith(".anim"))
                     {
-                        var acAssetPath = AssetDatabase.GetAssetPath(clip);
-                        if (acAssetPath.EndsWith(".anim"))
-                        {
-                            var newClip = UnityEngine.Object.Instantiate(clip) as AnimationClip;
-                            newClip.name = clip.name;
+                        var newClip = UnityEngine.Object.Instantiate(clip) as AnimationClip;
+                        newClip.name = clip.name;
 
-                            AssetDatabase.AddObjectToAsset(newClip, animatorController);
-                            AssetDatabase.ImportAsset(AssetDatabase.GetAssetPath(newClip));
-                            AssetDatabase.DeleteAsset(AssetDatabase.GetAssetPath(clip));
-                        }
+                        AssetDatabase.AddObjectToAsset(newClip, animatorController);
+                        AssetDatabase.ImportAsset(AssetDatabase.GetAssetPath(newClip));
+                        AssetDatabase.DeleteAsset(AssetDatabase.GetAssetPath(clip));
                     }
-                    Debuger.Log("<color=orange>Added " + clips.Length.ToString() + " clips to controller: </color><color=yellow>" + animatorController.name + "</color>");
                 }
-                else
-                {
-                    Debuger.Log("<color=red>Nothing done. Select a controller that has anim clips to nest.</color>");
-                }
+                Debuger.Log("<color=orange>Added " + clips.Length.ToString() + " clips to controller: </color><color=yellow>" + animatorController.name + "</color>");
             }
-
+            else
+            {
+                Debuger.Log("<color=red>Nothing done. Select a controller that has anim clips to nest.</color>");
+            }
         }
 
     }
+
+
+
+    #region FindReferences
+    [MenuItem("Assets/Tools/Find References", false, 10)]
+    static private void Find()
+    {
+        EditorSettings.serializationMode = SerializationMode.ForceText;
+        string path = AssetDatabase.GetAssetPath(Selection.activeObject);
+        if (!string.IsNullOrEmpty(path))
+        {
+            string guid = AssetDatabase.AssetPathToGUID(path);
+            List<string> withoutExtensions = new List<string>() { ".prefab", ".unity", ".mat", ".asset" };
+            string[] files = Directory.GetFiles(Application.dataPath, "*.*", SearchOption.AllDirectories)
+                .Where(s => withoutExtensions.Contains(Path.GetExtension(s).ToLower())).ToArray();
+            int startIndex = 0;
+            EditorApplication.update = delegate ()
+            {
+                string file = files[startIndex];
+                bool isCancel = EditorUtility.DisplayCancelableProgressBar("匹配资源中", file, (float)startIndex / (float)files.Length);
+                if (Regex.IsMatch(File.ReadAllText(file), guid))
+                {
+                    Debug.Log(file, AssetDatabase.LoadAssetAtPath<Object>(GetRelativeAssetsPath(file)));
+                }
+                startIndex++;
+                if (isCancel || startIndex >= files.Length)
+                {
+                    EditorUtility.ClearProgressBar();
+                    EditorApplication.update = null;
+                    startIndex = 0;
+                    Debug.Log("匹配结束");
+                }
+            };
+        }
+    }
+
+    [MenuItem("Assets/CusEditor/Find References", true)]
+    static private bool VFind()
+    {
+        string path = AssetDatabase.GetAssetPath(Selection.activeObject);
+        return (!string.IsNullOrEmpty(path));
+    }
+
+    static private string GetRelativeAssetsPath(string path)
+    {
+        return "Assets" + Path.GetFullPath(path).Replace(Path.GetFullPath(Application.dataPath), "").Replace('\\', '/');
+    }
+    #endregion
+
+}

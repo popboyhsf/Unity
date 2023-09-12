@@ -23,12 +23,12 @@ public abstract class PopUIBase : MonoBehaviour
     /// <summary>
     /// 打开之前
     /// </summary>
-    public abstract void BeforShow();
+    public abstract void BeforShow(object[] value);
 
 
-    public virtual void ShowUI()
+    public virtual void ShowUI(params object[] value)
     {
-        BeforShow();
+        BeforShow(value);
         foreach (var item in buttonlist)
         {
             item.interactable = true;
