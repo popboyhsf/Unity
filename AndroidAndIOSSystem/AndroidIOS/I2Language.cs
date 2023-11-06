@@ -61,6 +61,13 @@ public class I2Language : MonoBehaviour
     public LanguageEnum Language { private set; get; } = LanguageEnum.EN;
 
     public UnityAction OnChangeLanguage { get; set; }
+    private bool isGetLan = false;
+
+    public bool IsGetLan
+    {
+        get => isGetLan;
+
+    }
 
     private void Awake()
     {
@@ -70,7 +77,7 @@ public class I2Language : MonoBehaviour
     public void ApplyLanguage(LanguageEnum language)
     {
         Language = language;
-
+        isGetLan = true;
 
 #if UNITY_EDITOR
 
@@ -130,7 +137,7 @@ public class I2Language : MonoBehaviour
                 break;
             case LanguageEnum.ID:
                 _i = Mathf.RoundToInt(i * 150);
-                _m = (_i * 100).ToString("###,###,####,###,###,###");
+                _m = (_i * 100).ToString("N0");
                 break;
             case LanguageEnum.PH:
                 if (usFolat) _m = (i * 50f).ToString("0.0");
@@ -162,7 +169,7 @@ public class I2Language : MonoBehaviour
                 break;
             case LanguageEnum.VN:
                 _i = Mathf.RoundToInt(i * 250);
-                _m = (_i * 100).ToString("###,###,####,###,###,###");
+                _m = (_i * 100).ToString("N0");
                 break;
             case LanguageEnum.IN:
                 _i = Mathf.RoundToInt(i * 100);

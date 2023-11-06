@@ -91,7 +91,7 @@ public class SevenDaysManager : MonoBehaviour
     {
         click.interactable = true;
 
-        var count = Mathf.Min(SevenDaysData.GetCount(), aniList.Count - 1);
+        var count = Mathf.Min(SevenDaysData.GetCount(), aniList.Count);
 
         var _dayC = 1;
 
