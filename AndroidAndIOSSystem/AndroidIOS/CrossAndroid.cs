@@ -847,6 +847,63 @@ public class CrossAndroid : MonoBehaviour
         {
             I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.GR);
         }
+        //231114新增
+        else if (_s.IndexOf("AT") >= 0)
+        {
+            I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.AT);
+        }
+        else if (_s.IndexOf("CH") >= 0)
+        {
+            I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.CH);
+        }
+        else if (_s.IndexOf("BE") >= 0)
+        {
+            I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.BE);
+        }
+        else if (_s.IndexOf("NO") >= 0)
+        {
+            I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.NO);
+        }
+        else if (_s.IndexOf("IE") >= 0)
+        {
+            I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.IE);
+        }
+        else if (_s.IndexOf("DK") >= 0)
+        {
+            I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.DK);
+        }
+        else if (_s.IndexOf("FI") >= 0)
+        {
+            I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.FI);
+        }
+        else if (_s.IndexOf("BR") >= 0)
+        {
+            I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.PT);
+        }
+        else if (_s.IndexOf("PE") >= 0)
+        {
+            I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.PE);
+        }
+        else if (_s.IndexOf("EC") >= 0)
+        {
+            I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.EC);
+        }
+        else if (_s.IndexOf("MY") >= 0)
+        {
+            I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.MY);
+        }
+        else if (_s.IndexOf("CL") >= 0)
+        {
+            I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.CL);
+        }
+        else if (_s.IndexOf("CZ") >= 0)
+        {
+            I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.CZ);
+        }
+        else if (_s.IndexOf("HU") >= 0) 
+        {
+            I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.HU);
+        }
         else
         {
             I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.EN);
@@ -996,6 +1053,63 @@ public class CrossAndroid : MonoBehaviour
         else if (_s.IndexOf("GR") >= 0)
         {
             I2Language.Instance.ChangeUI(I2Language.LanguageEnum.GR);
+        }
+        //231114新增
+        else if (_s.IndexOf("AT") >= 0)
+        {
+            I2Language.Instance.ChangeUI(I2Language.LanguageEnum.AT);
+        }
+        else if (_s.IndexOf("CH") >= 0)
+        {
+            I2Language.Instance.ChangeUI(I2Language.LanguageEnum.CH);
+        }
+        else if (_s.IndexOf("BE") >= 0)
+        {
+            I2Language.Instance.ChangeUI(I2Language.LanguageEnum.BE);
+        }
+        else if (_s.IndexOf("NO") >= 0)
+        {
+            I2Language.Instance.ChangeUI(I2Language.LanguageEnum.NO);
+        }
+        else if (_s.IndexOf("IE") >= 0)
+        {
+            I2Language.Instance.ChangeUI(I2Language.LanguageEnum.IE);
+        }
+        else if (_s.IndexOf("DK") >= 0)
+        {
+            I2Language.Instance.ChangeUI(I2Language.LanguageEnum.DK);
+        }
+        else if (_s.IndexOf("FI") >= 0)
+        {
+            I2Language.Instance.ChangeUI(I2Language.LanguageEnum.FI);
+        }
+        else if (_s.IndexOf("BR") >= 0)
+        {
+            I2Language.Instance.ChangeUI(I2Language.LanguageEnum.PT);
+        }
+        else if (_s.IndexOf("PE") >= 0)
+        {
+            I2Language.Instance.ChangeUI(I2Language.LanguageEnum.PE);
+        }
+        else if (_s.IndexOf("EC") >= 0)
+        {
+            I2Language.Instance.ChangeUI(I2Language.LanguageEnum.EC);
+        }
+        else if (_s.IndexOf("MY") >= 0)
+        {
+            I2Language.Instance.ChangeUI(I2Language.LanguageEnum.MY);
+        }
+        else if (_s.IndexOf("CL") >= 0)
+        {
+            I2Language.Instance.ChangeUI(I2Language.LanguageEnum.CL);
+        }
+        else if (_s.IndexOf("CZ") >= 0)
+        {
+            I2Language.Instance.ChangeUI(I2Language.LanguageEnum.CZ);
+        }
+        else if (_s.IndexOf("HU") >= 0)
+        {
+            I2Language.Instance.ChangeUI(I2Language.LanguageEnum.HU);
         }
         else
         {
