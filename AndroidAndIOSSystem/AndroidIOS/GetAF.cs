@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GetAF : MonoBehaviour
+public class GetAF : MonoBehaviour,IDebuger
 {
 
     BoolData isNotCallAF = new BoolData("GetAF_AnalysisControllerLuckReady", true);
@@ -71,7 +71,10 @@ public class GetAF : MonoBehaviour
 #if ADV2
 
         if (!allowDebug)
-            AnalysisController.AfStatus = CrossAndroid.GetAF();
+        {
+            AnalysisController.AfStatus = AnalysisController.AFStatus.Organic;
+            CrossAndroid.GetAF();
+        }
 
 
 #else

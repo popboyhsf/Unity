@@ -366,14 +366,14 @@ public class CrossAndroid : MonoBehaviour
     /// <summary>
     /// 显示Banner
     /// </summary>
-    public static bool ShowBanner(bool must = true)
+    public static void ShowBanner()
     {
         Debuger.Log("ShowBanner");
         if (!CheckInited())
         {
-            return false;
+            return;
         }
-        return activity.Call<bool>("showBanner", must);
+        activity.Call("showBanner");
     }
 
     /// <summary>
@@ -1174,6 +1174,43 @@ public class CrossAndroid : MonoBehaviour
 
         activity.Call("LaunchOtherApp", packageName);
     }
+
+    #region GDPR
+
+    public static bool CanShowGDPR()
+    {
+        if (!CheckInited())
+        {
+            Debuger.Log("CheckInited ==== false");
+            return false;
+        }
+        var status = activity.Call<string>("canShowGDPR");
+        return int.Parse(status).IntToBool();
+    }
+
+    private static IIsShowGDPRBtn isShowGDPRBtn;
+    public static void ClickShowGDPR(IIsShowGDPRBtn value)
+    {
+        if (!CheckInited())
+        {
+            Debuger.Log("CheckInited ==== false");
+            return;
+        }
+
+        isShowGDPRBtn = value;
+        isShowGDPRBtn.BtnClickStatus(false);
+
+        activity.Call("showPrivacyOptionsForm");
+    }
+
+    public void OnPrivacyOptionsFormShow(string status)
+    {
+        var _status = int.Parse(status).IntToBool();
+        
+        isShowGDPRBtn?.BtnClickStatus(_status);
+    }
+
+    #endregion
 
 }
 #endif

@@ -65,8 +65,6 @@ public class SoundController : SingletonMonoBehaviour<SoundController>
 
     //音频路径
     private Dictionary<SoundType, string> audioClipPaths = new Dictionary<SoundType, string>();
-    //已经加载的音频
-    private Dictionary<SoundType, AudioClip> audioClipDict = new Dictionary<SoundType, AudioClip>();
 
     protected override void Init()
     {
@@ -178,10 +176,6 @@ public class SoundController : SingletonMonoBehaviour<SoundController>
     /// <returns></returns>
     AudioClip GetAudioClip(SoundType soundType)
     {
-        if (audioClipDict.ContainsKey(soundType))
-        {
-            return audioClipDict[soundType];
-        }
 
         if (audioClipPaths.TryGetValue(soundType, out string path))
         {

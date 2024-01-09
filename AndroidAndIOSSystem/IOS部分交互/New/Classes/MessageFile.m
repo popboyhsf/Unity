@@ -99,33 +99,29 @@ extern "C" {
 
     void gameStart(BOOL isShow){
         
-    if(true)
-        [AdManager showMaxInterstitialAd:InterstitialEnumSplashEnd];
+		if(true)
+			[AdManager showMaxInterstitialAd:InterstitialEnumSplashEnd];
         
         [AdManager initBanner:AdBannerPosBottom];
         [AdManager showBannerAd:true];
-        
     }
 
     void getAF(){
         [AppsFlyerProxy appsFlayerIsOrganicIsSafeChannel:^(BOOL isAppsFlyerReturn, BOOL isOrganic, BOOL isSafeChannel) {
-        OSLog(@"isAppsFlyerReturn is %i, isOrganic is %i, isSafeChannel is %i", isAppsFlyerReturn, isOrganic, isSafeChannel);
-            
-            
-        CLog(@"isSafeChannel is %i", isSafeChannel);
-        CLog(@"isOrganic is %i", isOrganic);
+		
+			OSLog(@"isAppsFlyerReturn is %i, isOrganic is %i, isSafeChannel is %i", isAppsFlyerReturn, isOrganic, isSafeChannel);
+                
+			CLog(@"isSafeChannel is %i", isSafeChannel);
+			CLog(@"isOrganic is %i", isOrganic);
         
-        int status = 0;//模拟买量
-        if(!isOrganic) status = 1;
+			int status = 0;//模拟买量
+			if(!isOrganic) status = 1;
         
-        //if(isAppsFlyerReturn)
-        //UnitySendMessage("CrossIosObject", "AppsFlyerState",  [NSString stringWithFormat:@"%d",status].UTF8String );
-        //else CLog(@"appsFlayerIsOrganicIsSafeChannel is Fail . Wait for AF");
-        //[LuckDrawManager getEventEntryRes];
+			//if(isAppsFlyerReturn)
+			//UnitySendMessage("CrossIosObject", "AppsFlyerState",  [NSString stringWithFormat:@"%d",status].UTF8String );
+			//else CLog(@"appsFlayerIsOrganicIsSafeChannel is Fail . Wait for AF");
+			//[LuckDrawManager getEventEntryRes];
             
-            NSString* resStr = [AppsFlyerProxy getPhoneLanguageStr];
-            CLog(@"LanguageResStr === %@",resStr);
-            UnitySendMessage("CrossIosObject","ReturnContry", resStr.UTF8String);
         }];
     }
 
@@ -192,8 +188,8 @@ extern "C" {
     
     //展示idfaview
     void showIDFA() {
-            [AppsFlyerProxy firstRequestATTDialog];
-            [AppsFlyerProxy logEvent:[AppsFlyerProxy getEventName:_tracking_show]];
+        [AppsFlyerProxy firstRequestATTDialog];
+        [AppsFlyerProxy logEvent:[AppsFlyerProxy getEventName:_tracking_show]];
     }
 
     //获取是否展示过授权请求，1展示过，0没展示
@@ -203,6 +199,11 @@ extern "C" {
             [AppsFlyerProxy logEvent:[AppsFlyerProxy getEventName:_screen_tracking]];
         }
         return result?1:0;
+    }
+    
+    void requestIDFA(){
+        [AppsFlyerProxy requestATTDialog];
+        
     }
 
     //unity调用展示idfa之前调用，每个用户只调用一次

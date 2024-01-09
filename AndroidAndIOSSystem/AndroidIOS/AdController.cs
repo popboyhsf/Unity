@@ -55,18 +55,44 @@ public class AdController
     {
         //if (Srot.limit > 0) return;
 
-        Debug.Log("ShowInterstitial");
+        watchICompletedActionSelf = watchCompletedAction;
+        watchIFailActionSelf = watchFailAction;
 
-        if (isDebug) return;
+        if (isDebug)
+        {
+            watchICompletedActionSelf?.Invoke();
+            watchICompletedActionSelf = null;
+            watchIFailActionSelf = null;
+            return;
+        }
 
 #if UNITY_EDITOR || NoAd || SafeMode
+        ShowInterstitialCallBack();
         return;
 #elif UNITY_ANDROID && !UNITY_EDITOR
         CrossAndroid.ShowInterstitial();
 #elif UNITY_IPHONE// && !UNITY_EDITOR
-        CrossIos.ShowInterstitial(pos,null, watchCompletedAction);
+        CrossIos.ShowInterstitial(pos,null, ShowInterstitialCallBack);
 #endif
-        //TODO 还没写IOS方面的交互 记得写
+
+    }
+
+    public static void ShowInterstitialCallBack()
+    {
+
+        Debug.Log("ShowInterstitialCallBack");
+        watchICompletedActionSelf?.Invoke();
+        watchICompletedActionSelf = null;
+        watchIFailActionSelf = null;
+    }
+
+    public static void ShowInterstitialFail()
+    {
+
+        Debug.Log("ShowInterstitialFail");
+        watchIFailActionSelf?.Invoke();
+        watchICompletedActionSelf = null;
+        watchIFailActionSelf = null;
     }
 
     /// <summary>
@@ -97,6 +123,9 @@ public class AdController
     private static UnityAction watchFailActionSelf;
     private static UnityAction watchEnterActionSelf;
     private static int entrySelf;
+
+    private static UnityAction watchICompletedActionSelf;
+    private static UnityAction watchIFailActionSelf;
 
     public static void ShowRewardedVideoCallBack()
     {

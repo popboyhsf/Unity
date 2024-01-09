@@ -84,6 +84,9 @@ public class CrossIos : MonoBehaviour
 
     [DllImport("__Internal")]
     public static extern void showIDFA();
+	
+	[DllImport("__Internal")]
+    public static extern void requestIDFA();
     
     [DllImport("__Internal")]
     public static extern void logEvetnForIDFA();
@@ -543,11 +546,27 @@ public class CrossIos : MonoBehaviour
     /// <param name="returnC"></param>
     public void ReturnContry(string returnC)
     {
+        if (I2Language.Instance == null) return;
+
         var _s = returnC.ToUpper();
+
+        try
+        {
+            _s = _s.Split('_')[1];
+        }
+        catch (Exception e)
+        {
+
+            Debuger.LogError("返回國家Error");
+        }
 
         if (_s.IndexOf("OTH") >= 0)
         {
-            I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.JP);
+            I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.EN);
+        }
+        else if (_s.IndexOf("US") >= 0)
+        {
+            I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.EN);
         }
         else if (_s.IndexOf("KR") >= 0)
         {
@@ -573,25 +592,162 @@ public class CrossIos : MonoBehaviour
         {
             I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.PH);
         }
-        //else if (_s.IndexOf("TH") >= 0)
-        //{
-        //    I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.TH);
-        //}
-        //else if (_s.IndexOf("VN") >= 0)
-        //{
-        //    I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.VN);
-        //}
+        else if (_s.IndexOf("DE") >= 0)
+        {
+            I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.DE);
+        }
+        else if (_s.IndexOf("FR") >= 0)
+        {
+            I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.FR);
+        }
+        else if (_s.IndexOf("TH") >= 0)
+        {
+            I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.TH);
+        }
+        else if (_s.IndexOf("VN") >= 0)
+        {
+            I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.VN);
+        }
         else if (_s.IndexOf("MX") >= 0)
         {
             I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.MX);
         }
-        else if (_s.IndexOf("US") >= 0)
+        else if (_s.IndexOf("TR") >= 0)
+        {
+            I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.TR);
+        }
+        else if (_s.IndexOf("EG") >= 0)
+        {
+            I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.EG);
+        }
+        else if (_s.IndexOf("IN") >= 0)
+        {
+            I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.IN);
+        }
+        else if (_s.IndexOf("PK") >= 0)
+        {
+            I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.PK);
+        }
+        else if (_s.IndexOf("BD") >= 0)
+        {
+            I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.BD);
+        }
+        else if (_s.IndexOf("ZA") >= 0)
+        {
+            I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.ZA);
+        }
+        else if (_s.IndexOf("NG") >= 0)
+        {
+            I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.NG);
+        }
+        else if (_s.IndexOf("CO") >= 0)
+        {
+            I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.CO);
+        }
+        else if (_s.IndexOf("AR") >= 0)
+        {
+            I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.AR);
+        }
+        else if (_s.IndexOf("SA") >= 0)
+        {
+            I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.SA);
+        }
+        else if (_s.IndexOf("AE") >= 0)
+        {
+            I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.AE);
+        }
+        else if (_s.IndexOf("IQ") >= 0)
         {
             I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.EN);
         }
+        else if (_s.IndexOf("ES") >= 0)
+        {
+            I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.ES);
+        }
+        else if (_s.IndexOf("IT") >= 0)
+        {
+            I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.IT);
+        }
+        else if (_s.IndexOf("PL") >= 0)
+        {
+            I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.PL);
+        }
+        else if (_s.IndexOf("NL") >= 0)
+        {
+            I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.NL);
+        }
+        else if (_s.IndexOf("RO") >= 0)
+        {
+            I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.RO);
+        }
+        else if (_s.IndexOf("SE") >= 0)
+        {
+            I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.SE);
+        }
+        else if (_s.IndexOf("GR") >= 0)
+        {
+            I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.GR);
+        }
+        //231114新增
+        else if (_s.IndexOf("AT") >= 0)
+        {
+            I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.AT);
+        }
+        else if (_s.IndexOf("CH") >= 0)
+        {
+            I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.CH);
+        }
+        else if (_s.IndexOf("BE") >= 0)
+        {
+            I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.BE);
+        }
+        else if (_s.IndexOf("NO") >= 0)
+        {
+            I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.NO);
+        }
+        else if (_s.IndexOf("IE") >= 0)
+        {
+            I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.IE);
+        }
+        else if (_s.IndexOf("DK") >= 0)
+        {
+            I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.DK);
+        }
+        else if (_s.IndexOf("FI") >= 0)
+        {
+            I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.FI);
+        }
+        else if (_s.IndexOf("BR") >= 0)
+        {
+            I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.PT);
+        }
+        else if (_s.IndexOf("PE") >= 0)
+        {
+            I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.PE);
+        }
+        else if (_s.IndexOf("EC") >= 0)
+        {
+            I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.EC);
+        }
+        else if (_s.IndexOf("MY") >= 0)
+        {
+            I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.MY);
+        }
+        else if (_s.IndexOf("CL") >= 0)
+        {
+            I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.CL);
+        }
+        else if (_s.IndexOf("CZ") >= 0)
+        {
+            I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.CZ);
+        }
+        else if (_s.IndexOf("HU") >= 0)
+        {
+            I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.HU);
+        }
         else
         {
-            I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.JP);
+            I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.EN);
         }
     }
 
@@ -684,7 +840,27 @@ public class CrossIos : MonoBehaviour
     /// </summary>
     public void IDFACallBack()
     {
+        if (ClickAllowCallBack == null)
+        {
+            IOSIDFA.Instance.ForceClickAllow();
+            return;
+        }
         ClickAllowCallBack?.Invoke();
+    }
+	
+	
+    /// <summary>
+    /// 打開引導IDFA去系統設置
+    /// </summary>
+    public static void RequestIDFA()
+    {
+        if (!CheckInited())
+        {
+            return;
+        }
+#if UNITY_IPHONE && !UNITY_EDITOR && !SafeMode
+        requestIDFA();
+#endif
     }
 
     /// <summary>

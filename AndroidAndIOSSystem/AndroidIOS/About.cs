@@ -64,14 +64,22 @@ public class About : MonoBehaviour
 #elif UNITY_IPHONE
 
         if (IOSID == "")
+        {
             if (GP) GP.gameObject.SetActive(false);
+        }
         else
+        {
             if (GP) GP.AddListener(openGP);
+        }
 
         if (FBUrlForIOS == "")
+        {
             if (FB) FB.gameObject.SetActive(false);
+        }
         else
+        {
             if (FB) FB.AddListener(openFB);
+        }
 
 #endif
 

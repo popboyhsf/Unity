@@ -7,7 +7,8 @@ public class IOSIDFA : SingletonMonoBehaviour<IOSIDFA>
 {
     private UnityAction backCall;
 
-
+    private DateTimeData firstShowTime = new DateTimeData("IOSIDFA_time");
+	
     /// <summary>
     /// 展示IDFA
     /// </summary>
@@ -16,8 +17,11 @@ public class IOSIDFA : SingletonMonoBehaviour<IOSIDFA>
     public void ShowIDFA(UnityAction enterCall, UnityAction backCall)
     {
         this.backCall = backCall;
+		LogEvetnForIDFA();
 
-
+        if(firstShowTime.Value == DateTime.MinValue)
+            firstShowTime.Value = DateTime.Today;
+		
 #if UNITY_EDITOR || SafeMode
         enterCall?.Invoke();
 #elif UNITY_ANDROID && !UNITY_EDITOR
@@ -69,6 +73,35 @@ public class IOSIDFA : SingletonMonoBehaviour<IOSIDFA>
             CrossIos.LogEvetnForIDFA();
         }
 #endif
+    }
+	
+    /// <summary>
+    /// 引導系統設置
+    /// </summary>
+    public void RequestIDFA()
+    {
+
+        var _timer = DateTime.Today - firstShowTime.Value;
+        if (_timer.TotalDays <= 0) return;
+
+#if UNITY_EDITOR || SafeMode
+        Debuger.Log("現在你在Unity編譯環境/SafeMode，假裝再次申請IDFA請求");
+#elif UNITY_ANDROID && !UNITY_EDITOR
+        
+#elif UNITY_IPHONE && !UNITY_EDITOR
+
+        CrossIos.RequestIDFA();
+      
+#endif
+    }
+
+    /// <summary>
+    /// 强制中斷流程
+    /// </summary>
+    public void ForceClickAllow()
+    {
+        UIManager.Instance.HideWindow(WindowName.IDFAWindow);
+        this.backCall?.Invoke();
     }
 
 }

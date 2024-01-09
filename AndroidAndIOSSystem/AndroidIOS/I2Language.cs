@@ -115,6 +115,10 @@ public class I2Language : MonoBehaviour
 
 #endif
 
+#if UNITY_IPHONE && !UNITY_EDITOR
+        ChangeUI(Language);
+#endif
+
         OnChangeLanguage?.Invoke();
     }
 

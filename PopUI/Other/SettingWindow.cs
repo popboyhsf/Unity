@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class SettingWindow : PopUIBase
+public class SettingWindow : PopUIBase, IIsShowGDPRBtn
 {
     public override string thisPopUIEnum => PopUIEnum.SettingWindow.ToString();
 
     public override string thisUIType => PopUIType.POP.ToString();
 
     [SerializeField]
-    Button closs, music, vibrator, retry;
+    Button closs, music, vibrator, retry, btnClickGDPR;
     [SerializeField]
     GameObject musicOn, musicoOff, vibratorOn, vibratorOff;
 
@@ -28,13 +28,43 @@ public class SettingWindow : PopUIBase
         if (vibrator) vibrator.onClick.AddListener(SoundBtn);
         if (closs) closs.onClick.AddListener(HiddenUIAI);
         if (retry) retry.onClick.AddListener(RetryGame);
-
+        if (btnClickGDPR) btnClickGDPR.onClick.AddListener(ClickGDPR);
 
         isMusic = SettingData.Music;
         IsVibrator = SettingData.Vibrator;
 
         ChangeMusicState(SettingData.Music);
         ChangeVibratorState(SettingData.Vibrator);
+    }
+
+    public void BtnClickStatus(bool canClick)
+    {
+        btnClickGDPR.interactable = canClick;
+    }
+
+    public void CanShow()
+    {
+        var _b = false;
+        #if UNITY_EDITOR || NoAd || SafeMode
+
+        #elif UNITY_ANDROID && !UNITY_EDITOR
+                _b = CrossAndroid.CanShowGDPR();
+        #elif UNITY_IPHONE
+        
+        #endif
+
+        btnClickGDPR.gameObject.SetActive(_b);
+    }
+
+    public void ClickGDPR()
+    {
+        #if UNITY_EDITOR || NoAd || SafeMode
+                return;
+        #elif UNITY_ANDROID && !UNITY_EDITOR
+                CrossAndroid.ClickShowGDPR(this);
+        #elif UNITY_IPHONE
+        
+        #endif
     }
 
 
@@ -96,7 +126,7 @@ public class SettingWindow : PopUIBase
 
     public override void BeforShow(object[] value)
     {
-
+        CanShow();
     }
 
     public override void AfterHiddenUI()
