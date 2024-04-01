@@ -32,6 +32,9 @@ public class GetAF : MonoBehaviour,IDebuger
 
     void Start()
     {
+#if NativeAds
+        NativeAF.GetConutry();
+#endif
         StartCoroutine(Delay());
     }
 
@@ -61,7 +64,8 @@ public class GetAF : MonoBehaviour,IDebuger
         yield return new WaitForSeconds(4f);
 #if UNITY_EDITOR
 
-        I2Language.Instance.ApplyLanguage(FackI2Language.Instance == null ? I2Language.LanguageEnum.EN : FackI2Language.Instance.LanguageLocal);
+        if(I2Language.Instance) 
+            I2Language.Instance.ApplyLanguage(FackI2Language.Instance == null ? I2Language.LanguageEnum.EN : FackI2Language.Instance.LanguageLocal);
 
 #endif
 
@@ -72,14 +76,20 @@ public class GetAF : MonoBehaviour,IDebuger
 
         if (!allowDebug)
         {
-            AnalysisController.AfStatus = AnalysisController.AFStatus.Organic;
+            AnalysisController.OnAFStatusChanged?.Invoke();
+#if NativeAds
+            NativeAF.GetAF();
+
+#else
             CrossAndroid.GetAF();
+#endif
         }
 
 
 #else
 
         //AdController.ShowGameStartInterstitial(PlayerData.CashCount >= 0.01f);
+        AnalysisController.OnAFStatusChanged?.Invoke();
         CrossIos.Instance.GetAF(0);
 
 #endif

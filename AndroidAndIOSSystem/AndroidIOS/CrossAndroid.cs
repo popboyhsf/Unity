@@ -904,6 +904,14 @@ public class CrossAndroid : MonoBehaviour
         {
             I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.HU);
         }
+        else if (_s.IndexOf("TW") >= 0)
+        {
+            I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.TW);
+        }
+        else if (_s.IndexOf("GB") >= 0)
+        {
+            I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.GB);
+        }
         else
         {
             I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.EN);
@@ -1110,6 +1118,14 @@ public class CrossAndroid : MonoBehaviour
         else if (_s.IndexOf("HU") >= 0)
         {
             I2Language.Instance.ChangeUI(I2Language.LanguageEnum.HU);
+        }
+        else if (_s.IndexOf("TW") >= 0)
+        {
+            I2Language.Instance.ChangeUI(I2Language.LanguageEnum.TW);
+        }
+        else if (_s.IndexOf("GB") >= 0)
+        {
+            I2Language.Instance.ChangeUI(I2Language.LanguageEnum.GB);
         }
         else
         {

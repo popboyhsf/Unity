@@ -32,14 +32,22 @@ public class LinkOpener : MonoBehaviour, IPointerClickHandler
 
             if (linkInfo.GetLinkID().IndexOf("1") >= 0)
             {
-                Application.OpenURL(GameConfig.Instance.androidPrivacyPolicy);
+#if UNITY_IPHONE
+                CrossIos.IOSWebPageShow(About.PPUrlForIOS);
+                return;
+#endif
+                Application.OpenURL(About.PPUrl);
             }
             else if (linkInfo.GetLinkID().IndexOf("2") >= 0)
             {
-                Application.OpenURL(GameConfig.Instance.androidTermsOfService);
+#if UNITY_IPHONE
+                 CrossIos.IOSWebPageShow(About.TOSURlForIOS);
+                return;
+#endif
+                Application.OpenURL(About.TOSURl);
             }
 
-            
+
             //Debuger.Log("GetLinkID == " + linkInfo.GetLinkID());
         }
     }

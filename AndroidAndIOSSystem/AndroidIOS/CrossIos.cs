@@ -84,18 +84,33 @@ public class CrossIos : MonoBehaviour
 
     [DllImport("__Internal")]
     public static extern void showIDFA();
-	
-	[DllImport("__Internal")]
-    public static extern void requestIDFA();
-    
-    [DllImport("__Internal")]
-    public static extern void logEvetnForIDFA();
 
     [DllImport("__Internal")]
     public static extern int canShowIDFA();
 
     [DllImport("__Internal")]
-    public static extern void rateUS(int count,int max，string patch);
+    public static extern void requestIDFA();
+
+    [DllImport("__Internal")]
+    public static extern void logEvetnForIDFA();
+
+    [DllImport("__Internal")]
+    public static extern void iOSWebPageShow(string str);
+
+    [DllImport("__Internal")]
+    public static extern void iOSDeviceShock(int value);
+
+    [DllImport("__Internal")]
+    public static extern void rateUSShow();
+
+    [DllImport("__Internal")]
+    public static extern void rateUS(int count,int max,string patch);
+
+    [DllImport("__Internal")]
+    public static extern int iOSCanShowGDPR();
+
+    [DllImport("__Internal")]
+    public static extern void showPrivacyOptionsForm();
 
 #endif
 
@@ -479,7 +494,7 @@ public class CrossIos : MonoBehaviour
     //接受url
     public void GetUrlForIconCallBack(string url)
     {
-        PostAndGetIcon.Instance.GetIcon(url);
+        //PostAndGetIcon.Instance.GetIcon(url);
     }
 
     //CashOut
@@ -513,11 +528,11 @@ public class CrossIos : MonoBehaviour
     {
         if (returnState == "1")
         {
-            NetWorkStateController.Instance.Show();
+           // NetWorkStateController.Instance.Show();
         }
         else
         {
-            NetWorkStateController.Instance.Hidden();
+          //  NetWorkStateController.Instance.Hidden();
         }
     }
 
@@ -534,7 +549,7 @@ public class CrossIos : MonoBehaviour
 
     public void GetTimer(string s)
     {
-        NetWorkTimerManager.Instance.GetTimeFromAndroid(s);
+       // NetWorkTimerManager.Instance.GetTimeFromAndroid(s);
         Debuger.Log("Get Timer From IOS == " + s);
     }
 
@@ -547,6 +562,7 @@ public class CrossIos : MonoBehaviour
     public void ReturnContry(string returnC)
     {
         if (I2Language.Instance == null) return;
+
 
         var _s = returnC.ToUpper();
 
@@ -745,6 +761,14 @@ public class CrossIos : MonoBehaviour
         {
             I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.HU);
         }
+        else if (_s.IndexOf("TW") >= 0)
+        {
+            I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.TW);
+        }
+        else if (_s.IndexOf("GB") >= 0)
+        {
+            I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.GB);
+        }
         else
         {
             I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.EN);
@@ -794,11 +818,26 @@ public class CrossIos : MonoBehaviour
     }
 
     /// <summary>
+    /// 展示评分游戏内弹窗
+    /// </summary>
+    public static void RateUSShow()
+    {
+        if (!CheckInited())
+        {
+            return;
+        }
+
+#if UNITY_IPHONE && !UNITY_EDITOR && !SafeMode
+        rateUSShow();
+#endif
+    }
+
+    /// <summary>
     /// 調用系統評分
     /// </summary>
     /// <param name="count"></param>
     /// <param name="patch"></param>
-    public static void RateUS(int count, int max, string patch)
+    public static void RateUS(int count,int max,string patch)
     {
         if (!CheckInited())
         {
@@ -810,6 +849,38 @@ public class CrossIos : MonoBehaviour
 #endif
     }
 
+    /// <summary>
+    /// 打开网页
+    /// </summary>
+    /// <param name="url"></param>
+    public static void IOSWebPageShow(string url)
+    {
+        if (!CheckInited())
+        {
+            return;
+        }
+
+#if UNITY_IPHONE && !UNITY_EDITOR && !SafeMode
+        iOSWebPageShow(url);
+#endif
+    }
+
+    /// <summary>
+    /// 震动
+    /// </summary>
+    /// <param name="value">时间(ms)</param>
+    public static void IOSDeviceShock(int value)
+    {
+        if (!CheckInited())
+        {
+            return;
+        }
+
+#if UNITY_IPHONE && !UNITY_EDITOR && !SafeMode
+        iOSDeviceShock(value);
+#endif
+
+    }
 
 
     #region IDFA彈窗交互
@@ -847,8 +918,7 @@ public class CrossIos : MonoBehaviour
         }
         ClickAllowCallBack?.Invoke();
     }
-	
-	
+
     /// <summary>
     /// 打開引導IDFA去系統設置
     /// </summary>
@@ -892,6 +962,47 @@ public class CrossIos : MonoBehaviour
        _b =  canShowIDFA() == 0;
 #endif
         return _b;
+    }
+
+    #endregion
+
+    #region GDPR
+
+    public static bool CanShowGDPR()
+    {
+        var _b = false;
+        if (!CheckInited())
+        {
+            _b = false;
+        }
+#if UNITY_IPHONE && !UNITY_EDITOR && !SafeMode
+       _b =  iOSCanShowGDPR() == 1;
+#endif
+        return _b;
+    }
+
+    private static IIsShowGDPRBtn isShowGDPRBtn;
+    public static void ClickShowGDPR(IIsShowGDPRBtn value)
+    {
+        if (!CheckInited())
+        {
+            return;
+        }
+
+        isShowGDPRBtn = value;
+        isShowGDPRBtn.BtnClickStatus(false);
+#if UNITY_IPHONE && !UNITY_EDITOR && !SafeMode
+       showPrivacyOptionsForm();
+#endif
+    }
+
+    public void OnPrivacyOptionsFormShow(string status)
+    {
+        var _status = int.Parse(status).IntToBool();
+
+        isShowGDPRBtn?.BtnClickStatus(_status);
+
+        Debuger.Log("isShowGDPRBtn == " + _status);
     }
 
     #endregion

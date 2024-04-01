@@ -80,6 +80,10 @@ public class I2Language : MonoBehaviour
         CL,//es-CL  智利
         CZ,//cs     捷克
         HU,//hu     匈牙利
+
+
+        TW,//zh-TW  台灣
+        GB,//en-GB  英國
     }
 
     public LanguageEnum Language { private set; get; } = LanguageEnum.EN;
@@ -105,12 +109,7 @@ public class I2Language : MonoBehaviour
 
 #if UNITY_EDITOR
 
-        var _l = LocalizationManager.GetAllLanguages()[(int)language];
-
-        if (LocalizationManager.HasLanguage(_l))
-        {
-            LocalizationManager.CurrentLanguage = _l;
-        }
+        ChangeUI(Language);
 
 
 #endif
@@ -323,6 +322,16 @@ public class I2Language : MonoBehaviour
                 if (usFolat) _m = (i * 350).ToString("0.00");
                 else _m = (i * 350).ToString("0");
                 break;
+
+
+            case LanguageEnum.TW:
+                if (usFolat) _m = (i * 60).ToString("0.00");
+                else _m = (i * 60).ToString("0");
+                break;
+            case LanguageEnum.GB:
+                if (usFolat) _m = i.ToString("0.00");
+                else _m = i.ToString("0");
+                break;
             default:
                 break;
         }
@@ -473,6 +482,13 @@ public class I2Language : MonoBehaviour
                 break;
             case LanguageEnum.HU:
                 _m = "Ft";
+                break;
+
+            case LanguageEnum.TW:
+                _m = "NT$";
+                break;
+            case LanguageEnum.GB:
+                _m = "£";
                 break;
             default:
                 break;

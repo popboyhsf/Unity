@@ -20,17 +20,17 @@ using TMPro;
 [AddComponentMenu("Typewriter Effect")]
 public class TypewriterEffect : MonoBehaviour
 {
-    enum TypeState
+    public enum TypeState
     {
         Null,
         Typing,
         TypeEnd,
-        Ended
     }
 
     int charsPerSecond = 10;
 
     public bool isTyping;
+    public TypeState typeState = TypeState.Null;
     private float timer;
     private string words;
 
@@ -44,7 +44,7 @@ public class TypewriterEffect : MonoBehaviour
     private Text mText { get { if (_text == null) _text = GetComponent<Text>(); return _text; } }
 #endif
 
-    public void Show(string words,UnityAction onTalkEnd, int charsPerSecond=10)
+    public void Show(string words, UnityAction onTalkEnd, int charsPerSecond = 10)
     {
         this.words = words;
         this.onTypeEnded = onTalkEnd;
@@ -52,6 +52,7 @@ public class TypewriterEffect : MonoBehaviour
         isTyping = true;
         this.charsPerSecond = Mathf.Max(1, charsPerSecond);
         mText.text = "";
+        typeState = TypeState.Typing;
     }
 
     void Update()
@@ -78,6 +79,7 @@ public class TypewriterEffect : MonoBehaviour
             timer = 0;
             mText.text = words;
             onTypeEnded?.Invoke();
+            typeState = TypeState.TypeEnd;
         }
     }
 

@@ -17,18 +17,18 @@ public class About : MonoBehaviour
     //Android
 
 
-    public const string GPID = "com.bingo.dream.lx";
+    public const string GPID = "TODO";
     private const string FBUrl = "";
-    public const string PPUrl = "https://docs.google.com/document/d/e/2PACX-1vRWCPa1u0EF3YeMDKm6SBiu7urWllGzKW2GNFqk_HRnDEY6iGVl_XFDtfQ0iRggUHiVspnCgFGTY1gy/pub";
-    public const string TOSURl = "https://docs.google.com/document/d/e/2PACX-1vSrALcRCwWtlFxFnQHUflePbGGuKCh3_QesDwg7xtZDNKOBBr-fcaYY5TKAU37PMxEZP4aOK8a6HncP/pub";
+    public const string PPUrl = "TODO";
+    public const string TOSURl = "TODO";
     //IOS
 
 
-    public const string IOSID = "1541317383";
+    public const string IOSID = "TODO";
     private const string FBUrlForIOS = "";
 
-    public const string PPUrlForIOS = "https://docs.google.com/document/d/e/2PACX-1vQyL92654KhL4REOq22YCroOZh87I8DGVLXxiKwMiBHUxAee2bjDEl5ERcD37aFgOVwA-aK9C9b-bzv/pub";
-    public const string TOSURlForIOS = "https://docs.google.com/document/d/e/2PACX-1vQRDWWm6h6pylrnSenGYfgFAtWjF9fW3ln0xWQYHQH88oJ6hnoiFkZew5tG1TlXErbFGlRuFI6HE5gA/pub";
+    public const string PPUrlForIOS = "TODO";
+    public const string TOSURlForIOS = "TODO";
 
 
     public const string GPUrl = "market://details?id=" + GPID;
@@ -122,7 +122,7 @@ public class About : MonoBehaviour
     {
         SoundController.Instance.PlaySound(SoundType.tanchuang);
 #if UNITY_IPHONE
-        Application.OpenURL(PPUrlForIOS);
+         CrossIos.IOSWebPageShow(PPUrlForIOS);
         return;
 #endif
         Application.OpenURL(PPUrl);
@@ -132,7 +132,7 @@ public class About : MonoBehaviour
     {
         SoundController.Instance.PlaySound(SoundType.tanchuang);
 #if UNITY_IPHONE
-        Application.OpenURL(TOSURlForIOS);
+         CrossIos.IOSWebPageShow(TOSURlForIOS);
         return;
 #endif
         Application.OpenURL(TOSURl);

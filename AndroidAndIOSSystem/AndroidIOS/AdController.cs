@@ -253,6 +253,10 @@ public class AdController
 #if UNITY_EDITOR || NoAd || SafeMode
         return;
 #elif UNITY_ANDROID && !UNITY_EDITOR
+#if NativeAds
+        NativeAds.ShowInterstitial(pos);
+        return;
+#endif
         CrossAndroid.ShowInterstitial(pos);
 #elif UNITY_IPHONE// && !UNITY_EDITOR
         CrossIos.ShowInterstitial(pos,null, null);
@@ -283,6 +287,10 @@ public class AdController
         ShowInterstitialCallBack();
         return;
 #elif UNITY_ANDROID && !UNITY_EDITOR
+#if NativeAds
+        NativeAds.ShowInterstitial(pos);
+        return;
+#endif
         CrossAndroid.ShowInterstitial(pos);
 #elif UNITY_IPHONE// && !UNITY_EDITOR
         CrossIos.ShowInterstitial(pos,null, null);
@@ -334,9 +342,13 @@ public class AdController
         ShowRewardedVideoCallBack();
         return;
 #elif UNITY_ANDROID && !UNITY_EDITOR
-                        CrossAndroid.ShowRewardedVideo(entry);
+#if NativeAds
+        NativeAds.ShowRewardedVideo(entry);
+        return;
+#endif
+        CrossAndroid.ShowRewardedVideo(entry);
 #elif UNITY_IPHONE// && !UNITY_EDITOR
-                        CrossIos.ShowRewardedVideo(entry,null);
+        CrossIos.ShowRewardedVideo(entry,null);
 #endif
         watchEnterActionSelf = null;
     }
@@ -371,6 +383,10 @@ public class AdController
     public static void CancelShowRewardedVideo()
     {
 #if UNITY_ANDROID && !UNITY_EDITOR
+#if NativeAds
+        NativeAds.ReqHideLoadingRewardVideoWindow();
+        return;
+#endif
         CrossAndroid.ReqHideLoadingRewardVideoWindow();
 #elif UNITY_IPHONE && !UNITY_EDITOR
         CrossIos.ReqHideLoadingRewardVideoWindow();

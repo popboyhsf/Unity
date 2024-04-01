@@ -60,7 +60,7 @@ public class RateUs : PopUIBase
 #if UNITY_ANDROID
             Application.OpenURL(About.GPUrl);
 #elif UNITY_IPHONE
-            Application.OpenURL(About.GPUrlForIOS);
+            CrossIos.RateUS(selectStartCount, btnStars.Length, About.IOSID);
 #endif
             HiddenUIAI();
         }
@@ -74,7 +74,11 @@ public class RateUs : PopUIBase
 
     public override void FSetBeforShow()
     {
-        
+#if UNITY_ANDROID
+            
+#elif UNITY_IPHONE
+        CrossIos.RateUSShow();
+#endif
     }
 
     public override void FSetAfterHiddenUI()

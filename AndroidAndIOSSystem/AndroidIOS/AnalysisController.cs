@@ -275,13 +275,17 @@ public static class AnalysisController
         }
     }
 
-    public static void TraceEvent(string eventName, string jsonStr="")
+    public static void TraceEvent(string eventName, string jsonStr = "")
     {
         Debuger.LogWarning("AF ====== " + eventName + "    Content === " + jsonStr);
 
 #if SafeMode || Marketing      
         return;
 #elif UNITY_ANDROID && !UNITY_EDITOR
+#if NativeAds
+        NativeAF.LogEvent(eventName, jsonStr);
+        return;
+#endif
         CrossAndroid.LogEvent(eventName, jsonStr);
 #elif UNITY_IPHONE && !UNITY_EDITOR
         CrossIos.LogEvent(eventName, jsonStr);
@@ -299,6 +303,10 @@ public static class AnalysisController
         Debuger.LogWarning("AF ====== LogEvetnForTrackLuckBalance" +  "    Content === " + i + "   ===== " + j);
         return;
 #elif UNITY_ANDROID && !UNITY_EDITOR
+#if NativeAds
+        NativeAF.LogEvetnForTrackLuckBalance(i,j);
+        return;
+#endif
         CrossAndroid.LogEvetnForTrackLuckBalance(i,j);
 #elif UNITY_IPHONE && !UNITY_EDITOR
         CrossIos.LogEvetnForTrackLuckBalance(i,j);

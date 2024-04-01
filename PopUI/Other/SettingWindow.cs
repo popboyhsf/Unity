@@ -50,7 +50,7 @@ public class SettingWindow : PopUIBase, IIsShowGDPRBtn
         #elif UNITY_ANDROID && !UNITY_EDITOR
                 _b = CrossAndroid.CanShowGDPR();
         #elif UNITY_IPHONE
-        
+                _b = CrossIos.CanShowGDPR();
         #endif
 
         btnClickGDPR.gameObject.SetActive(_b);
@@ -63,7 +63,7 @@ public class SettingWindow : PopUIBase, IIsShowGDPRBtn
         #elif UNITY_ANDROID && !UNITY_EDITOR
                 CrossAndroid.ClickShowGDPR(this);
         #elif UNITY_IPHONE
-        
+                CrossIos.ClickShowGDPR(this);
         #endif
     }
 

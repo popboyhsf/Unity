@@ -422,32 +422,21 @@ extern "C" void UnityCleanupTrampoline()
    //带vc的打点事件 suffixCode 每次根据版本号变动
    [AppsFlyerProxy versionSuffixList:@[@"ad_request",@"ad_show",@"af_succ",@"luck_balance",@"interstitial_show",@"video_show",@"balance_display",@"loading_finish",@"loading_timeout"] prefixList:@[@"lang"] suffixCode:2];
    
-   //appId是应用的id，gameName是统计前缀 6473612973
+   //appId是应用的id，gameName是统计前缀 
    [AppsFlyerProxy instanceInitNoATTWithKey:@"SFmpoiTG8y4MzCSPePPpsP" appId: @"" gameName: @"" delegate:self];
    [AppsFlyerProxy refrenceWindow:self.window];
 
    [AppsFlyerProxy firstCheckSystemIdfaSet];
 
-
    //确保idfa提示后初始化
    if ([AppsFlyerProxy attDialogCanShow] == true) {
-       [AdManager instanceInitWithTestMode:NO delegate:self];
-       [AdManager initBanner:AdBannerPosBottom];
-       [AdManager showBannerAd:YES];
-	   
-	       //自己配置
-            [AdManager showMaxInterstitialAd:InterstitialEnumSplashEnd];
-            [AdManager setOrganicBlockInterstitial:(false)];
-            [AdManager setInterstitialInterval:15 firstShowDelay:(15)];
-            [AdManager setInterstitialIntervalToVideo:15];
+       dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+           [AdManager instancePrepareGDPRWithDelegate:self rootCon:self.window.rootViewController];
+       });
    }
 
     [self performSelector:@selector(changeLanguage) withObject:nil afterDelay:2];
     
-    //Debug 这行代码是查看sdk是否集成成功，会弹出一个界面，如果都在completed sdk integrations下面代表成功，提交时不要调用
-    //[self performSelector:@selector(showDebuge) withObject:nil afterDelay:10];
-
-
     return YES;
 }
 
@@ -458,6 +447,29 @@ extern "C" void UnityCleanupTrampoline()
     NSString* resStr = [AppsFlyerProxy getPhoneCountryCodeStr];
     CLog(@"LanguageGetStr === %@",resStr);
     UnitySendMessage("CrossIosObject","ReturnContry", resStr.UTF8String);
+
+}
+
+//GDPR流程结束开始初始化广告
+-(void)googleGDPRFinishBeginLoad {
+   dispatch_async(dispatch_get_main_queue(), ^{
+	   
+       [AdManager instanceInitWithTestMode:NO delegate:self];
+	   [AdManager mtgROASWork:YES];
+       [AdManager initBanner:AdBannerPosBottom];
+       [AdManager showBannerAd:YES];
+	   
+	       //自己配置
+            [AdManager showMaxInterstitialAd:InterstitialEnumSplashEnd];
+            [AdManager setOrganicBlockInterstitial:(false)];
+            [AdManager setInterstitialInterval:15 firstShowDelay:(15)];
+            [AdManager setInterstitialIntervalToVideo:15];
+			
+	//Debug 这行代码是查看sdk是否集成成功，会弹出一个界面，如果都在completed sdk integrations下面代表成功，提交时不要调用
+    //[self performSelector:@selector(showDebuge) withObject:nil afterDelay:2];
+			
+   });
+   
 
 }
 
@@ -630,6 +642,47 @@ extern "C" void UnityCleanupTrampoline()
     
     UnitySendMessage("CrossIosObject", "ReturnNetState",  [NSString stringWithFormat:@"%d",status].UTF8String );
 
+}
+
+- (void)showDebuge {
+   [[ALSdk shared] showMediationDebugger];
+}
+
+- (void)webPageNotification:(NSNotification *)notification {
+   NSDictionary *userInfo = notification.userInfo;
+   NSString *urlStr = [userInfo objectForKey:@"url"];
+   SFSafariViewController *vc = [[SFSafariViewController alloc] initWithURL:[NSURL URLWithString:urlStr]];
+   [_window.rootViewController presentViewController:vc animated:YES completion:nil];
+}
+
+//GDPR重新展示结果
+-(void)onPrivacyOptionsFormShow:(BOOL)isSucceed {
+   //展示结束，通知unity
+   int status = 1;
+	
+   if(isSucceed) status = 1;
+	
+   UnitySendMessage("CrossIosObject", "OnPrivacyOptionsFormShow",  [NSString stringWithFormat:@"%d",status].UTF8String );
+}
+
+//这个是AFSDK里的，
+- (void)attRequestNotification:(NSNotification *)notification {
+   //弹窗结束后继续loading加载
+    NSString *content = [notification.userInfo objectForKey:@"content"];
+    if([content isEqualToString:@"YES"])
+    {
+        //同意
+    }
+    else
+    {
+        //不同意
+    }
+   UnitySendMessage("CrossIosObject", "IDFACallBack",  "");
+   
+   //确保idfa弹窗之后初始化sdk
+   dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+       [AdManager instancePrepareGDPRWithDelegate:self rootCon:self.window.rootViewController];
+   });
 }
 
 // Object ->>>>>>  Call Unity  end
@@ -805,46 +858,7 @@ extern "C" void UnityCleanupTrampoline()
     AppController_SendNotificationWithArg(kUnityHandleEventsForBackgroundURLSession, arg);
 }
 
-// Object ->>>>>>  Self
-- (void)showDebuge {
-   [[ALSdk shared] showMediationDebugger];
-}
-- (void)webPageNotification:(NSNotification *)notification {
-   NSDictionary *userInfo = notification.userInfo;
-   NSString *urlStr = [userInfo objectForKey:@"url"];
-   SFSafariViewController *vc = [[SFSafariViewController alloc] initWithURL:[NSURL URLWithString:urlStr]];
-   [_window.rootViewController presentViewController:vc animated:YES completion:nil];
-}
 
-
-
-//这个是AFSDK里的，
-- (void)attRequestNotification:(NSNotification *)notification {
-   //弹窗结束后继续loading加载
-    NSString *content = [notification.userInfo objectForKey:@"content"];
-    if([content isEqualToString:@"YES"])
-    {
-        //同意
-    }
-    else
-    {
-        //不同意
-    }
-   UnitySendMessage("CrossIosObject", "IDFACallBack",  "");
-   //确保idfa弹窗之后初始化sdk
-   dispatch_async(dispatch_get_main_queue(), ^{
-       [AdManager instanceInitWithTestMode:NO delegate:self];	
-       [AdManager initBanner:AdBannerPosBottom];
-       [AdManager showBannerAd:YES];
-		//广告自己配置
-        [AdManager showMaxInterstitialAd:InterstitialEnumSplashEnd];
-        [AdManager setOrganicBlockInterstitial:(false)];
-        [AdManager setInterstitialInterval:15 firstShowDelay:(15)];
-        [AdManager setInterstitialIntervalToVideo:15];
-   });
-}
-
-// Object ->>>>>>  Self End
 @end
 
 

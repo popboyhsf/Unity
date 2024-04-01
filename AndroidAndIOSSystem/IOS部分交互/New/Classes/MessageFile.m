@@ -2,7 +2,7 @@
 //  Message.m
 //  Unity-iPhone
 //
-//  Created by wanxiong mac on 2021/3/16.
+//  Created by wanxiong mac on 2024/01/10.
 //
 
 #import <Foundation/Foundation.h>
@@ -213,24 +213,52 @@ extern "C" {
             [AppsFlyerProxy logEvent:[AppsFlyerProxy getEventName:_tracking_close]];
             }
     }
-    
+	
+	//协议web页面调用
+    void iOSWebPageShow(char *str) {
+        NSString *valueStr = [NSString stringWithCString:str encoding:NSUTF8StringEncoding];
+        NSLog(@"%@", valueStr);
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"iOSWebPageShow" object:nil userInfo:@{@"url": valueStr}];
+    }
+
+    //震动
+    void iOSDeviceShock(int value) {
+        AudioServicesPlaySystemSound(value);
+    }
+	
+	void rateUSShow()
+    {
+		[AppsFlyerProxy logEvent:[AppsFlyerProxy getEventName:_rate_show]];
+	}
+	
     void rateUS(int count,int max,const char* patch)
     {
-        NSString* patchNS = [NSString stringWithUTF8String:patch];
-        
-        NSString *starStr = [NSString stringWithFormat:@"%@%d", _rate_score_, count];
-        [AppsFlyerProxy logEvent:[AppsFlyerProxy getEventName:starStr]];
+        NSString* patchNS = [NSString stringWithUTF8String:patch]; 
         
         if(count == max)
         {
-            [AppsFlyerProxy logEvent:[AppsFlyerProxy getEventName:_rate_show]];
+            NSString *starStr = [NSString stringWithFormat:@"%@%d", _rate_score_, count];
+			[AppsFlyerProxy logEvent:[AppsFlyerProxy getEventName:starStr]];
+			
             [AppsFlyerProxy appScoring];
             
         }
-           
         
     }
+	
+	//GDPR按钮能否展示0不展示，1展示
+    int iOSCanShowGDPR() {
+        NSString *str = [AdManager canShowGDPR];
+        if ([str isEqualToString:@"1"])
+            return 1;
+        return 0;
+    }
 
+    //展示GDPR
+    void showPrivacyOptionsForm() {
+        [AdManager showPrivacyOptionsForm];
+    }
+	
     
 #ifdef __cplusplus
 }

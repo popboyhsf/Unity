@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
@@ -100,7 +101,8 @@ public class IOSIDFA : SingletonMonoBehaviour<IOSIDFA>
     /// </summary>
     public void ForceClickAllow()
     {
-        UIManager.Instance.HideWindow(WindowName.IDFAWindow);
+        //UIManager.Instance.HideWindow(WindowName.IDFAWindow);
+        PopUIManager.Instance.HiddenUI(PopUIEnum.IDFAWindow);
         this.backCall?.Invoke();
     }
 
