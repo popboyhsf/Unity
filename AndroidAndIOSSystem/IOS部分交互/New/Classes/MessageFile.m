@@ -113,14 +113,7 @@ extern "C" {
                 
 			CLog(@"isSafeChannel is %i", isSafeChannel);
 			CLog(@"isOrganic is %i", isOrganic);
-        
-			int status = 0;//模拟买量
-			if(!isOrganic) status = 1;
-        
-			//if(isAppsFlyerReturn)
-			//UnitySendMessage("CrossIosObject", "AppsFlyerState",  [NSString stringWithFormat:@"%d",status].UTF8String );
-			//else CLog(@"appsFlayerIsOrganicIsSafeChannel is Fail . Wait for AF");
-			//[LuckDrawManager getEventEntryRes];
+       
             
         }];
     }

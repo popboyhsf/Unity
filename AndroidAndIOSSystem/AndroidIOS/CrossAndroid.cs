@@ -912,6 +912,10 @@ public class CrossAndroid : MonoBehaviour
         {
             I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.GB);
         }
+        else if (_s.IndexOf("KZ") >= 0)
+        {
+            I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.KZ);
+        }
         else
         {
             I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.EN);
@@ -1126,6 +1130,10 @@ public class CrossAndroid : MonoBehaviour
         else if (_s.IndexOf("GB") >= 0)
         {
             I2Language.Instance.ChangeUI(I2Language.LanguageEnum.GB);
+        }
+        else if (_s.IndexOf("KZ") >= 0)
+        {
+            I2Language.Instance.ChangeUI(I2Language.LanguageEnum.KZ);
         }
         else
         {

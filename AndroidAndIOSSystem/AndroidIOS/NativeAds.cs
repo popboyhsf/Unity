@@ -3,22 +3,22 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class NativeAds : MonoBehaviour
+public class NativeAds : MonoBehaviour, IDebuger
 {
     private const string MaxSdkKey = @"f6N71KFAOcJtC/daU32stkPYY4FugAznUulJt1t/SYd/pkm99EEr4nPRsxz1Gz2H4AbgVfOt3v+sBkLNHrXxhCwReZFRiYPswagoIkOKJ8H45/gZOFND9W4FJiTECA4F";
 
 #if UNITY_IPHONE
-    private const string InterstitialAdUnitId = "ENTER_IOS_INTERSTITIAL_AD_UNIT_ID_HERE";
-    private const string RewardedAdUnitId = "ENTER_IOS_REWARD_AD_UNIT_ID_HERE";
-    private const string RewardedInterstitialAdUnitId = "ENTER_IOS_REWARD_INTER_AD_UNIT_ID_HERE";
-    private const string BannerAdUnitId = "ENTER_IOS_BANNER_AD_UNIT_ID_HERE";
-    private const string MRecAdUnitId = "ENTER_IOS_MREC_AD_UNIT_ID_HERE";
+    private const string InterstitialAdUnitId = "";
+    private const string RewardedAdUnitId = "";
+    private const string RewardedInterstitialAdUnitId = "";
+    private const string BannerAdUnitId = "";
+    private const string MRecAdUnitId = "";
 #else // UNITY_ANDROID
     private const string InterstitialAdUnitId = @"iBS11cQnLuUb5rwVlwANllg6amUNmxEchfwVk6eTw2s=";
     private const string RewardedAdUnitId = @"y0dpzogQy0vAJb4dpp6A8lg6amUNmxEchfwVk6eTw2s=";
-    private const string RewardedInterstitialAdUnitId = "ENTER_ANDROID_REWARD_INTER_AD_UNIT_ID_HERE";
+    private const string RewardedInterstitialAdUnitId = "";
     private const string BannerAdUnitId = @"T40gbLxr5KWSwyMmtRqxQVg6amUNmxEchfwVk6eTw2s=";
-    private const string MRecAdUnitId = "ENTER_ANDROID_MREC_AD_UNIT_ID_HERE";
+    private const string MRecAdUnitId = "";
 #endif
 
     private bool isBannerShowing;
@@ -32,12 +32,32 @@ public class NativeAds : MonoBehaviour
 
     private bool isReward = false;
 
+    private bool allowDebug = false;
+
+    public bool AllowDebug
+    {
+        get
+        {
+            return allowDebug;
+        }
+        set
+        {
+            allowDebug = value;
+            if (allowDebug)
+            {
+                MaxSdk.ShowMediationDebugger();
+                allowDebug = false;
+            }
+        }
+    }
+
+    public string AllowName => "顯示ADDebuger";
 
     private void Awake()
     {
-        gameObject.name = "NativeObj";
+        gameObject.name = "NativeAds";
         Application.targetFrameRate = 60;
-#if !UNITY_ANDROID && !NativeAds
+#if !NativeAds
         gameObject.SetActive(false);
 #endif
     }
@@ -68,16 +88,16 @@ public class NativeAds : MonoBehaviour
     /// </summary>
     /// <param name="pos">0启动游戏,1切回游戏,2获取到奖励</param>
     /// <param name="must"></param>
-    public static void ShowInterstitial(int pos,bool needAutoShow = false)
+    public static void ShowInterstitial(int pos, bool needAutoShow = false)
     {
-       
+
         if (MaxSdk.IsInterstitialReady(Utils.AESDecrypt(InterstitialAdUnitId)))
         {
             MaxSdk.ShowInterstitial(Utils.AESDecrypt(InterstitialAdUnitId));
         }
         else
         {
-            if(needAutoShow) 
+            if (needAutoShow)
                 isNeedInterstitialADShow = true;
         }
     }
@@ -115,6 +135,7 @@ public class NativeAds : MonoBehaviour
         if (isNeedInterstitialADShow)
         {
             MaxSdk.ShowInterstitial(Utils.AESDecrypt(InterstitialAdUnitId));
+            isNeedInterstitialADShow = false;
         }
     }
 
@@ -214,6 +235,7 @@ public class NativeAds : MonoBehaviour
         if (isNeedRewardedADShow)
         {
             MaxSdk.ShowRewardedAd(Utils.AESDecrypt(RewardedAdUnitId));
+            isNeedRewardedADShow = false;
         }
     }
 

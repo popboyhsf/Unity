@@ -25,6 +25,10 @@ public static class CountryCode
                 }
             }
         }
+        else if (Application.platform == RuntimePlatform.IPhonePlayer)
+        {
+
+        }
         return "";
     }
 
@@ -41,6 +45,10 @@ public static class CountryCode
                     return javaClass.CallStatic<string>(ANDROID_METHOD_LANGUAGE, context);
                 }
             }
+        }
+        else if (Application.platform == RuntimePlatform.IPhonePlayer)
+        {
+
         }
         return "";
     }

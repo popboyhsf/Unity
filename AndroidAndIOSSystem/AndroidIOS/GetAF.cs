@@ -32,9 +32,6 @@ public class GetAF : MonoBehaviour,IDebuger
 
     void Start()
     {
-#if NativeAds
-        NativeAF.GetConutry();
-#endif
         StartCoroutine(Delay());
     }
 
@@ -62,6 +59,9 @@ public class GetAF : MonoBehaviour,IDebuger
     IEnumerator Delay()
     {
         yield return new WaitForSeconds(4f);
+#if NativeAds
+        NativeAF.GetConutry();
+#endif
 #if UNITY_EDITOR
 
         if(I2Language.Instance) 

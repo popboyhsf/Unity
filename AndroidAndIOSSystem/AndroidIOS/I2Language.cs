@@ -84,6 +84,7 @@ public class I2Language : MonoBehaviour
 
         TW,//zh-TW  台灣
         GB,//en-GB  英國
+        KZ,//kk     哈萨克斯坦
     }
 
     public LanguageEnum Language { private set; get; } = LanguageEnum.EN;
@@ -332,6 +333,10 @@ public class I2Language : MonoBehaviour
                 if (usFolat) _m = i.ToString("0.00");
                 else _m = i.ToString("0");
                 break;
+            case LanguageEnum.KZ:
+                if (usFolat) _m = (i * 1.5f).ToString("0.00");
+                else _m = (i * 1.5f).ToString("0");
+                break;
             default:
                 break;
         }
@@ -489,6 +494,9 @@ public class I2Language : MonoBehaviour
                 break;
             case LanguageEnum.GB:
                 _m = "£";
+                break;
+            case LanguageEnum.KZ:
+                _m = "〒";
                 break;
             default:
                 break;

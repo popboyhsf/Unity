@@ -288,6 +288,10 @@ public static class AnalysisController
 #endif
         CrossAndroid.LogEvent(eventName, jsonStr);
 #elif UNITY_IPHONE && !UNITY_EDITOR
+#if NativeAds
+        NativeAF.LogEvent(eventName, jsonStr);
+        return;
+#endif
         CrossIos.LogEvent(eventName, jsonStr);
 #endif
     }
@@ -309,6 +313,10 @@ public static class AnalysisController
 #endif
         CrossAndroid.LogEvetnForTrackLuckBalance(i,j);
 #elif UNITY_IPHONE && !UNITY_EDITOR
+#if NativeAds
+        NativeAF.LogEvetnForTrackLuckBalance(i,j);
+        return;
+#endif
         CrossIos.LogEvetnForTrackLuckBalance(i,j);
 #endif
     }

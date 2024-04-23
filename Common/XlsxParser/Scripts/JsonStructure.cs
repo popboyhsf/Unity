@@ -42,7 +42,7 @@ public static class JsonStructureLoader
             return null;
         }
 #else
-        string encrptName = fileName; 
+        string encrptName = fileName.ToLower(); 
         TextAsset jsonText = Resources.Load<TextAsset>("Jsons\\" + encrptName);
         string decryptJson = "";
         try

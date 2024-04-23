@@ -259,6 +259,10 @@ public class AdController
 #endif
         CrossAndroid.ShowInterstitial(pos);
 #elif UNITY_IPHONE// && !UNITY_EDITOR
+#if NativeAds
+        NativeAds.ShowInterstitial(pos);
+        return;
+#endif
         CrossIos.ShowInterstitial(pos,null, null);
 #endif
 
@@ -293,6 +297,10 @@ public class AdController
 #endif
         CrossAndroid.ShowInterstitial(pos);
 #elif UNITY_IPHONE// && !UNITY_EDITOR
+#if NativeAds
+        NativeAds.ShowInterstitial(pos);
+        return;
+#endif
         CrossIos.ShowInterstitial(pos,null, null);
 #endif
 
@@ -348,6 +356,10 @@ public class AdController
 #endif
         CrossAndroid.ShowRewardedVideo(entry);
 #elif UNITY_IPHONE// && !UNITY_EDITOR
+#if NativeAds
+        NativeAds.ShowRewardedVideo(entry);
+        return;
+#endif
         CrossIos.ShowRewardedVideo(entry,null);
 #endif
         watchEnterActionSelf = null;
@@ -389,6 +401,10 @@ public class AdController
 #endif
         CrossAndroid.ReqHideLoadingRewardVideoWindow();
 #elif UNITY_IPHONE && !UNITY_EDITOR
+#if NativeAds
+        NativeAds.ReqHideLoadingRewardVideoWindow();
+        return;
+#endif
         CrossIos.ReqHideLoadingRewardVideoWindow();
 #endif
     }

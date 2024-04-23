@@ -26,7 +26,7 @@ public class CrossIos : MonoBehaviour
     /**
     * IOS 相关函数
     */
-#if UNITY_IPHONE && !UNITY_EDITOR && !SafeMode
+#if UNITY_IPHONE && !UNITY_EDITOR && !SafeMode && !NativeAds
     /**
      * IOS   广告
      */
@@ -193,7 +193,7 @@ public class CrossIos : MonoBehaviour
         InterstitialOpenCallback = openCallback;
         InterstitialCloseCallback = closeCallback;
         int p = pos;
-#if UNITY_IPHONE && !UNITY_EDITOR && !SafeMode
+#if UNITY_IPHONE && !UNITY_EDITOR && !SafeMode && !NativeAds
         showInterstitial(p);
 #endif
     }
@@ -232,7 +232,7 @@ public class CrossIos : MonoBehaviour
         RewardVideoOpenCallback = watchStartAction;
         RewardVideoCloseCallback = watchClossAction;
         RewardVideoFailCallback = watchFailAction;
-#if UNITY_IPHONE && !UNITY_EDITOR && !SafeMode
+#if UNITY_IPHONE && !UNITY_EDITOR && !SafeMode && !NativeAds
         showRewardBasedVideoParam(entry);
 #endif
     }
@@ -248,7 +248,7 @@ public class CrossIos : MonoBehaviour
         RewardVideoOpenCallback = watchStartAction;
         RewardVideoCloseCallback = watchClossAction;
         RewardVideoFailCallback = watchFailAction;
-#if UNITY_IPHONE && !UNITY_EDITOR && !SafeMode
+#if UNITY_IPHONE && !UNITY_EDITOR && !SafeMode && !NativeAds
         showRewardBasedVideo();
 #endif
     }
@@ -285,7 +285,7 @@ public class CrossIos : MonoBehaviour
             return;
         }
 
-#if UNITY_IPHONE && !UNITY_EDITOR && !SafeMode
+#if UNITY_IPHONE && !UNITY_EDITOR && !SafeMode && !NativeAds
         hideLoadingRewardVideoWindow();
 #endif
     }
@@ -297,7 +297,7 @@ public class CrossIos : MonoBehaviour
             return;
         }
 
-#if UNITY_IPHONE && !UNITY_EDITOR && !SafeMode
+#if UNITY_IPHONE && !UNITY_EDITOR && !SafeMode && !NativeAds
         LogEventIOS(eventName, jsonStr);
 #endif
     }
@@ -308,7 +308,7 @@ public class CrossIos : MonoBehaviour
         {
             return;
         }
-#if UNITY_IPHONE && !UNITY_EDITOR && !SafeMode
+#if UNITY_IPHONE && !UNITY_EDITOR && !SafeMode && !NativeAds
             LogEvetnForTrackLuckBalance(j, i);         
 #endif
 
@@ -332,7 +332,7 @@ public class CrossIos : MonoBehaviour
     {
         var timer = time / 1000f;
         yield return new WaitForSecondsRealtime(timer);
-#if UNITY_IPHONE && !UNITY_EDITOR && !SafeMode
+#if UNITY_IPHONE && !UNITY_EDITOR && !SafeMode && !NativeAds
             startVibrator(type);
             //Debug.Log("Vibrator === " + type);
 #endif
@@ -346,7 +346,7 @@ public class CrossIos : MonoBehaviour
     public void WatchRewardVideoComplete(string returnCode)
     {
         Debuger.Log("WatchRewardVideoComplete");
-#if UNITY_IPHONE && !UNITY_EDITOR && !SafeMode
+#if UNITY_IPHONE && !UNITY_EDITOR && !SafeMode && !NativeAds
         
         if (returnCode == "success")
             RewardVideoCompletedAction?.Invoke();
@@ -367,7 +367,7 @@ public class CrossIos : MonoBehaviour
     /// <param name="isShow"></param>
     public void ShowGameStartInterstitial(bool isShow)
     {
-#if UNITY_IPHONE && !UNITY_EDITOR && !SafeMode
+#if UNITY_IPHONE && !UNITY_EDITOR && !SafeMode && !NativeAds
             gameStart(isShow);
             PushMessage();
 #endif
@@ -399,7 +399,7 @@ public class CrossIos : MonoBehaviour
         {
             return;
         }
-#if UNITY_IPHONE && !UNITY_EDITOR && !SafeMode
+#if UNITY_IPHONE && !UNITY_EDITOR && !SafeMode && !NativeAds
         isRewardVideoReady(isCash);
 #endif
         thisIsReadyI = isViedoReady;
@@ -433,7 +433,7 @@ public class CrossIos : MonoBehaviour
             return;
         }
 
-#if UNITY_IPHONE && !UNITY_EDITOR && !SafeMode
+#if UNITY_IPHONE && !UNITY_EDITOR && !SafeMode && !NativeAds
         rewardVideoCancel();
 #endif
         Debug.Log("rewardVideoCancel ====== " + thisIsReadyI);
@@ -454,7 +454,7 @@ public class CrossIos : MonoBehaviour
         {
             return;
         }
-#if UNITY_IPHONE && !UNITY_EDITOR && !SafeMode
+#if UNITY_IPHONE && !UNITY_EDITOR && !SafeMode && !NativeAds
             GetUnityPostInt(i);         
 #endif
 
@@ -485,7 +485,7 @@ public class CrossIos : MonoBehaviour
         {
             return;
         }
-#if UNITY_IPHONE && !UNITY_EDITOR && !SafeMode
+#if UNITY_IPHONE && !UNITY_EDITOR && !SafeMode && !NativeAds
             GetUrlForIcon();         
 #endif
 
@@ -510,7 +510,7 @@ public class CrossIos : MonoBehaviour
             return;
         }
 
-#if UNITY_IPHONE && !UNITY_EDITOR && !SafeMode
+#if UNITY_IPHONE && !UNITY_EDITOR && !SafeMode && !NativeAds
             CashOutI(balance,s);         
 #endif
 
@@ -542,7 +542,7 @@ public class CrossIos : MonoBehaviour
         {
             return;
         }
-#if UNITY_IPHONE && !UNITY_EDITOR && !SafeMode
+#if UNITY_IPHONE && !UNITY_EDITOR && !SafeMode && !NativeAds
             GetTimerFromUnity();         
 #endif
     }
@@ -769,6 +769,10 @@ public class CrossIos : MonoBehaviour
         {
             I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.GB);
         }
+        else if (_s.IndexOf("KZ") >= 0)
+        {
+            I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.KZ);
+        }
         else
         {
             I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.EN);
@@ -811,7 +815,7 @@ public class CrossIos : MonoBehaviour
 
         Debug.Log("Send Massage To IOS === GetAF");
 
-#if UNITY_IPHONE && !UNITY_EDITOR && !SafeMode
+#if UNITY_IPHONE && !UNITY_EDITOR && !SafeMode && !NativeAds
             getAF();          
 #endif
         yield break;
@@ -827,7 +831,7 @@ public class CrossIos : MonoBehaviour
             return;
         }
 
-#if UNITY_IPHONE && !UNITY_EDITOR && !SafeMode
+#if UNITY_IPHONE && !UNITY_EDITOR && !SafeMode && !NativeAds
         rateUSShow();
 #endif
     }
@@ -844,7 +848,7 @@ public class CrossIos : MonoBehaviour
             return;
         }
 
-#if UNITY_IPHONE && !UNITY_EDITOR && !SafeMode
+#if UNITY_IPHONE && !UNITY_EDITOR && !SafeMode && !NativeAds
         rateUS(count, max, patch);
 #endif
     }
@@ -860,7 +864,7 @@ public class CrossIos : MonoBehaviour
             return;
         }
 
-#if UNITY_IPHONE && !UNITY_EDITOR && !SafeMode
+#if UNITY_IPHONE && !UNITY_EDITOR && !SafeMode && !NativeAds
         iOSWebPageShow(url);
 #endif
     }
@@ -876,7 +880,7 @@ public class CrossIos : MonoBehaviour
             return;
         }
 
-#if UNITY_IPHONE && !UNITY_EDITOR && !SafeMode
+#if UNITY_IPHONE && !UNITY_EDITOR && !SafeMode && !NativeAds
         iOSDeviceShock(value);
 #endif
 
@@ -901,7 +905,7 @@ public class CrossIos : MonoBehaviour
 
         ClickAllowCallBack = callback;
 
-#if UNITY_IPHONE && !UNITY_EDITOR && !SafeMode
+#if UNITY_IPHONE && !UNITY_EDITOR && !SafeMode && !NativeAds
         showIDFA();
 #endif
     }
@@ -928,7 +932,7 @@ public class CrossIos : MonoBehaviour
         {
             return;
         }
-#if UNITY_IPHONE && !UNITY_EDITOR && !SafeMode
+#if UNITY_IPHONE && !UNITY_EDITOR && !SafeMode && !NativeAds
         requestIDFA();
 #endif
     }
@@ -942,7 +946,7 @@ public class CrossIos : MonoBehaviour
         {
             return;
         }
-#if UNITY_IPHONE && !UNITY_EDITOR && !SafeMode
+#if UNITY_IPHONE && !UNITY_EDITOR && !SafeMode && !NativeAds
         logEvetnForIDFA();
 #endif
     }
@@ -958,7 +962,7 @@ public class CrossIos : MonoBehaviour
         {
             _b = true;
         }
-#if UNITY_IPHONE && !UNITY_EDITOR && !SafeMode
+#if UNITY_IPHONE && !UNITY_EDITOR && !SafeMode && !NativeAds
        _b =  canShowIDFA() == 0;
 #endif
         return _b;
@@ -975,7 +979,7 @@ public class CrossIos : MonoBehaviour
         {
             _b = false;
         }
-#if UNITY_IPHONE && !UNITY_EDITOR && !SafeMode
+#if UNITY_IPHONE && !UNITY_EDITOR && !SafeMode && !NativeAds
        _b =  iOSCanShowGDPR() == 1;
 #endif
         return _b;
@@ -991,7 +995,7 @@ public class CrossIos : MonoBehaviour
 
         isShowGDPRBtn = value;
         isShowGDPRBtn.BtnClickStatus(false);
-#if UNITY_IPHONE && !UNITY_EDITOR && !SafeMode
+#if UNITY_IPHONE && !UNITY_EDITOR && !SafeMode && !NativeAds
        showPrivacyOptionsForm();
 #endif
     }

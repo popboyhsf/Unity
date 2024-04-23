@@ -6,6 +6,11 @@ using UnityEngine.UI;
 public class RateUs : PopUIBase
 {
     public static bool Rated { get; private set; } = false;
+
+    public override string thisPopUIEnum => PopUIEnum.RateUS.ToString();
+
+    public override string thisUIType => PopUIType.POP.ToString();
+
     [SerializeField]
     GameObject guideHand;
     [SerializeField]
@@ -25,11 +30,29 @@ public class RateUs : PopUIBase
             btnStars[i].onClick.AddListener(() => { OnClickStar(showCount); });
         }
         btnSubmit.interactable = false;
-        btnSubmit.onClick.AddListener(OnClickSubmit);
+        btnSubmit.onClick.AddListener(() => {
+
+#if UNITY_ANDROID
+            OnClickSubmit();
+#elif UNITY_IPHONE
+            OnClickSubmitIOS();
+#endif
+
+
+        });
         btnClose.onClick.AddListener(HiddenUIAI);
         RefreshDisplay();
         Rated = true;
 
+    }
+
+    public override void BeforShow(object[] value)
+    {
+#if UNITY_ANDROID
+            
+#elif UNITY_IPHONE
+        CrossIos.RateUSShow();
+#endif
     }
 
     private void OnClickStar(int showCount)
@@ -55,13 +78,10 @@ public class RateUs : PopUIBase
 
     private void OnClickSubmit()
     {
+
         if (selectStartCount == btnStars.Length)
         {
-#if UNITY_ANDROID
             Application.OpenURL(About.GPUrl);
-#elif UNITY_IPHONE
-            CrossIos.RateUS(selectStartCount, btnStars.Length, About.IOSID);
-#endif
             HiddenUIAI();
         }
         else
@@ -70,24 +90,14 @@ public class RateUs : PopUIBase
         }
     }
 
-
-
-    public override void FSetBeforShow()
+    private void OnClickSubmitIOS()
     {
-#if UNITY_ANDROID
-            
-#elif UNITY_IPHONE
-        CrossIos.RateUSShow();
-#endif
+        CrossIos.RateUS(selectStartCount, btnStars.Length, About.IOSID);
+        HiddenUIAI();
     }
 
-    public override void FSetAfterHiddenUI()
+    public override void AfterHiddenUI()
     {
-        
-    }
 
-    public void PlayOpen()
-    {
-        ani.SetTrigger("Open");
     }
 }

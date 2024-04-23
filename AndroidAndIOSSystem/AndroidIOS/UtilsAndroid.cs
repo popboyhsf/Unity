@@ -31,10 +31,10 @@ public static class UtilsAndroid
         long[] pattern = new long[2];
         pattern[0] = delayMillisecond;
         pattern[1] = vibratorMillisecond;
-#if UNITY_ANDROID && !UNITY_EDITOR
+#if UNITY_ANDROID && !UNITY_EDITOR && !NativeAds
         CrossAndroid.StartVibrator(pattern, -1);
-#elif UNITY_IPHONE && !UNITY_EDITOR
-        CrossIos.Instance.StartVibrator(pattern, type);
+#elif UNITY_IPHONE && !UNITY_EDITOR && !NativeAds
+        CrossIos.StartVibrator(pattern, -1);
 #endif
 
     }
