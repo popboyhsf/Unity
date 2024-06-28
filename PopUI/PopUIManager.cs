@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DG.Tweening;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -24,7 +25,7 @@ public class PopUIManager : MonoBehaviour
         }
     }
 
-    public Dictionary<string, PopUIBase> GetPopUIDic { get => popUIDic;}
+    public Dictionary<string, PopUIBase> GetPopUIDic { get => popUIDic; }
 
     public UnityAction BeforShowAction { get; set; }
     public UnityAction AfterHiddenAction { get; set; }
@@ -44,7 +45,7 @@ public class PopUIManager : MonoBehaviour
             PopUIBase _base = item.GetComponent<PopUIBase>();
             if (_base == null)
             {
-                Debuger.LogError(item.name + " 没有包含UI脚本");
+                Debuger.LogWarning(item.name + " 没有包含UI脚本");
             }
             else
             {
@@ -74,15 +75,61 @@ public class PopUIManager : MonoBehaviour
     public void ShowUI(PopUIEnum uIEnum, params object[] value)
     {
         var _ui = UIBase(uIEnum);
-        if (_ui == null) return;
 
-        _ui.transform.parent.gameObject.SetActive(true);
+        if (_ui == null)
+        {
+#if ENCRYPT
+            Action<GameObject> _action = (obj) =>
+            {
+                if (obj)
+                {
+                    var _obj = Instantiate(obj, self.transform);
 
-        if (_ui.UseBaseBeforActive) BeforShowAction?.Invoke();
-        _ui.ShowUI(value);
+                    PopUIBase _base = _obj.GetComponent<PopUIBase>();
+
+                    if (popUIDic.ContainsKey(_base.thisPopUIEnum))
+                    {
+                        Destroy(_obj);
+                        return;
+                    }
+
+                    popUIDic.Add(_base.thisPopUIEnum, _base);
+                    if (_base.thisUIType.ToLower().Equals("pop"))
+                    {
+                        _base.transform.SetParent(Pop);
+                    }
+
+                    if (_base.thisUIType.ToLower().Equals("top"))
+                    {
+                        _base.transform.SetParent(Top);
+                    }
+
+                    _ui = UIBase(uIEnum);
+                    _ui.transform.parent.gameObject.SetActive(true);
+                    if (_ui.UseBaseBeforActive) BeforShowAction?.Invoke();
+                    _ui.ShowUI(value);
+
+                }
+                else
+                    Debuger.LogError("不含有：" + uIEnum.ToString());
+
+            };
+            PrefabsReader.Instance.LoadPrefabAES(uIEnum.ToString(), _action);
+#endif
+        }
+        else
+        {
+            _ui.transform.parent.gameObject.SetActive(true);
+
+            if (_ui.UseBaseBeforActive) BeforShowAction?.Invoke();
+            _ui.ShowUI(value);
+        }
+
+
+
     }
 
-    public void ShowUI(string uIEnum, params object[] value)
+    public void ShowUI(string uIEnum)
     {
         var _ui = UIBase(uIEnum);
         if (_ui == null) return;
@@ -90,7 +137,7 @@ public class PopUIManager : MonoBehaviour
         _ui.transform.parent.gameObject.SetActive(true);
 
         if (_ui.UseBaseBeforActive) BeforShowAction?.Invoke();
-        _ui.ShowUI(value);
+        _ui.ShowUI();
     }
 
     public void HiddenUI(PopUIEnum uIEnum)
@@ -125,8 +172,11 @@ public class PopUIManager : MonoBehaviour
     {
         if (!popUIDic.ContainsKey(uIEnum.ToString()))
         {
-            Debuger.LogError("不含有："+ uIEnum.ToString());
+#if !ENCRYPT
+            Debuger.LogError("不含有：" + uIEnum.ToString());
+#endif
             return null;
+
         }
         return popUIDic[uIEnum.ToString()];
     }
@@ -135,7 +185,9 @@ public class PopUIManager : MonoBehaviour
     {
         if (!popUIDic.ContainsKey(uIEnum))
         {
-            Debuger.LogError("不含有：" + uIEnum);
+#if !ENCRYPT
+            Debuger.LogError("不含有：" + uIEnum.ToString());
+#endif
             return null;
         }
         return popUIDic[uIEnum.ToString()];

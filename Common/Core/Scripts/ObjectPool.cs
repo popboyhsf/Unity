@@ -45,12 +45,12 @@ public class ObjectPool<T> where T : new()
     public virtual void Release(T element)
     {
         if (!m_ActiveList.Contains(element))
-            Dbg.LogError($"Internal error. Trying to destroy {element} that is not in m_ActiveList.");
+            Debuger.LogError($"Internal error. Trying to destroy {element} that is not in m_ActiveList.");
 
         m_ActiveList.Remove(element);
 
         if (m_InactiveStack.Count > 0 && ReferenceEquals(m_InactiveStack.Peek(), element))
-            Dbg.LogError($"Internal error. Trying to destroy {element} that is already released to pool.");
+            Debuger.LogError($"Internal error. Trying to destroy {element} that is already released to pool.");
 
         if (m_ActionOnRelease != null)
             m_ActionOnRelease(element);

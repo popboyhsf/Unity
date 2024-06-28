@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class NativeAds : MonoBehaviour, IDebuger
 {
-    private const string MaxSdkKey = @"f6N71KFAOcJtC/daU32stkPYY4FugAznUulJt1t/SYd/pkm99EEr4nPRsxz1Gz2H4AbgVfOt3v+sBkLNHrXxhCwReZFRiYPswagoIkOKJ8H45/gZOFND9W4FJiTECA4F";
+    private const string MaxSdkKey = @"";
 
 #if UNITY_IPHONE
     private const string InterstitialAdUnitId = "";
@@ -14,10 +14,10 @@ public class NativeAds : MonoBehaviour, IDebuger
     private const string BannerAdUnitId = "";
     private const string MRecAdUnitId = "";
 #else // UNITY_ANDROID
-    private const string InterstitialAdUnitId = @"iBS11cQnLuUb5rwVlwANllg6amUNmxEchfwVk6eTw2s=";
-    private const string RewardedAdUnitId = @"y0dpzogQy0vAJb4dpp6A8lg6amUNmxEchfwVk6eTw2s=";
-    private const string RewardedInterstitialAdUnitId = "";
-    private const string BannerAdUnitId = @"T40gbLxr5KWSwyMmtRqxQVg6amUNmxEchfwVk6eTw2s=";
+    private const string InterstitialAdUnitId = @"";
+    private const string RewardedAdUnitId = @"";
+    private const string  = "";
+    private const string BannerAdUnitId = @"";
     private const string MRecAdUnitId = "";
 #endif
 

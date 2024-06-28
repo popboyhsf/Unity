@@ -118,31 +118,6 @@ extern "C" {
         }];
     }
 
-    void GetUnityPostInt(int type){
-        
-        CLog(@"点击回报_%i",type);
-        //[LuckDrawManager showLuckDraw:type];
-        UnityPause(true);
-        [AdManager hideBannerAd];
-    }
-
-
-    void CashOutI(float i,const char* s){
-        NSString* ss = [NSString stringWithUTF8String:s];
-        NSLog(@" CashOutI_%@",ss);
-        UnityPause(true);
-        [AdManager hideBannerAd];
-    }
-
-    void GetUrlForIcon(){
-        //SDK 控制
-    }
-    
-    void GetTimerFromUnity(){
-        NSLog(@"GetTimerFromUnity_AS");
-        [AdManager getServerTime];
-        
-    }
 
     void LogEvetnForTrackLuckBalance(int j,float i){
     
@@ -150,39 +125,11 @@ extern "C" {
     
     }
 
-    void RateUs(bool isScoreEnogh){
-        if(isScoreEnogh){
-            [AppsFlyerProxy appScoring];
-        }
-    }
-
-
-    void PushMessage(){
-    
-        NSString* iddAM = [NSString stringWithUTF8String:"1"];
-        NSString* iddPM = [NSString stringWithUTF8String:"2"];
-        NSString* mTitled = [NSString stringWithUTF8String:"T"];
-        NSString* mSubTitled = [NSString stringWithUTF8String:"T"];
-        NSString* mess1d = [NSString stringWithUTF8String:"🎻 Your energy is full! Start the event now! 🎻"];
-        NSString* mess2d = [NSString stringWithUTF8String:"🥁 Someone asks for a challenge! Can you win? 🥁"];
-        NSString* mess3d = [NSString stringWithUTF8String:"🎉 So lucky! A special gift is waiting for you! 🎉"];
-        NSString* mess4d = [NSString stringWithUTF8String:"🧐 Where this sound comes from? Can you find it out? 🧐"];
-        NSString* mess5d = [NSString stringWithUTF8String:"😱 Someone breaks your record! Win it back! 😱"];
-
-        NSLog(@" setPushNormal: 1");
-        NSArray *message=@[mess1d,mess2d,mess3d,mess4d,mess5d];
-        NSLog(@" setPushNormal: 2");
-        //[OSUtil removeOneNotificationWithID:idd];
-        NSLog(@" setPushNormal: 3");
-        
-        NSLog(@" setPushNormal: 4");
-    
-    }
-    
     //展示idfaview
     void showIDFA() {
         [AppsFlyerProxy firstRequestATTDialog];
         [AppsFlyerProxy logEvent:[AppsFlyerProxy getEventName:_tracking_show]];
+		//UnitySendMessage("CrossIosObject", "IDFACallBack",  "");
     }
 
     //获取是否展示过授权请求，1展示过，0没展示
@@ -196,7 +143,6 @@ extern "C" {
     
     void requestIDFA(){
         [AppsFlyerProxy requestATTDialog];
-        
     }
 
     //unity调用展示idfa之前调用，每个用户只调用一次

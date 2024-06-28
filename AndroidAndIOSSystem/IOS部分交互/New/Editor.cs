@@ -72,8 +72,11 @@ public class XcodeBuildPostprocessor
         proj.AddFrameworkToProject(target, "PassKit.framework", false);
         proj.AddFrameworkToProject(target, "Network.framework", true);
 
+        proj.AddFrameworkToProject(target, "CoreImage.framework", true);//这是新加的
+        proj.AddFrameworkToProject(target, "CoreText.framework", true);//这是新加的
+        proj.AddFrameworkToProject(target, "MapKit.framework", true);//这是新加的
         proj.SetBuildProperty(target, "ENABLE_BITCODE", "false");
-        proj.SetBuildProperty(mainTarget, "ENABLE_BITCODE", "false");
+
         proj.SetBuildProperty(target, "CLANG_MODULES_AUTOLINK", "YES");
         proj.AddBuildProperty(mainTarget, "FRAMEWORK_SEARCH_PATHS", "$(SRCROOT)/DropIn1");
         proj.AddBuildProperty(mainTarget, "FRAMEWORK_SEARCH_PATHS", "$(SRCROOT)/DropIn1/DependFramework");
@@ -84,6 +87,7 @@ public class XcodeBuildPostprocessor
         proj.AddBuildProperty(target, "OTHER_LDFLAGS", "-l\"c++abi\"");
         proj.AddBuildProperty(target, "OTHER_LDFLAGS", "-l\"sqlite3\"");
         proj.AddBuildProperty(target, "OTHER_LDFLAGS", "-l\"z\"");
+        proj.AddBuildProperty(target, "OTHER_LDFLAGS", "-l\"xml2\"");//这是新加的
         AddLibToProject(proj, target, "libz.tbd");
         AddLibToProject(proj, target, "libsqlite3.0.tbd");
         AddLibToProject(proj, target, "libSwiftWebKit.tbd");
@@ -130,9 +134,6 @@ public class XcodeBuildPostprocessor
         //添加google id
         infoDict.SetString("GADApplicationIdentifier", "TODO");
 
-        //添加applovin id
-        infoDict.SetString("AppLovinSdkKey", "TODO");
-
         //添加adcolony的schemes配置
         var applicationQueriesSchemesKey = "LSApplicationQueriesSchemes";
         PlistElementArray applicationQueriesSchemesArr = infoDict.CreateArray(applicationQueriesSchemesKey);
@@ -147,10 +148,8 @@ public class XcodeBuildPostprocessor
         //SKAdNetworkItems
         var adNetworkItemsKey = "SKAdNetworkItems";
         PlistElementArray adNetworkItemsArr = infoDict.CreateArray(adNetworkItemsKey);
-		//TODO
-        string[] list = { "TODO!!!"};
-        
-		for(int i = 0; i < list.Length; i++)
+        string[] list = { "TODO" };
+        for(int i = 0; i < list.Length; i++)
         {
             PlistElementDict dictemp = adNetworkItemsArr.AddDict();
             dictemp.SetString("SKAdNetworkIdentifier", list[i]);
@@ -217,11 +216,11 @@ public class XcodeBuildPostprocessor
         str = str + "   //带vc的打点事件，如果需要的话suffixCode每次加1\n";
         str = str + "   [AppsFlyerProxy versionSuffixList:@[@\"ad_request\",@\"ad_show\",@\"af_succ\",@\"luck_balance\",@\"interstitial_show\",@\"video_show\",@\"balance_display\",@\"loading_finish\",@\"loading_timeout\"] prefixList:@[@\"lang\"] suffixCode:1];\n";
         str = str + "   //appId是应用的id，gameName是统计前缀\n";
-        str = str + "   [AppsFlyerProxy instanceInitNoATTWithKey:@\"SFmpoiTG8y4MzCSPePPpsP\" appId: @\"\" gameName: @\"\" delegate:self];\n";
+        str = str + "   [AppsFlyerProxy instanceInitNoATTWithKey:@\"TODO\" appId: @\"\" gameName: @\"\" delegate:self];\n";
         str = str + "   [AppsFlyerProxy refrenceWindow:self.window];\n";
         str = str + "   [AppsFlyerProxy firstCheckSystemIdfaSet];\n\n";
         str = str + "   //获取国家，通知unity\n";
-        str = str + "   NSString *countryStr = [AppsFlyerProxy getPhoneCountryCodeStr];\n";
+        str = str + "   NSString *countryStr = [AppsFlyerProxy getPhoneCountryEnum];\n";
         str = str + "   const char* charStr = countryStr.UTF8String;\n";
         str = str + "   UnitySendMessage(\"\", \"\", charStr);\n\n";
         str = str + "   //确保idfa提示后初始化\n";

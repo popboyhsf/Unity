@@ -1,0 +1,39 @@
+					Unity To IOS
+showInterstitial
+showRewardBasedVideo
+showRewardBasedVideoParam
+isRewardVideoReady
+rewardVideoCancel
+LogEventIOS
+hideLoadingRewardVideoWindow
+startVibrator
+gameStart
+getAF
+LogEvetnForTrackLuckBalance
+showIDFA
+canShowIDFA
+requestIDFA
+logEvetnForIDFA
+iOSWebPageShow
+iOSDeviceShock
+rateUSShow
+rateUS
+iOSCanShowGDPR
+showPrivacyOptionsForm
+
+					IOS To Unity
+
+RewardVideoIsReady
+RewardVideoIsReadyCall
+	HideLoadingRewardVideoWindow
+
+ReturnContry
+WatchRewardVideoComplete
+RewardVideoOpen
+ShowLoadingRewardVideoWindow
+	HideLoadingRewardVideoWindow
+InterstitialAdOpen
+InterstitialAdClose
+AppsFlyerState
+OnPrivacyOptionsFormShow
+IDFACallBack

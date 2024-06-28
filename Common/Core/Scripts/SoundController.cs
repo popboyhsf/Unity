@@ -113,7 +113,8 @@ public class SoundController : SingletonMonoBehaviour<SoundController>
             musicAudioSource.loop = true;
             musicAudioSource.mute = false;
             musicAudioSource.clip = GetAudioClip(soundType);
-            musicAudioSource.Play();
+			if(musicAudioSource.clip != null)
+                musicAudioSource.Play();
         }
     }
 
@@ -147,6 +148,9 @@ public class SoundController : SingletonMonoBehaviour<SoundController>
             AudioSource audioSource = audioSourcePool.Get();
             audioSource.loop = loop;
             audioSource.clip = GetAudioClip(soundType);
+			
+			if (audioSource.clip == null) return null;
+			
             audioSource.Play();
             if (!loop)
             {

@@ -84,7 +84,7 @@ public static class Utils
         }
         else
         {
-            str = ts.Minutes.ToString("00") + ":" + ts.Seconds.ToString("00");
+            str = Math.Floor(ts.TotalMinutes).ToString("00") + ":" + ts.Seconds.ToString("00");
         }
 
         return str;
@@ -117,7 +117,7 @@ public static class Utils
         }
         else
         {
-            str = ts.Minutes.ToString("00") + ":" + ts.Seconds.ToString("00");
+            str = Math.Floor(ts.TotalMinutes).ToString("00") + ":" + ts.Seconds.ToString("00");
         }
         return str;
     }

@@ -262,7 +262,7 @@ public class DateTimeData : PlayerPrefsData
     {
         get
         {
-            return DateTime.Parse(PlayerPrefs.GetString(key, DateTime.MinValue.ToString()), CultureInfo.InvariantCulture);
+            return DateTime.Parse(PlayerPrefs.GetString(key, DateTime.MinValue.ToString(CultureInfo.InvariantCulture)), CultureInfo.InvariantCulture);
         }
         set
         {
@@ -276,12 +276,12 @@ public class DateTimeData : PlayerPrefsData
 
     public override string ToString()
     {
-        return Value.ToString();
+        return Value.ToString(CultureInfo.InvariantCulture);
     }
 
     public override void ResetValue(string obj)
     {
-        Value = DateTime.Parse(obj);
+        Value = DateTime.Parse(obj, CultureInfo.InvariantCulture);
     }
 }
 

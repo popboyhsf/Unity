@@ -130,7 +130,6 @@ public class I2Language : MonoBehaviour
         {
             LocalizationManager.CurrentLanguage = _l;
         }
-        OnChangeLanguage?.Invoke();
     }
 
     public string ChangeMoney(float i, bool usFolat = true)

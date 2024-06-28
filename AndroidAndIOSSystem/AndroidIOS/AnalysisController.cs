@@ -308,16 +308,16 @@ public static class AnalysisController
         return;
 #elif UNITY_ANDROID && !UNITY_EDITOR
 #if NativeAds
-        NativeAF.LogEvetnForTrackLuckBalance(i,j);
+        NativeAF.LogEvetnForTrack(i,j);
         return;
 #endif
-        CrossAndroid.LogEvetnForTrackLuckBalance(i,j);
+        CrossAndroid.LogEvetnForTrack(i,j);
 #elif UNITY_IPHONE && !UNITY_EDITOR
 #if NativeAds
-        NativeAF.LogEvetnForTrackLuckBalance(i,j);
+        NativeAF.LogEvetnForTrack(i,j);
         return;
 #endif
-        CrossIos.LogEvetnForTrackLuckBalance(i,j);
+        CrossIos.LogEvetnForTrack(i,j);
 #endif
     }
 }

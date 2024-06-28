@@ -25,10 +25,15 @@ public class AtlasReader : SingletonMonoBehaviour<AtlasReader>
         return null;
     }
 
-    private void Start()
+    public void LoadImgAES(string name, Image img)
     {
-        //InitSelf();
-        //I2Language.Instance.onApplyLanguage += InitSelf;
+        var _atlasName = name.Split('/')[0];
+        var _iconName = name.Split('/')[1];
+
+        var _url = @"/" + "Sprite" + @"/" + _atlasName;
+        AtlasPackInfo _info = new AtlasPackInfo(_url, _atlasName, _iconName, img);
+        GetGetItemHeadByABAES(_info);
+
     }
 
     /// <summary>
@@ -46,13 +51,9 @@ public class AtlasReader : SingletonMonoBehaviour<AtlasReader>
             if (!packInfos.ContainsKey(info.atlasName))
             {
                 packInfos.Add(info.atlasName, new List<AtlasPackInfo>());
-                packInfos[info.atlasName].Add(info);
                 StartCoroutine(GetABByAESI(info));
             }
-            else
-            {
-                packInfos[info.atlasName].Add(info);
-            }
+            packInfos[info.atlasName].Add(info);
 
             return;
         }
@@ -112,7 +113,7 @@ public class AtlasReader : SingletonMonoBehaviour<AtlasReader>
             GetGetItemHeadByABAES(item);
         }
 
-        packInfos.Remove(info.atlasName);
+        packInfos[info.atlasName].Clear();
 
     }
 
@@ -142,12 +143,12 @@ public struct AtlasPackInfo
 #if ENCRYPT
         var _atlasName = name.Split('/')[0];
         var _iconName = name.Split('/')[1];
-        var _url = @"/" + path + @"/" + _atlasName;
+        var _url = @"/" + "Sprite" + @"/" + _atlasName;
         AtlasPackInfo _info = new AtlasPackInfo(_url, _atlasName, _iconName, img);
         AtlasReader.Instance.GetGetItemHeadByABAES(_info);
 
 #else
-        img.sprite = ResourceManager.LoadResource<Sprite>(path + "/" + name, true);
+        img.sprite = ResourceManager.LoadResource<Sprite>("Sprite" + "/" + name, true);
 #endif
 
 

@@ -436,7 +436,9 @@ extern "C" void UnityCleanupTrampoline()
    }
 
     [self performSelector:@selector(changeLanguage) withObject:nil afterDelay:2];
-    
+	
+    //[self performSelector:@selector(googleGDPRFinishBeginLoad) withObject:nil afterDelay:3];
+	
     return YES;
 }
 
@@ -454,7 +456,7 @@ extern "C" void UnityCleanupTrampoline()
 -(void)googleGDPRFinishBeginLoad {
    dispatch_async(dispatch_get_main_queue(), ^{
 	   
-       [AdManager instanceInitWithTestMode:NO delegate:self];
+       [AdManager instanceInitWithTestMode:NO delegate:self applovinKey:@"NBeatPCakspf0wVTSoEPWJpSNeqcosc1EOlVDDJ2HIE_Lyg3f86WM3gLMOANXE2_fXWmuPoDFsxC59tFqGd6ZG"];
 	   [AdManager mtgROASWork:YES];
        [AdManager initBanner:AdBannerPosBottom];
        [AdManager showBannerAd:YES];
@@ -481,15 +483,6 @@ extern "C" void UnityCleanupTrampoline()
 
 }
 
-
-- (void)isMuted:(BOOL)muted {
-    if (muted) {
-        NSLog(@"静音");
-        UnitySendMessage("CrossIosObject", "ShowWindowsMute",  "");
-    }else {
-        NSLog(@"非静音");
-    }
-}
 
 //激励视频关闭时回调，同时回调激励是否成功参数
 - (void)rewardVideoReward:(NSNumber*)obj {
@@ -542,41 +535,6 @@ extern "C" void UnityCleanupTrampoline()
 {
     CLog(@"adSet is %@", adSet);
 }
-- (void)luckDrawGetReward:(NSString *)rewardId rewardCount:(NSInteger)rewardCount
-{
-    remeber = [NSString stringWithFormat:@"%@_%ld",rewardId,rewardCount];
-}
-
-    
-
-- (void)dismissLuckDraw
-{
-    if([remeber isEqualToString:@"A"])
-    {
-
-    }
-    else
-    {
-        UnitySendMessage("CrossIosObject", "OnLuckCallBack",  remeber.UTF8String);
-        remeber = @"A";
-    }
-    [AdManager showBannerAd:true];
-    UnityPause(false);
-}
-
-- (void)dismissCashOut
-{
-    CLog(@"关闭CashOut界面");
-    UnityPause(false);
-    [AdManager showBannerAd:true];
-}
-
-- (void)luckDrawEventEntryRes:(NSString *)url
-{
-    CLog(@"luckDrawEventEntryRes");
-    UnitySendMessage("CrossIosObject", "GetUrlForIconCallBack",  url.UTF8String);
-    CLog(@"返回的网址 is %@", url);
-}
 
 
 - (void)onAppsFlyerReturn:(BOOL)isOrganic channel:(BOOL)isSafeChannel isSafeCounty:(BOOL)isSafeCounty{
@@ -614,34 +572,6 @@ extern "C" void UnityCleanupTrampoline()
 - (void)onAppsFlyerReturnSuccess:(NSDictionary<NSString *,NSString *> *)map
 {
     CLog(@"map is %@", map);
-}
-
-- (void)serverLocalTimeCallback:(NSString *)localTime
-{
-    if(localTime == nil)
-    {
-        UnitySendMessage("CrossIosObject", "GetTimer",  "");
-    }
-    else
-    {
-        UnitySendMessage("CrossIosObject", "GetTimer",  localTime.UTF8String);
-    }
-}
-
-- (void)netWorkStatus:(BOOL)available
-{
-    int status = 0;
-    if(available)
-    {
-        status = 0;
-    }
-    else
-    {
-        status = 1;
-    }
-    
-    UnitySendMessage("CrossIosObject", "ReturnNetState",  [NSString stringWithFormat:@"%d",status].UTF8String );
-
 }
 
 - (void)showDebuge {

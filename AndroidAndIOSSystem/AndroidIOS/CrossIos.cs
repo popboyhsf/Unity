@@ -40,10 +40,8 @@ public class CrossIos : MonoBehaviour
     [DllImport("__Internal")]
     public static extern void showRewardBasedVideo();
     
-
     [DllImport("__Internal")]
     public static extern void LogEventIOS(string eventName,string content);
-    
     
     [DllImport("__Internal")]
     public static extern void hideLoadingRewardVideoWindow();
@@ -64,23 +62,7 @@ public class CrossIos : MonoBehaviour
     public static extern void getAF();   
 
     [DllImport("__Internal")]
-    public static extern void GetUnityPostInt(int type);   
-
-    [DllImport("__Internal")]
-    public static extern void GetUrlForIcon();   
-
-    [DllImport("__Internal")]
     public static extern void LogEvetnForTrackLuckBalance(int j,float i);
-
-    [DllImport("__Internal")]
-    public static extern void CashOutI(float i,string j);
-
-    [DllImport("__Internal")]
-    public static extern void PushMessage();
-
-    
-    [DllImport("__Internal")]
-    public static extern void GetTimerFromUnity();
 
     [DllImport("__Internal")]
     public static extern void showIDFA();
@@ -302,7 +284,7 @@ public class CrossIos : MonoBehaviour
 #endif
     }
 
-    public static void LogEvetnForTrackLuckBalance(float i, int j)
+    public static void LogEvetnForTrack(float i, int j)
     {
         if (!CheckInited())
         {
@@ -369,7 +351,6 @@ public class CrossIos : MonoBehaviour
     {
 #if UNITY_IPHONE && !UNITY_EDITOR && !SafeMode && !NativeAds
             gameStart(isShow);
-            PushMessage();
 #endif
     }
 
@@ -441,119 +422,6 @@ public class CrossIos : MonoBehaviour
 
     #endregion
 
-    #region 服务器抽奖
-
-    /// <summary>
-    /// 传递状态 int
-    /// </summary>
-    /// <param name="i"></param>
-    public static void PostInt(int i)
-    {
-        Debuger.Log("PostUnityPostInt === " + i);
-        if (!CheckInited())
-        {
-            return;
-        }
-#if UNITY_IPHONE && !UNITY_EDITOR && !SafeMode && !NativeAds
-            GetUnityPostInt(i);         
-#endif
-
-    }
-
-    /// <summary>
-    /// 奖品回调
-    /// </summary>
-    /// <param name="name"></param>
-    /// <param name="num"></param>
-    public void OnLuckCallBack(string count)
-    {
-        string name = count.Split('_')[0];
-        int num = int.Parse(count.Split('_')[1]);
-
-        Debuger.Log("抽中的奖品 === " + name + "    数量 ==== " + num);
-        if (name.ToLower().Equals("hammer"))
-        {
-            //ItemSystemData.AddItem(ItemSystemData.ItemEnum.chuizi, num);
-        }
-    }
-
-    //发送请求url
-    public static void PostUrlForIcon()
-    {
-        Debuger.Log("PostUrlForIcon === ");
-        if (!CheckInited())
-        {
-            return;
-        }
-#if UNITY_IPHONE && !UNITY_EDITOR && !SafeMode && !NativeAds
-            GetUrlForIcon();         
-#endif
-
-    }
-
-    //接受url
-    public void GetUrlForIconCallBack(string url)
-    {
-        //PostAndGetIcon.Instance.GetIcon(url);
-    }
-
-    //CashOut
-    public static void CashOut(float balance, string s)
-    {
-        balance = (float)Math.Round(balance, 2);
-
-        Debuger.Log("CashOut === " + balance);
-        Debuger.Log("CashOut === " + s);
-
-        if (!CheckInited())
-        {
-            return;
-        }
-
-#if UNITY_IPHONE && !UNITY_EDITOR && !SafeMode && !NativeAds
-            CashOutI(balance,s);         
-#endif
-
-    }
-
-    #endregion
-
-    #region 联网与时间
-
-    /// <summary>
-    /// 返回网络状态
-    /// </summary>
-    /// <param name="returnState">返回状态</param>
-    public void ReturnNetState(string returnState)
-    {
-        if (returnState == "1")
-        {
-           // NetWorkStateController.Instance.Show();
-        }
-        else
-        {
-          //  NetWorkStateController.Instance.Hidden();
-        }
-    }
-
-    public static void PostTimer()
-    {
-        if (!CheckInited())
-        {
-            return;
-        }
-#if UNITY_IPHONE && !UNITY_EDITOR && !SafeMode && !NativeAds
-            GetTimerFromUnity();         
-#endif
-    }
-
-    public void GetTimer(string s)
-    {
-       // NetWorkTimerManager.Instance.GetTimeFromAndroid(s);
-        Debuger.Log("Get Timer From IOS == " + s);
-    }
-
-    #endregion
 
     /// <summary>
     /// 返回国家 --- 需要在Android - GetAF后执行
@@ -791,19 +659,6 @@ public class CrossIos : MonoBehaviour
         Debug.LogWarning("AFSET === " + AnalysisController.AfStatus);
     }
 
-    private bool isCheckPhy = false;
-    /// <summary>
-    /// 显示静音状态弹窗
-    /// </summary>
-    public void ShowWindowsMute()
-    {
-        if (!isCheckPhy)
-        {
-            isCheckPhy = true;
-            //PopUIManager.Instance.ShowUI(PopUIEnum.PhyMuteTip);
-        }
-    }
-
     public void GetAF(float timer)
     {
         StartCoroutine(GetAFI(timer));
@@ -921,6 +776,7 @@ public class CrossIos : MonoBehaviour
             return;
         }
         ClickAllowCallBack?.Invoke();
+		ClickAllowCallBack = null;
     }
 
     /// <summary>

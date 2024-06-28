@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Globalization;
+using UnityEngine;
 
 public static class FirstCheck
 {
-    public static bool GetIsDayFirst(string key, bool isNow = false)
+    public static bool GetIsDayFirst(string key, bool is24 = false)
     {
         StringData data = new StringData(key, "");
 
@@ -13,7 +14,7 @@ public static class FirstCheck
         }
 
         var d1 = DateTime.Parse(data.Value, CultureInfo.InvariantCulture);
-        var d2 = isNow ? DateTime.Now : DateTime.Today;
+        var d2 = is24 ? DateTime.Now : DateTime.Today;
         var diff = d2 - d1;
 
         if (diff.TotalDays >= 1)
@@ -28,18 +29,34 @@ public static class FirstCheck
 
     }
 
-    public static bool GetIsGameFirst(string key)
+    public static bool GetIsGameFirst(string key, bool writeOff = false)
+    {
+        BoolData data = new BoolData(key, false);
+
+        if (!data.Value)
+        {
+            if (!writeOff)
+                data.Value = true;
+
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public static void GameFirstWriteOff(string key)
     {
         BoolData data = new BoolData(key, false);
 
         if (!data.Value)
         {
             data.Value = true;
-            return true;
         }
         else
         {
-            return false;
+            Debuger.LogWarning($"{key} 已经核销过！！");
         }
     }
 }

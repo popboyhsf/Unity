@@ -688,7 +688,7 @@ public class CrossAndroid : MonoBehaviour
     /// </summary>
     /// <param name="i">当前礼品卡总额</param>
     /// <param name="j">当前礼品卡梯度</param>
-    public static void LogEvetnForTrackLuckBalance(float i, int j = 200)
+    public static void LogEvetnForTrack(float i, int j = 200)
     {
         if (!CheckInited())
         {
