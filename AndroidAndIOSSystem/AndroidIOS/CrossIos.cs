@@ -75,9 +75,6 @@ public class CrossIos : MonoBehaviour
     public static extern void iOSWebPageShow(string str);
 
     [DllImport("__Internal")]
-    public static extern void iOSDeviceShock(int value);
-
-    [DllImport("__Internal")]
     public static extern void rateUSShow();
 
     [DllImport("__Internal")]
@@ -108,9 +105,6 @@ public class CrossIos : MonoBehaviour
 
     [DllImport("__Internal")]
     public static extern void iOSWebPageShow(string str);
-
-    [DllImport("__Internal")]
-    public static extern void iOSDeviceShock(int value);
 
     [DllImport("__Internal")]
     public static extern void rateUSShow();
@@ -758,22 +752,6 @@ public class CrossIos : MonoBehaviour
 #endif
     }
 
-    /// <summary>
-    /// 震动
-    /// </summary>
-    /// <param name="value">时间(ms)</param>
-    public static void IOSDeviceShock(int value)
-    {
-        if (!CheckInited())
-        {
-            return;
-        }
-
-#if UNITY_IPHONE && !UNITY_EDITOR && !SafeMode
-        iOSDeviceShock(value);
-#endif
-
-    }
 
 
     #region IDFA彈窗交互
