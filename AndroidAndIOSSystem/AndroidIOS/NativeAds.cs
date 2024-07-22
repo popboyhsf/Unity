@@ -1,5 +1,5 @@
 ﻿using AppsFlyerSDK;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -126,6 +126,7 @@ public class NativeAds : MonoBehaviour, IDebuger
     private void LoadInterstitial()
     {
         MaxSdk.LoadInterstitial(Utils.AESDecrypt(InterstitialAdUnitId));
+        NativeAF.ADRequest();
     }
 
     private void OnInterstitialLoadedEvent(string adUnitId, MaxSdkBase.AdInfo adInfo)
@@ -169,6 +170,9 @@ public class NativeAds : MonoBehaviour, IDebuger
 
 
         AdController.ShowInterstitialCallBack();
+
+        NativeAF.ADShow();
+        NativeAF.InterstitialShow();
     }
 
     private void OnInterstitialRevenuePaidEvent(string adUnitId, MaxSdkBase.AdInfo adInfo)
@@ -234,6 +238,7 @@ public class NativeAds : MonoBehaviour, IDebuger
     private void LoadRewardedAd()
     {
         MaxSdk.LoadRewardedAd(Utils.AESDecrypt(RewardedAdUnitId));
+        NativeAF.ADRequest();
     }
 
     private void OnRewardedAdLoadedEvent(string adUnitId, MaxSdkBase.AdInfo adInfo)
@@ -298,6 +303,9 @@ public class NativeAds : MonoBehaviour, IDebuger
             Debuger.Log("WatchRewardVideoComplete");
 
             AdController.ShowRewardedVideoCallBack();
+
+            NativeAF.ADShow();
+            NativeAF.VideoShow();
         }
         else
         {
