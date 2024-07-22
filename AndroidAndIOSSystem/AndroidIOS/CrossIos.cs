@@ -95,12 +95,6 @@ public class CrossIos : MonoBehaviour
     public static extern void startVibrator(int type);    
 
     [DllImport("__Internal")]
-    public static extern void showIDFA();
-
-    [DllImport("__Internal")]
-    public static extern int canShowIDFA();
-
-    [DllImport("__Internal")]
     public static extern void requestIDFA();
 
     [DllImport("__Internal")]
@@ -769,7 +763,7 @@ public class CrossIos : MonoBehaviour
 
         ClickAllowCallBack = callback;
 
-#if UNITY_IPHONE && !UNITY_EDITOR && !SafeMode
+#if UNITY_IPHONE && !UNITY_EDITOR && !SafeMode && !NativeAds
         showIDFA();
 #endif
     }
@@ -827,7 +821,7 @@ public class CrossIos : MonoBehaviour
         {
             _b = true;
         }
-#if UNITY_IPHONE && !UNITY_EDITOR && !SafeMode
+#if UNITY_IPHONE && !UNITY_EDITOR && !SafeMode && !NativeAds
        _b =  canShowIDFA() == 0;
 #endif
         return _b;
