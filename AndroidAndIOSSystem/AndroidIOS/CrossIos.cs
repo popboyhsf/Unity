@@ -107,9 +107,6 @@ public class CrossIos : MonoBehaviour
     public static extern void iOSWebPageShow(string str);
 
     [DllImport("__Internal")]
-    public static extern void rateUSShow();
-
-    [DllImport("__Internal")]
     public static extern void rateUS(int count,int max,string patch);
 
     [DllImport("__Internal")]
@@ -714,7 +711,7 @@ public class CrossIos : MonoBehaviour
             return;
         }
 
-#if UNITY_IPHONE && !UNITY_EDITOR && !SafeMode
+#if UNITY_IPHONE && !UNITY_EDITOR && !SafeMode && !NativeAds
         rateUSShow();
 #endif
     }
