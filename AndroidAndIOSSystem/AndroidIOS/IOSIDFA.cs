@@ -29,6 +29,13 @@ public class IOSIDFA : SingletonMonoBehaviour<IOSIDFA>
         
 #elif UNITY_IPHONE && !UNITY_EDITOR
 
+        #if NativeAds
+
+                this.backCall?.Invoke();
+                return;
+
+        #endif
+
         if (CrossIos.CanShowIDFA())
         {
             enterCall?.Invoke();

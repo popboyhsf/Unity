@@ -15,13 +15,7 @@ public enum VideoEventName
 }
 public static class EventName
 {
-#if LuckyBlock
     private const string gameName = "luckyblock_wx_";
-#elif MusicIOMode
-    private const string gameName = "musicio_wx_";
-#else
-    private const string gameName = "blockpuzzle_wx_";
-#endif
 
     public const string gameStart = gameName + "game_start";
     public const string gameEnd = gameName + "game_end";

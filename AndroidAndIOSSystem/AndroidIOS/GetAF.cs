@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GetAF : MonoBehaviour,IDebuger
+public class GetAF : MonoBehaviour, IDebuger
 {
 
     BoolData isNotCallAF = new BoolData("GetAF_AnalysisControllerLuckReady", true);
@@ -29,6 +29,7 @@ public class GetAF : MonoBehaviour,IDebuger
     }
 
     public string AllowName => "FackAF";
+
 
     void Start()
     {
@@ -58,17 +59,20 @@ public class GetAF : MonoBehaviour,IDebuger
 
     IEnumerator Delay()
     {
-        yield return new WaitForSeconds(4f);
-#if NativeAds
-        NativeAF.GetConutry();
-#endif
+        yield return new WaitForSeconds(1f);
+
 #if UNITY_EDITOR
 
-        if(I2Language.Instance) 
+        if (I2Language.Instance)
             I2Language.Instance.ApplyLanguage(FackI2Language.Instance == null ? I2Language.LanguageEnum.EN : FackI2Language.Instance.LanguageLocal);
 
 #endif
 
+#if NativeAds && !UNITY_IPHONE
+        NativeAF.GetConutry();
+#endif
+
+        yield return new WaitForSeconds(3f);
 
 #if !SafeMode
 
@@ -77,10 +81,7 @@ public class GetAF : MonoBehaviour,IDebuger
         if (!allowDebug)
         {
             AnalysisController.OnAFStatusChanged?.Invoke();
-#if NativeAds
-            NativeAF.GetAF();
-
-#else
+#if !NativeAds
             CrossAndroid.GetAF();
 #endif
         }
@@ -88,9 +89,14 @@ public class GetAF : MonoBehaviour,IDebuger
 
 #else
 
-        //AdController.ShowGameStartInterstitial(PlayerData.CashCount >= 0.01f);
-        AnalysisController.OnAFStatusChanged?.Invoke();
-        CrossIos.Instance.GetAF(0);
+        if (!allowDebug)
+        {
+            AnalysisController.OnAFStatusChanged?.Invoke();
+#if !NativeAds
+            CrossIos.Instance.GetAF(0);
+#endif
+        }
+
 
 #endif
 
@@ -99,9 +105,7 @@ public class GetAF : MonoBehaviour,IDebuger
 
         float _gold = -996; //TODO 后期接入礼品卡金额
 
-        _gold = GoldData.giftNum.Value;
-
-        if (_gold == -996) Debuger.LogError("尚未接入礼品卡");
+        if (_gold == -996) Debuger.LogWarning("尚未接入礼品卡");
 
         if (isNotCallAF.Value)
         {

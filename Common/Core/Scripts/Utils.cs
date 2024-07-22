@@ -218,6 +218,9 @@ public static class Utils
     public static string AESEncrypt(string str)
     {
         if (string.IsNullOrEmpty(str)) return null;
+
+        str = Regex.Replace(str, "ı", "i", RegexOptions.CultureInvariant);
+
         Byte[] toEncryptArray = Encoding.UTF8.GetBytes(str);
 
         System.Security.Cryptography.RijndaelManaged rm = new System.Security.Cryptography.RijndaelManaged

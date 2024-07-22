@@ -37,7 +37,7 @@ public class LoadingWindow : PopUIBase
 
 #if UNITY_EDITOR || SafeMode || NoAd
 
-#if !ADV2 && !SafeMode && UNITY_IPHONE
+#if !ADV2 && !SafeMode && UNITY_IPHONE 
                         IOSIDFA.Instance.ShowIDFA(()=> {
                             PopUIManager.Instance.ShowUI(PopUIEnum.IOSIDFAUI);
                         },()=> { 

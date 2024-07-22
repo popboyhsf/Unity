@@ -3,24 +3,54 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using AppsFlyerSDK;
+using UnityEngine.Events;
+using Mkey;
+using CoreUtils;
 
-public class NativeAF
+public class NativeAF : SingletonMonoBehaviour<NativeAF>, IAppsFlyerConversionData
 {
 
-    /// <summary>
-    /// Unity主动访问Android寻求AF结果
-    /// </summary>
-    /// <returns></returns>
-    public static AnalysisController.AFStatus GetAF()
+    private const string AF_Key = @"";
+    private const string AF_ID = @"";
+
+    private BoolData isNoOrganic = new BoolData("NativeAF_isNoOrganic", false);
+
+    private static string countryCode = "";
+
+    public void InitAF()
     {
+        AppsFlyer.OnRequestResponse += (sender, args) =>
+        {
+            var af_args = args as AppsFlyerRequestEventArgs;
+            Debuger.Log(string.Format("AppsFlyer_Unity_v_{0}_{1} called with {2}",
+                AppsFlyer.getSdkVersion(),
+                "AppsFlyerOnRequestResponse",
+                " status code " + af_args.statusCode));
+        };
 
-        AnalysisController.AFStatus afStatus = AnalysisController.AFStatus.Organic;
+        AppsFlyer.OnInAppResponse += (sender, args) =>
+        {
+            var af_args = args as AppsFlyerRequestEventArgs;
+            Debuger.Log(string.Format("AppsFlyer_Unity_v_{0}_{1} called with {2}",
+                AppsFlyer.getSdkVersion(),
+                "AppsFlyerOnInAppResponse",
+                " status code " + af_args.statusCode));
+        };
 
 
-        Debug.LogWarning("NativeAF GetAF Function Start And Value == " + afStatus);
+        AppsFlyer.initSDK(Utils.AESDecrypt(AF_Key), AF_ID, this);
+        AppsFlyer.startSDK();
 
-        return afStatus;
+#if UNITY_ANDROID
+        Log("_lucky_lang_" + countryCode);
+#elif UNITY_IPHONE
+
+#endif
+
+        Debuger.Log("NativeAF == Start");
     }
+
 
 
     #region Conutry
@@ -31,10 +61,14 @@ public class NativeAF
 
         _c = GetCountry();
 
+
         if (!_c.Equals("nil"))
         {
             ReturnContry(_c);
             ReturnContryChangeUI(_c);
+
+            countryCode = _c;
+
             Debuger.Log($"获取Country{_c}");
         }
         else
@@ -49,13 +83,33 @@ public class NativeAF
 
     }
 
+    public static void SetCountry(string country)
+    {
+        var _c = "nil";
+
+        _c = country;
+
+
+        if (!_c.Equals("nil"))
+        {
+            ReturnContry(_c);
+            ReturnContryChangeUI(_c);
+
+            countryCode = _c;
+
+            Log("_lucky_lang_" + countryCode);
+
+            Debuger.Log($"获取Country{_c}");
+        }
+    }
+
     private static string GetCountry()
     {
         string var1;
         string var3;
         int var4;
 
-        
+
         {
             var1 = CountryCode.GetLanguageCode();
             string var2 = CountryCode.GetCountryCode();
@@ -121,6 +175,7 @@ public class NativeAF
                 {"VN", 51},
                 {"ZA", 52},
                 {"TW", 53},
+                {"KZ", 54},
             };
 
             if (countryCodes.ContainsKey(var2))
@@ -140,166 +195,169 @@ public class NativeAF
                     break;
                 case 1:
                     var6 = "LANG_AR";
-                      break;
+                    break;
                 case 2:
                     var6 = "LANG_AT";
-                      break;
+                    break;
                 case 3:
                     var6 = "LANG_AU";
-                      break;
+                    break;
                 case 4:
                     var6 = "LANG_BD";
-                      break;
+                    break;
                 case 5:
                     var6 = "LANG_BE";
-                      break;
+                    break;
                 case 6:
                     var6 = "LANG_PT";
-                      break;
+                    break;
                 case 7:
                     var6 = "LANG_CA";
-                      break;
+                    break;
                 case 8:
                     var6 = "LANG_CH";
-                      break;
+                    break;
                 case 9:
                     var6 = "LANG_CL";
-                      break;
+                    break;
                 case 10:
                     var6 = "LANG_CO";
-                      break;
+                    break;
                 case 11:
                     var6 = "LANG_CZ";
-                      break;
+                    break;
                 case 12:
                     var6 = "LANG_DE";
-                      break;
+                    break;
                 case 13:
                     var6 = "LANG_DK";
-                      break;
+                    break;
                 case 14:
                     var6 = "LANG_EC";
-                      break;
+                    break;
                 case 15:
                     var6 = "LANG_EG";
-                      break;
+                    break;
                 case 16:
                     var6 = "LANG_ES";
-                      break;
+                    break;
                 case 17:
                     var6 = "LANG_ET";
-                      break;
+                    break;
                 case 18:
                     var6 = "LANG_FI";
-                      break;
+                    break;
                 case 19:
                     var6 = "LANG_FR";
-                      break;
+                    break;
                 case 20:
                     var6 = "LANG_GB";
-                      break;
+                    break;
                 case 21:
                     var6 = "LANG_GH";
-                      break;
+                    break;
                 case 22:
                     var6 = "LANG_GR";
-                      break;
+                    break;
                 case 23:
                     var6 = "LANG_HU";
-                      break;
+                    break;
                 case 24:
                     var6 = "LANG_ID";
-                      break;
+                    break;
                 case 25:
                     var6 = "LANG_IE";
-                      break;
+                    break;
                 case 26:
                     var6 = "LANG_IN";
-                      break;
+                    break;
                 case 27:
                     var6 = "LANG_IQ";
-                      break;
+                    break;
                 case 28:
                     var6 = "LANG_IT";
-                      break;
+                    break;
                 case 29:
                     var6 = "LANG_JP";
-                      break;
+                    break;
                 case 30:
                     var6 = "LANG_KE";
-                      break;
+                    break;
                 case 31:
                     var6 = "LANG_KR";
-                      break;
+                    break;
                 case 32:
                     var6 = "LANG_KW";
-                      break;
+                    break;
                 case 33:
                     var6 = "LANG_MX";
-                      break;
+                    break;
                 case 34:
                     var6 = "LANG_MY";
-                      break;
+                    break;
                 case 35:
                     var6 = "LANG_NG";
-                      break;
+                    break;
                 case 36:
                     var6 = "LANG_NL";
-                      break;
+                    break;
                 case 37:
                     var6 = "LANG_NO";
-                      break;
+                    break;
                 case 38:
                     var6 = "LANG_PE";
-                      break;
+                    break;
                 case 39:
                     var6 = "LANG_PH";
-                      break;
+                    break;
                 case 40:
                     var6 = "LANG_PK";
-                      break;
+                    break;
                 case 41:
                     var6 = "LANG_PL";
-                      break;
+                    break;
                 case 42:
                     var6 = "LANG_BR";
-                      break;
+                    break;
                 case 43:
                     var6 = "LANG_QA";
-                      break;
+                    break;
                 case 44:
                     var6 = "LANG_RO";
-                      break;
+                    break;
                 case 45:
                     var6 = "LANG_RU";
-                      break;
+                    break;
                 case 46:
                     var6 = "LANG_SA";
-                      break;
+                    break;
                 case 47:
                     var6 = "LANG_SE";
-                      break;
+                    break;
                 case 48:
                     var6 = "LANG_TH";
-                      break;
+                    break;
                 case 49:
                     var6 = "LANG_TR";
-                      break;
+                    break;
                 case 50:
                     var6 = "LANG_US";
-                      break;
+                    break;
                 case 51:
                     var6 = "LANG_VN";
-                      break;
+                    break;
                 case 52:
                     var6 = "LANG_ZA";
-                      break;
+                    break;
                 case 53:
                     var6 = "LANG_TW";
                     break;
+                case 54:
+                    var6 = "LANG_KZ";
+                    break;
                 default:
                     var6 = null;
-                      break;
+                    break;
             }
 
             var3 = var6;
@@ -444,23 +502,27 @@ public class NativeAF
 
                 var3 = var6;
             }
-            else
-            {
-                var3 = "LANG_OTH";
-                Debuger.LogWarning("没有根据手机获取到语言,强制OTH");
-            }
         }
+
+        if (var3 == null)
+        {
+            var3 = "LANG_OTH";
+            Debuger.LogWarning("没有根据手机获取到语言,强制OTH");
+        }
+
 
         return var3;
     }
+
 
     /// <summary>
     /// 返回国家 --- 需要在Android - GetAF后执行
     /// </summary>
     /// <param name="returnC"></param>
-    private static void ReturnContry(string returnC)
+    public static void ReturnContry(string returnC)
     {
         if (I2Language.Instance == null) return;
+
 
         var _s = returnC.ToUpper();
 
@@ -666,6 +728,10 @@ public class NativeAF
         else if (_s.IndexOf("GB") >= 0)
         {
             I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.GB);
+        }
+        else if (_s.IndexOf("KZ") >= 0)
+        {
+            I2Language.Instance.ApplyLanguage(I2Language.LanguageEnum.KZ);
         }
         else
         {
@@ -882,20 +948,30 @@ public class NativeAF
         {
             I2Language.Instance.ChangeUI(I2Language.LanguageEnum.GB);
         }
+        else if (_s.IndexOf("KZ") >= 0)
+        {
+            I2Language.Instance.ChangeUI(I2Language.LanguageEnum.KZ);
+        }
         else
         {
             I2Language.Instance.ChangeUI(I2Language.LanguageEnum.EN);
         }
     }
-    
+
     #endregion
 
 
 
     #region Log
+
+    /// <summary>
+    /// 游戲内
+    /// </summary>
+    /// <param name="eventName"></param>
+    /// <param name="jsonStr"></param>
     public static void LogEvent(String eventName, String jsonStr)
     {
-
+        AppsFlyer.sendEvent(eventName, JsonUtility.FromJson<Dictionary<string, string>>(jsonStr));
     }
 
     /// <summary>
@@ -903,7 +979,121 @@ public class NativeAF
     /// </summary>
     /// <param name="i">当前礼品卡总额</param>
     /// <param name="j">当前礼品卡梯度</param>
-    public static void LogEvetnForTrackLuckBalance(float i, int j = 200)
+    public static void LogEvetnForTrack(float i, int j = 200)
+    {
+        Log("_luck_balance_" + j + "_" + (int)i);
+    }
+
+
+
+    /// <summary>
+    /// 请求广告时
+    /// </summary>
+    public static void ADRequest()
+    {
+        Log("_ad_request");
+    }
+
+    /// <summary>
+    /// 当成功展示一条广告时
+    /// </summary>
+    public static void ADShow()
+    {
+        Log("_ad_show");
+    }
+
+    /// <summary>
+    /// 当成功展示一条激励视频广告时
+    /// </summary>
+    public static void VideoShow()
+    {
+        Log("_video_show");
+    }
+
+    /// <summary>
+    /// 当成功展示一条插屏广告时
+    /// </summary>
+    public static void InterstitialShow()
+    {
+
+        Log("_Interstitial_show");
+    }
+
+    private static void Log(string value)
+    {
+        var _eventName = EventName.gameAFName + value;
+        AppsFlyer.sendEvent(_eventName, null);
+
+        Debuger.Log("AFSend == " + _eventName);
+
+        SimpleTween.DelayAction(Instance.gameObject, 1f, () =>
+        {
+            var _eventNameVC = _eventName + $"_VC_{Application.version}";
+            Debuger.Log("AFVCSend == " + _eventNameVC);
+            AppsFlyer.sendEvent(_eventNameVC, null);
+        });
+    }
+
+    #endregion
+
+
+    #region AF
+
+    public void onConversionDataSuccess(string conversionData)
+    {
+        Debuger.Log(string.Format("AppsFlyer_Unity_v_{0}_{1} called with {2}",
+            AppsFlyer.getSdkVersion(),
+            "onConversionDataSuccess",
+            conversionData));
+
+        Dictionary<string, object> conversionDataDictionary = AppsFlyer.CallbackStringToDictionary(conversionData);
+
+        if (isNoOrganic.Value)
+        {
+            AnalysisController.AfStatus = AnalysisController.AFStatus.NonOrganic;
+            goto End;
+        }
+
+        if (conversionDataDictionary.TryGetValue("af_status", out object _value))
+        {
+            if (_value.Equals("Non-organic"))
+            {
+                AnalysisController.AfStatus = AnalysisController.AFStatus.NonOrganic;
+                isNoOrganic.Value = true;
+            }
+            else if (_value.Equals("Organic"))
+            {
+                AnalysisController.AfStatus = AnalysisController.AFStatus.Organic;
+            }
+            else
+            {
+                AnalysisController.AfStatus = AnalysisController.AFStatus.Unknow;
+            }
+
+            Debuger.Log("AF_Status___" + _value);
+        }
+        else
+        {
+            Debuger.LogError("AF_Status_Failed");
+        }
+
+    End:
+        {
+            Log("_af_succ");
+        }
+    }
+
+    public void onConversionDataFail(string error)
+    {
+        Log("_af_fail");
+    }
+
+    public void onAppOpenAttribution(string attributionData)
+    {
+
+    }
+
+    public void onAppOpenAttributionFailure(string error)
     {
 
     }

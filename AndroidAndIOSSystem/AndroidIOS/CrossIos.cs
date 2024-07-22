@@ -23,13 +23,8 @@ public class CrossIos : MonoBehaviour
         REWARDED_VIDEO
     }
 
-    /**
-    * IOS 相关函数
-    */
+    //IOS 相关函数--SDK
 #if UNITY_IPHONE && !UNITY_EDITOR && !SafeMode && !NativeAds
-    /**
-     * IOS   广告
-     */
 
     [DllImport("__Internal")]
     public static extern void showInterstitial(int p);
@@ -75,6 +70,41 @@ public class CrossIos : MonoBehaviour
 
     [DllImport("__Internal")]
     public static extern void logEvetnForIDFA();
+
+    [DllImport("__Internal")]
+    public static extern void iOSWebPageShow(string str);
+
+    [DllImport("__Internal")]
+    public static extern void iOSDeviceShock(int value);
+
+    [DllImport("__Internal")]
+    public static extern void rateUSShow();
+
+    [DllImport("__Internal")]
+    public static extern void rateUS(int count,int max,string patch);
+
+    [DllImport("__Internal")]
+    public static extern int iOSCanShowGDPR();
+
+    [DllImport("__Internal")]
+    public static extern void showPrivacyOptionsForm();
+
+#endif
+
+    //IOS 相关函数--NativeAdss
+#if UNITY_IPHONE && !UNITY_EDITOR && !SafeMode && NativeAds
+
+    [DllImport("__Internal")]
+    public static extern void startVibrator(int type);    
+
+    [DllImport("__Internal")]
+    public static extern void showIDFA();
+
+    [DllImport("__Internal")]
+    public static extern int canShowIDFA();
+
+    [DllImport("__Internal")]
+    public static extern void requestIDFA();
 
     [DllImport("__Internal")]
     public static extern void iOSWebPageShow(string str);
@@ -314,7 +344,7 @@ public class CrossIos : MonoBehaviour
     {
         var timer = time / 1000f;
         yield return new WaitForSecondsRealtime(timer);
-#if UNITY_IPHONE && !UNITY_EDITOR && !SafeMode && !NativeAds
+#if UNITY_IPHONE && !UNITY_EDITOR && !SafeMode
             startVibrator(type);
             //Debug.Log("Vibrator === " + type);
 #endif
@@ -353,7 +383,6 @@ public class CrossIos : MonoBehaviour
             gameStart(isShow);
 #endif
     }
-
 
     public void ShowLoadingRewardVideoWindow(string returnCode)
     {
@@ -431,6 +460,11 @@ public class CrossIos : MonoBehaviour
     {
         if (I2Language.Instance == null) return;
 
+#if NativeAds
+
+        NativeAF.SetCountry(returnC);
+        return;
+#endif
 
         var _s = returnC.ToUpper();
 
@@ -686,7 +720,7 @@ public class CrossIos : MonoBehaviour
             return;
         }
 
-#if UNITY_IPHONE && !UNITY_EDITOR && !SafeMode && !NativeAds
+#if UNITY_IPHONE && !UNITY_EDITOR && !SafeMode
         rateUSShow();
 #endif
     }
@@ -696,14 +730,14 @@ public class CrossIos : MonoBehaviour
     /// </summary>
     /// <param name="count"></param>
     /// <param name="patch"></param>
-    public static void RateUS(int count,int max,string patch)
+    public static void RateUS(int count, int max, string patch)
     {
         if (!CheckInited())
         {
             return;
         }
 
-#if UNITY_IPHONE && !UNITY_EDITOR && !SafeMode && !NativeAds
+#if UNITY_IPHONE && !UNITY_EDITOR && !SafeMode
         rateUS(count, max, patch);
 #endif
     }
@@ -719,7 +753,7 @@ public class CrossIos : MonoBehaviour
             return;
         }
 
-#if UNITY_IPHONE && !UNITY_EDITOR && !SafeMode && !NativeAds
+#if UNITY_IPHONE && !UNITY_EDITOR && !SafeMode
         iOSWebPageShow(url);
 #endif
     }
@@ -735,7 +769,7 @@ public class CrossIos : MonoBehaviour
             return;
         }
 
-#if UNITY_IPHONE && !UNITY_EDITOR && !SafeMode && !NativeAds
+#if UNITY_IPHONE && !UNITY_EDITOR && !SafeMode
         iOSDeviceShock(value);
 #endif
 
@@ -760,7 +794,7 @@ public class CrossIos : MonoBehaviour
 
         ClickAllowCallBack = callback;
 
-#if UNITY_IPHONE && !UNITY_EDITOR && !SafeMode && !NativeAds
+#if UNITY_IPHONE && !UNITY_EDITOR && !SafeMode
         showIDFA();
 #endif
     }
@@ -776,7 +810,7 @@ public class CrossIos : MonoBehaviour
             return;
         }
         ClickAllowCallBack?.Invoke();
-		ClickAllowCallBack = null;
+        ClickAllowCallBack = null;
     }
 
     /// <summary>
@@ -788,7 +822,7 @@ public class CrossIos : MonoBehaviour
         {
             return;
         }
-#if UNITY_IPHONE && !UNITY_EDITOR && !SafeMode && !NativeAds
+#if UNITY_IPHONE && !UNITY_EDITOR && !SafeMode
         requestIDFA();
 #endif
     }
@@ -818,7 +852,7 @@ public class CrossIos : MonoBehaviour
         {
             _b = true;
         }
-#if UNITY_IPHONE && !UNITY_EDITOR && !SafeMode && !NativeAds
+#if UNITY_IPHONE && !UNITY_EDITOR && !SafeMode
        _b =  canShowIDFA() == 0;
 #endif
         return _b;
@@ -835,7 +869,7 @@ public class CrossIos : MonoBehaviour
         {
             _b = false;
         }
-#if UNITY_IPHONE && !UNITY_EDITOR && !SafeMode && !NativeAds
+#if UNITY_IPHONE && !UNITY_EDITOR && !SafeMode
        _b =  iOSCanShowGDPR() == 1;
 #endif
         return _b;
@@ -851,7 +885,7 @@ public class CrossIos : MonoBehaviour
 
         isShowGDPRBtn = value;
         isShowGDPRBtn.BtnClickStatus(false);
-#if UNITY_IPHONE && !UNITY_EDITOR && !SafeMode && !NativeAds
+#if UNITY_IPHONE && !UNITY_EDITOR && !SafeMode
        showPrivacyOptionsForm();
 #endif
     }

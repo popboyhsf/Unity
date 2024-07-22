@@ -1,23 +1,25 @@
-﻿using System;
+﻿using AppsFlyerSDK;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using CoreUtils;
 
 public class NativeAds : MonoBehaviour, IDebuger
 {
-    private const string MaxSdkKey = @"";
+    private const string MaxSdkKey = @"TODO";
 
 #if UNITY_IPHONE
-    private const string InterstitialAdUnitId = "";
-    private const string RewardedAdUnitId = "";
+    private const string InterstitialAdUnitId = @"TODO";
+    private const string RewardedAdUnitId = @"TODO";
     private const string RewardedInterstitialAdUnitId = "";
-    private const string BannerAdUnitId = "";
+    private const string BannerAdUnitId = @"TODO";
     private const string MRecAdUnitId = "";
 #else // UNITY_ANDROID
-    private const string InterstitialAdUnitId = @"";
-    private const string RewardedAdUnitId = @"";
-    private const string  = "";
-    private const string BannerAdUnitId = @"";
+    private const string InterstitialAdUnitId = @"TODO";
+    private const string RewardedAdUnitId = @"TODO";
+    private const string RewardedInterstitialAdUnitId = "";
+    private const string BannerAdUnitId = @"TODO";
     private const string MRecAdUnitId = "";
 #endif
 
@@ -74,6 +76,8 @@ public class NativeAds : MonoBehaviour, IDebuger
             //InitializeRewardedInterstitialAds();
             InitializeBannerAds();
             //InitializeMRecAds();
+
+            InitAF();
         };
 
         MaxSdk.SetSdkKey(Utils.AESDecrypt(MaxSdkKey));
@@ -171,6 +175,14 @@ public class NativeAds : MonoBehaviour, IDebuger
     {
         // Interstitial ad revenue paid. Use this callback to track user revenue.
         Debuger.Log("Interstitial revenue paid");
+
+        //If the integration is appsflyer
+        string appsFlyerId = AppsFlyer.getAppsFlyerId();
+
+        MBridgeRevenueParamsEntity mBridgeRevenueParamsEntity = new MBridgeRevenueParamsEntity(MBridgeRevenueParamsEntity.ATTRIBUTION_PLATFORM_APPSFLYER, appsFlyerId);
+        mBridgeRevenueParamsEntity.SetMaxAdInfo(adInfo);
+
+        MBridgeRevenueManager.Track(mBridgeRevenueParamsEntity);
 
     }
 
@@ -308,6 +320,13 @@ public class NativeAds : MonoBehaviour, IDebuger
         // Rewarded ad revenue paid. Use this callback to track user revenue.
         Debuger.Log("Rewarded ad revenue paid");
 
+        //If the integration is appsflyer
+        string appsFlyerId = AppsFlyer.getAppsFlyerId();
+
+        MBridgeRevenueParamsEntity mBridgeRevenueParamsEntity = new MBridgeRevenueParamsEntity(MBridgeRevenueParamsEntity.ATTRIBUTION_PLATFORM_APPSFLYER, appsFlyerId);
+        mBridgeRevenueParamsEntity.SetMaxAdInfo(adInfo);
+
+        MBridgeRevenueManager.Track(mBridgeRevenueParamsEntity);
     }
 
     #endregion
@@ -372,6 +391,16 @@ public class NativeAds : MonoBehaviour, IDebuger
         Debuger.Log("Banner ad revenue paid");
 
 
+    }
+
+    #endregion
+
+
+    #region AF
+
+    private void InitAF()
+    {
+        NativeAF.Instance.InitAF();
     }
 
     #endregion
