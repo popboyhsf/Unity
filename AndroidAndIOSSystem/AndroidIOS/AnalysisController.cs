@@ -15,7 +15,9 @@ public enum VideoEventName
 }
 public static class EventName
 {
-    private const string gameName = "luckyblock_wx_";
+
+    public const string gameAFName = "xxx";
+    public const string gameName = "wx_";
 
     public const string gameStart = gameName + "game_start";
     public const string gameEnd = gameName + "game_end";

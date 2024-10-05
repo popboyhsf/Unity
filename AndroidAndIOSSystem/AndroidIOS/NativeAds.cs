@@ -1,9 +1,8 @@
-﻿using AppsFlyerSDK;
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿#if NativeAds
+
+using AppsFlyerSDK;
+using System;
 using UnityEngine;
-using CoreUtils;
 
 public class NativeAds : MonoBehaviour, IDebuger
 {
@@ -414,3 +413,15 @@ public class NativeAds : MonoBehaviour, IDebuger
     #endregion
 
 }
+
+#else
+using UnityEngine;
+
+public class NativeAds : MonoBehaviour
+{
+    private void Awake()
+    {
+        Destroy(this.gameObject);
+    }
+}
+#endif

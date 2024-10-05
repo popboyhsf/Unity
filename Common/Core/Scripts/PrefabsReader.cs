@@ -56,6 +56,7 @@ public class PrefabsReader : SingletonMonoBehaviour<PrefabsReader>
         var _prefabName = info.name;
 #if UNITY_EDITOR
         _url = Application.dataPath + "/StreamingAssets" + _url;
+        _url = new Uri(_url, UriKind.Absolute).AbsoluteUri;
 #elif UNITY_IPHONE
         _url = "file://"+Application.dataPath +"/Raw"+_url; 
 #elif UNITY_ANDROID

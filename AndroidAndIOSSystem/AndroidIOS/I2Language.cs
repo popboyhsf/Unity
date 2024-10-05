@@ -115,7 +115,7 @@ public class I2Language : MonoBehaviour
 
 #endif
 
-#if UNITY_IPHONE && !UNITY_EDITOR
+#if UNITY_IPHONE && !UNITY_EDITOR && !NativeAds
         ChangeUI(Language);
 #endif
 
@@ -124,11 +124,19 @@ public class I2Language : MonoBehaviour
 
     public void ChangeUI(LanguageEnum language)
     {
-        var _l = LocalizationManager.GetAllLanguages()[(int)language];
-
-        if (LocalizationManager.HasLanguage(_l))
+        try
         {
-            LocalizationManager.CurrentLanguage = _l;
+            var _l = LocalizationManager.GetAllLanguages()[(int)language];
+
+            if (LocalizationManager.HasLanguage(_l))
+            {
+                LocalizationManager.CurrentLanguage = _l;
+            }
+        }
+        catch (Exception e)
+        {
+            ChangeUI(LanguageEnum.EN);
+            Debuger.LogWarning("可能不含有语言 = " + language);
         }
     }
 
@@ -227,7 +235,7 @@ public class I2Language : MonoBehaviour
                 _m = (_i).ToString();
                 break;
             case LanguageEnum.SA:
-                if (usFolat) _m = (i * 3).ToString("0.0");
+                if (usFolat) _m = (i * 3).ToString("0.00");
                 else _m = (i * 3).ToString("0");
                 break;
             case LanguageEnum.AE:
@@ -325,7 +333,7 @@ public class I2Language : MonoBehaviour
 
 
             case LanguageEnum.TW:
-                if (usFolat) _m = (i * 60).ToString("0.00");
+                if (usFolat) _m = (i * 60).ToString("0.0");
                 else _m = (i * 60).ToString("0");
                 break;
             case LanguageEnum.GB:
@@ -529,5 +537,27 @@ public class I2Language : MonoBehaviour
         }
 
         return _b;
+    }
+	
+	//阿拉伯数字 转 阿拉伯文数字
+    public string ConvertToArabicNumerals(string input)
+    {
+        string[] arabicNumerals = { "٠", "١", "٢", "٣", "٤", "٥", "٦", "٧", "٨", "٩" };
+        string output = "";
+
+        foreach (char c in input)
+        {
+            if (char.IsDigit(c))
+            {
+                int digit = int.Parse(c.ToString());
+                output += arabicNumerals[digit];
+            }
+            else
+            {
+                output += c;
+            }
+        }
+
+        return output;
     }
 }

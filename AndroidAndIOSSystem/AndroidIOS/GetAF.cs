@@ -81,9 +81,6 @@ public class GetAF : MonoBehaviour, IDebuger
         if (!allowDebug)
         {
             AnalysisController.OnAFStatusChanged?.Invoke();
-#if !NativeAds
-            CrossAndroid.GetAF();
-#endif
         }
 
 
@@ -92,9 +89,6 @@ public class GetAF : MonoBehaviour, IDebuger
         if (!allowDebug)
         {
             AnalysisController.OnAFStatusChanged?.Invoke();
-#if !NativeAds
-            CrossIos.Instance.GetAF(0);
-#endif
         }
 
 

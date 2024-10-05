@@ -1,9 +1,10 @@
-﻿using System.Collections;
+﻿using CoreUtils;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.U2D;
 using UnityEngine.UI;
-
 public class AtlasReader : SingletonMonoBehaviour<AtlasReader>
 {
 
@@ -27,8 +28,8 @@ public class AtlasReader : SingletonMonoBehaviour<AtlasReader>
 
     public void LoadImgAES(string name, Image img)
     {
-        var _atlasName = name.Split('/')[0];
-        var _iconName = name.Split('/')[1];
+        var _atlasName = "TODO";//TODO 图集名字;
+        var _iconName = name;
 
         var _url = @"/" + "Sprite" + @"/" + _atlasName;
         AtlasPackInfo _info = new AtlasPackInfo(_url, _atlasName, _iconName, img);
@@ -81,6 +82,7 @@ public class AtlasReader : SingletonMonoBehaviour<AtlasReader>
         var _atlasName = info.atlasName;
 #if UNITY_EDITOR
         _url = Application.dataPath + "/StreamingAssets" + _url;
+        _url = new Uri(_url, UriKind.Absolute).AbsoluteUri;
 #elif UNITY_IPHONE
         _url = "file://"+Application.dataPath +"/Raw"+_url; 
 #elif UNITY_ANDROID

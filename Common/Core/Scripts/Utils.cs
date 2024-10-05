@@ -4,6 +4,8 @@ using System.Text;
 using UnityEngine;
 using System.Globalization;
 using UnityEngine.Events;
+using System.Text.RegularExpressions;
+
 /// <summary>
 /// 工具类
 /// </summary>
@@ -208,7 +210,7 @@ public static class Utils
     #region AES
 
     //private static string AESKey = GPID.Replace(".", "").Remove(16);
-    private static string AESKey = "1234567890qwerty";
+    private static string AESKey = "16-TODO";
 
     /// <summary>
     ///  AES 加密

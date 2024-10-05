@@ -399,7 +399,7 @@ public class AdController
         NativeAds.ReqHideLoadingRewardVideoWindow();
         return;
 #endif
-        CrossAndroid.ReqHideLoadingRewardVideoWindow();
+        ADLoading.Instance.HiddenLoading();
 #elif UNITY_IPHONE && !UNITY_EDITOR
 #if NativeAds
         NativeAds.ReqHideLoadingRewardVideoWindow();

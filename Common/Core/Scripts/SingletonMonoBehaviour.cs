@@ -21,7 +21,7 @@ public class SingletonMonoBehaviour<T> : OptimizedMonoBehaviour where T : Compon
         }
     }
 
-    protected void Awake()
+    protected virtual void Awake()
     {
         Init();
     }

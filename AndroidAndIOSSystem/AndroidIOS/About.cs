@@ -85,8 +85,25 @@ public class About : MonoBehaviour
 
 
 
-        if (PP) PP.AddListener(openPP);
-        if (TOS) TOS.AddListener(openTOS);
+        if (PPUrl == "")
+        {
+            if (PP) PP.gameObject.SetActive(false);
+        }
+        else
+        {
+            if (PP) PP.AddListener(openPP);
+        }
+
+        if (TOSURl == "")
+        {
+            if (TOS) TOS.gameObject.SetActive(false);
+        }
+        else
+        {
+            if (TOS) TOS.AddListener(openTOS);
+        }
+
+
         if (cashPP) cashPP.AddListener(openPP);
 
 

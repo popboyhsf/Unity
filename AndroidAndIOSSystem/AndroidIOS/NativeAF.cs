@@ -1,18 +1,22 @@
-﻿using Newtonsoft.Json.Linq;
+﻿#if NativeAds
+
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using AppsFlyerSDK;
-using UnityEngine.Events;
 using Mkey;
-using CoreUtils;
 
 public class NativeAF : SingletonMonoBehaviour<NativeAF>, IAppsFlyerConversionData
 {
 
+#if UNITY_IPHONE
     private const string AF_Key = @"";
     private const string AF_ID = @"";
+#else // UNITY_ANDROID
+    private const string AF_Key = @"";
+    private const string AF_ID = @"";
+#endif
+
 
     private BoolData isNoOrganic = new BoolData("NativeAF_isNoOrganic", false);
 
@@ -99,7 +103,7 @@ public class NativeAF : SingletonMonoBehaviour<NativeAF>, IAppsFlyerConversionDa
 
             Log("_lucky_lang_" + countryCode);
 
-            Debuger.Log($"获取Country{_c}");
+            Debuger.Log($"设置Country{_c}");
         }
     }
 
@@ -1100,3 +1104,15 @@ public class NativeAF : SingletonMonoBehaviour<NativeAF>, IAppsFlyerConversionDa
 
     #endregion
 }
+
+#else
+using UnityEngine;
+
+public class NativeAF : MonoBehaviour
+{
+    private void Awake()
+    {
+        Destroy(this.gameObject);
+    }
+}
+#endif

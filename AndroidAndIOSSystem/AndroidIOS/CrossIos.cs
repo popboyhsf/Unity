@@ -109,6 +109,10 @@ public class CrossIos : MonoBehaviour
     [DllImport("__Internal")]
     public static extern void showPrivacyOptionsForm();
 
+    [DllImport("__Internal")]
+    public static extern void unityMainLoadFinish();
+    
+
 #endif
 
 
@@ -128,6 +132,7 @@ public class CrossIos : MonoBehaviour
         _instance = this;
         CheckInited();
         GetVersionInfo();
+        Init();
     }
 
     private void Start()
@@ -142,7 +147,11 @@ public class CrossIos : MonoBehaviour
 
     private static void Init()
     {
+#if UNITY_IPHONE && !UNITY_EDITOR && NativeAds
 
+        unityMainLoadFinish();
+
+#endif
     }
 
     private static bool CheckInited()
