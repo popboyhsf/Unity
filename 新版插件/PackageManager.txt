@@ -1,0 +1,3 @@
+https://github.com/CarterGames/SaveManager.git
+
+https://github.com/MathewHDYT/Unity-Audio-Manager.git?path=/com.mathewhdyt.audiomanager#package

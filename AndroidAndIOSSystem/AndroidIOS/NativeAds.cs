@@ -6,7 +6,6 @@ using UnityEngine;
 
 public class NativeAds : MonoBehaviour, IDebuger
 {
-    private const string MaxSdkKey = @"TODO";
 
 #if UNITY_IPHONE
     private const string InterstitialAdUnitId = @"TODO";
@@ -78,8 +77,6 @@ public class NativeAds : MonoBehaviour, IDebuger
 
             InitAF();
         };
-
-        MaxSdk.SetSdkKey(Utils.AESDecrypt(MaxSdkKey));
         MaxSdk.InitializeSdk();
     }
 

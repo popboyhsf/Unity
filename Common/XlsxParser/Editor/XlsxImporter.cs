@@ -1,27 +1,40 @@
-﻿using System.Collections.Generic;
-using System.Data;
-using System.IO;
+﻿using System.IO;
 using UnityEditor;
-using UnityEditor.Experimental.AssetImporters;
-using UnityEngine.Events;
 using UnityEngine;
 
 namespace XlsxParser
 {
     //监听的后缀名
-    [ScriptedImporter(1, "xlsx")]
-    public class XlsxImporter : ScriptedImporter
+    [UnityEditor.AssetImporters.ScriptedImporter(1, "xlsx")]
+    public class XlsxImporter : UnityEditor.AssetImporters.ScriptedImporter
     {
         //监听自定义资源导入
-        public override void OnImportAsset(AssetImportContext ctx)
+        public override void OnImportAsset(UnityEditor.AssetImporters.AssetImportContext ctx)
         {
             XlsxReader.Excute(ctx.assetPath);
         }
     }
+    public class XlsxEditor
+    {
+        [MenuItem("Assets/Tools/XlsxConvertToJson")]
+        private static void XlsxConvertToJson()
+        {
+            if (Selection.activeObject != null)
+            {
+                string fileName = AssetDatabase.GetAssetPath(Selection.activeObject);
+                if (fileName.EndsWith("xlsx"))
+                {
+                    XlsxReader.Excute(fileName);
+                    AssetDatabase.Refresh();
+                }
+            }
+        }
+    }
+
 
     public class XlsxImporterEditer : EditorWindow
     {
-        const string fullPath = "Assets/Designs/Xlsx" + "/";
+        const string fullPath = "Assets/Design" + "/";
 
         [MenuItem("Tools/YuanJi/XlsxImporter")]
         public static void ImportAsset()
@@ -49,6 +62,9 @@ namespace XlsxParser
             
         }
     }
+
+
+
 }
 
 

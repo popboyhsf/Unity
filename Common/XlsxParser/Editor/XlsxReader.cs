@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using ExcelDataReader;
 using System;
@@ -7,6 +6,7 @@ using System.Data;
 using System.IO;
 using System.Text;
 using UnityEngine.Events;
+using Newtonsoft.Json;
 
 /// <summary>
 /// Excel转Json类

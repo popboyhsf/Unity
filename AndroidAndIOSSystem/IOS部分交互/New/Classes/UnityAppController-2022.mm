@@ -625,8 +625,7 @@ extern "C" void UnityCleanupTrampoline()
 
 - (void)applicationDidBecomeActive:(UIApplication*)application
 {
- [AppsFlyerProxy applicationDidBecomeActive];
-
+	 [AppsFlyerProxy applicationDidBecomeActive];
     ::printf("-> applicationDidBecomeActive()\n");
 
     [self removeSnapshotViewController];
