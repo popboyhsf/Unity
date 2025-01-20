@@ -3,13 +3,13 @@ using UnityEngine;
 public static class CountryCode
 {
     // Java class path
-    private const string ANDROID_CLASS = "com.unity3d.player.CountryCodePlugin";
+    private const string ANDROID_CLASS = "com.unity3d.player.LocaleUtils";
 
     // Android method to get country code
-    private const string ANDROID_METHOD_COUNTRY = "getCountry";
+    private const string ANDROID_METHOD_COUNTRY = "getCountryCode";
 
     // Android method to get language code
-    private const string ANDROID_METHOD_LANGUAGE = "getLanguage";
+    private const string ANDROID_METHOD_LANGUAGE = "getLanguageCode";
 
     // Function to retrieve country code
     public static string GetCountryCode()
@@ -39,11 +39,7 @@ public static class CountryCode
         {
             using (AndroidJavaClass javaClass = new AndroidJavaClass(ANDROID_CLASS))
             {
-                AndroidJavaObject context = GetContext();
-                if (context != null)
-                {
-                    return javaClass.CallStatic<string>(ANDROID_METHOD_LANGUAGE, context);
-                }
+                return javaClass.CallStatic<string>(ANDROID_METHOD_LANGUAGE);
             }
         }
         else if (Application.platform == RuntimePlatform.IPhonePlayer)
@@ -57,6 +53,6 @@ public static class CountryCode
     {
         AndroidJavaClass unityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
         AndroidJavaObject currentActivity = unityPlayer.GetStatic<AndroidJavaObject>("currentActivity");
-        return currentActivity.Call<AndroidJavaObject>("getApplicationContext");
+        return currentActivity;
     }
 }
